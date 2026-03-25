@@ -23,3 +23,8 @@ Route::get('gio-hang', [HomeController::class, 'giohang'])->name('giohang');
 Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');
 Route::get('dang-nhap', [HomeController::class, 'dangnhap'])->name('dangnhap');
 Route::get('xem-chi-tiet', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
+//trang admin
+Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');
+Route::get('qly-sanpham', [HomeController::class, 'qlysanpham'])->name('qlysanpham');
+Route::get('qly-donhang', [HomeController::class, 'qlydonhang'])->name('qlydonhang');
+Route::get('qly-taikhoan', [HomeController::class, 'qlytaikhoan'])->name('qlytaikhoan');

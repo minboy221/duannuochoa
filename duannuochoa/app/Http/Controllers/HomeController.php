@@ -45,4 +45,19 @@ class HomeController extends Controller
     {
         return view('xemchitiet');
     }
+    //phần trang admin tổng quan
+    public function tongquan()
+    {
+        return view('tongquan');
+    }
+    //phần trang qly sản phẩm
+    public function qlysanpham()
+    {
+        return view('qlysanpham');
+    }
+    //quản lý tài khoản
+    public function qlytaikhoan()
+    {
+        return view('qlytaikhoan');
+    }
 }
