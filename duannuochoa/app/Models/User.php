@@ -17,6 +17,20 @@ class User extends Authenticatable
     public $timestamps = false;
 
     /**
+     * Indicates if the model should be timestamped.
+     *
+     * @var bool
+     */
+    public $timestamps = false;
+
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
+    protected $primaryKey = 'user_id';
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
@@ -29,6 +43,10 @@ class User extends Authenticatable
         'phone',
         'address',
         'password',
+        'phone',
+        'address',
+        'role_id',
+        'avatar',
     ];
 
     /**

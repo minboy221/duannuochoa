@@ -135,10 +135,19 @@
                     </button>
                     <button
                         class="p-2 hover:bg-primary-container/20 rounded-full transition-colors scale-95 active:scale-90 duration-300">
-                        <a href="{{ route('taikhoan') }}">
-                            <span class="material-symbols-outlined text-primary">person</span>
-                        </a>
-                    </button>
+                        @auth
+                            <a href="{{ route('taikhoan') }}">
+                                <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary/20 shadow-sm">
+                                    <img src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->full_name) . '&background=0052d0&color=fff' }}" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}">
+                                <span class="material-symbols-outlined text-primary">person</span>
+                            </a>
+                        @endauth
+                   </button>
                 </div>
             </div>
         </nav>

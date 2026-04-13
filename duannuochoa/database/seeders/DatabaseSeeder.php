@@ -42,6 +42,10 @@ class DatabaseSeeder extends Seeder
             ['product_id' => $p1->product_id, 'volume_id' => 100],
             ['price' => 3200000, 'stock_quantity' => 50, 'color' => 'Xanh đen']
         );
+        \Illuminate\Support\Facades\DB::table('roles')->insert([
+            ['role_id' => 1, 'role_name' => 'Admin'],
+            ['role_id' => 2, 'role_name' => 'User'],
+        ]);
         
         \App\Models\ProductVariant::firstOrCreate(
             ['product_id' => $p1->product_id, 'volume_id' => 50],
