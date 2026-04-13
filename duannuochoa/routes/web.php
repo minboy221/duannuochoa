@@ -24,7 +24,16 @@ Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');
 Route::get('dang-nhap', [HomeController::class, 'dangnhap'])->name('dangnhap');
 Route::get('xem-chi-tiet', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 //trang admin
-Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');
-Route::get('qly-sanpham', [HomeController::class, 'qlysanpham'])->name('qlysanpham');
-Route::get('qly-donhang', [HomeController::class, 'qlydonhang'])->name('qlydonhang');
-Route::get('qly-taikhoan', [HomeController::class, 'qlytaikhoan'])->name('qlytaikhoan');
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');
+    
+    // Management Routes
+    Route::resource('categories', \App\Http\Controllers\Admin\CategoryController::class);
+    Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
+    Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
+    Route::resource('products.variants', \App\Http\Controllers\Admin\ProductVariantController::class)->shallow();
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::resource('discounts', \App\Http\Controllers\Admin\DiscountController::class);
+    Route::resource('shipping-methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
+    Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
+});
