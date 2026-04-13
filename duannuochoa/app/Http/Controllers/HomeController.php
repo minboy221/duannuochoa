@@ -48,16 +48,22 @@ class HomeController extends Controller
     //phần trang admin tổng quan
     public function tongquan()
     {
-        return view('tongquan');
+        return view('admin.tongquan');
     }
     //phần trang qly sản phẩm
     public function qlysanpham()
     {
-        return view('qlysanpham');
+        return view('admin.qlysanpham');
     }
     //quản lý tài khoản
     public function qlytaikhoan()
     {
-        return view('qlytaikhoan');
+        return view('admin.qlytaikhoan');
+    }
+
+    //quản lý đơn hàng
+    public function qlydonhang()
+    {
+        return view('admin.qlydonhang');
     }
 }

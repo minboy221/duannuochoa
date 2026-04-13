@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Auth\ForgotPasswordRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
 
 class ForgotPasswordController extends Controller
 {
@@ -17,10 +19,8 @@ class ForgotPasswordController extends Controller
         return view('auth.forgot-password');
     }
 
-    public function sendOtp(Request $request)
+    public function sendOtp(ForgotPasswordRequest $request)
     {
-        $request->validate(['email' => 'required|email|exists:users,email']);
-
         $otp = sprintf("%06d", mt_rand(1, 999999));
         $expiresAt = Carbon::now()->addMinutes(10);
 
@@ -52,9 +52,8 @@ class ForgotPasswordController extends Controller
         return view('auth.verify-otp');
     }
 
-    public function verifyOtp(Request $request)
+    public function verifyOtp(VerifyOtpRequest $request)
     {
-        $request->validate(['otp' => 'required|string|size:6']);
         $email = session('reset_email');
 
         $otpRecord = DB::table('otps')
