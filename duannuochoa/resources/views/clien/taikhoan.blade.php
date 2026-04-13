@@ -8,13 +8,19 @@
                     <div class="flex items-center space-x-4 mb-8">
                         <div
                             class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary text-xl font-bold shadow-lg overflow-hidden">
-                            <img alt="Avatar" class="w-full h-full object-cover"
-                                data-alt="close-up portrait of a confident young man with stylish hair looking at the camera in soft daylight"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCb25ToM5e4RsuerzJsXK4H3blc19H9HnK00DYnnqvkiT8ZGH9vNZ19TWxQ_hgGeNx3Wmq4W3gR8SVHG1t9KcGCMKbwuQrs-ISKtOd9unkN1gVg_G6rmNK6Fn40pAHQrcTGVCjcnIlwhkd0Inpp6a-9-9SKo9rJ0FY6_sGcbrMIk3VydtNadqYFCJykxLGTtWZTBsqUrTMJ3T2HJi4LpKTkOhFIz751nXkk1H3Yf3E4BiKg3PYd9ExubuK8OpKyyHqx7lxr9peIyQCl" />
+                        <div class="relative group">
+                            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-primary-container flex items-center justify-center text-on-primary text-xl font-bold shadow-lg overflow-hidden border-2 border-white">
+                                <img alt="Avatar" class="w-full h-full object-cover"
+                                    src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->full_name) . '&background=0052d0&color=fff' }}" />
+                            </div>
+                            <label for="avatar-sidebar" class="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-xs text-primary">edit</span>
+                            </label>
+                        </div>
                         </div>
                         <div>
-                            <h2 class="font-headline font-bold text-lg leading-tight">Chào, Nam Trần</h2>
-                            <p class="text-sm text-on-surface-variant">Thành viên Bạc</p>
+                            <h2 class="font-headline font-bold text-lg leading-tight">Chào, {{ Auth::user()->full_name }}</h2>
+                            <p class="text-sm text-on-surface-variant">Thành viên mới</p>
                         </div>
                     </div>
                     <nav class="space-y-2">
@@ -34,11 +40,13 @@
                             <span>Cài đặt tài khoản</span>
                         </a>
                         <div class="pt-4 mt-4 border-t border-outline-variant/20">
-                            <a class="flex items-center space-x-3 p-4 rounded-xl hover:text-error transition-all text-on-surface-variant font-medium"
-                                href="#">
-                                <span class="material-symbols-outlined" data-icon="logout">logout</span>
-                                <span>Đăng xuất</span>
-                            </a>
+                            <form action="{{ route('logout') }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full flex items-center space-x-3 p-4 rounded-xl hover:text-error transition-all text-on-surface-variant font-medium text-left">
+                                    <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                                    <span>Đăng xuất</span>
+                                </button>
+                            </form>
                         </div>
                     </nav>
                 </div>
@@ -53,24 +61,43 @@
                             nhân</h1>
                         <p class="text-on-surface-variant">Quản lý thông tin hồ sơ của bạn để bảo mật tài khoản</p>
                     </header>
-                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    @if(session('success'))
+                        <div class="alert alert-success mb-6">{{ session('success') }}</div>
+                    @endif
+
+                    <form action="{{ route('profile.update') }}" method="POST" enctype="multipart/form-data" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @csrf
+                        <div class="md:col-span-2 flex justify-center mb-6">
+                            <div class="relative group cursor-pointer" onclick="document.getElementById('avatar-input').click()">
+                                <div class="w-32 h-32 rounded-full overflow-hidden border-4 border-surface-container-high shadow-xl transition-all group-hover:border-primary/30">
+                                    <img id="avatar-preview" src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->full_name) . '&background=0052d0&color=fff&size=128' }}" 
+                                         class="w-full h-full object-cover">
+                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <span class="material-symbols-outlined text-white text-3xl">photo_camera</span>
+                                </div>
+                                <input type="file" id="avatar-input" name="avatar" class="hidden" accept="image/*" onchange="previewImage(this)">
+                            </div>
+                        </div>
+
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-on-surface-variant ml-2">Họ và Tên</label>
                             <input
                                 class="w-full bg-surface-container-high border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
-                                type="text" value="Trần Hoàng Nam" />
+                                type="text" name="full_name" value="{{ Auth::user()->full_name }}" required />
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-on-surface-variant ml-2">Địa chỉ Email</label>
                             <input
-                                class="w-full bg-surface-container-high border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
-                                type="email" value="nam.tran@example.com" />
+                                class="w-full bg-surface-container-high/50 border-none rounded-md px-6 py-4 text-on-surface-variant cursor-not-allowed"
+                                type="email" value="{{ Auth::user()->email }}" disabled />
+                            <p class="text-[10px] text-on-surface-variant ml-2 italic">* Email không thể thay đổi</p>
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-on-surface-variant ml-2">Số điện thoại</label>
                             <input
                                 class="w-full bg-surface-container-high border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
-                                type="tel" value="090 123 4567" />
+                                type="tel" name="phone" value="{{ Auth::user()->phone }}" />
                         </div>
                         <div class="space-y-2">
                             <label class="text-sm font-bold text-on-surface-variant ml-2">Giới tính</label>
@@ -85,7 +112,7 @@
                             <label class="text-sm font-bold text-on-surface-variant ml-2">Địa chỉ nhận hàng</label>
                             <textarea
                                 class="w-full bg-surface-container-high border-none rounded-md px-6 py-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all"
-                                rows="3">123 Đường Lê Lợi, Quận 1, TP. Hồ Chí Minh</textarea>
+                                name="address" rows="3">{{ Auth::user()->address }}</textarea>
                         </div>
                         <div class="md:col-span-2 pt-4">
                             <button
@@ -95,6 +122,18 @@
                             </button>
                         </div>
                     </form>
+
+                    <script>
+                        function previewImage(input) {
+                            if (input.files && input.files[0]) {
+                                var reader = new FileReader();
+                                reader.onload = function(e) {
+                                    document.getElementById('avatar-preview').src = e.target.result;
+                                }
+                                reader.readAsDataURL(input.files[0]);
+                            }
+                        }
+                    </script>
                 </section>
                 <!-- Order History Section (Bento Grid Style) -->
                 <section class="space-y-6" id="order-history">
