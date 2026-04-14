@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\UpdateOrderStatusRequest;
 
 class OrderController extends Controller
 {
@@ -25,13 +25,9 @@ class OrderController extends Controller
         return view('admin.orders.edit', compact('order'));
     }
 
-    public function update(Request $request, Order $order)
+    public function update(UpdateOrderStatusRequest $request, Order $order)
     {
-        $request->validate([
-            'status' => 'required|string|in:Chờ xác nhận,Đang giao,Đã hoàn thành,Đã hủy',
-        ]);
-
-        $order->update(['status' => $request->status]);
+        $order->update($request->validated());
         return redirect()->route('admin.orders.index')->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
 

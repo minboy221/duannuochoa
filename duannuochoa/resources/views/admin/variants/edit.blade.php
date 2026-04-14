@@ -6,29 +6,32 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.variants.update', $variant) }}" method="POST">
+        <form action="{{ route('admin.variants.update', $variant) }}" method="POST" novalidate>
             @csrf @method('PUT')
-            <div class="mb-4 text-error">@if ($errors->any()) {{ $errors->first() }} @endif</div>
             
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-bold mb-2">Dung tích (ml)</label>
-                    <input type="number" name="volume_id" value="{{ $variant->volume_id }}" class="w-full rounded-lg border-gray-300 p-3" required min="1">
+                    <input type="number" name="volume_id" value="{{ old('volume_id', $variant->volume_id) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    @error('volume_id') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-2">Màu sắc (Không bắt buộc)</label>
-                    <input type="text" name="color" value="{{ $variant->color }}" class="w-full rounded-lg border-gray-300 p-3">
+                    <input type="text" name="color" value="{{ old('color', $variant->color) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    @error('color') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-bold mb-2">Giá bán (VNĐ)</label>
-                    <input type="number" name="price" value="{{ $variant->price }}" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                    <input type="number" name="price" value="{{ old('price', $variant->price) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    @error('price') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-2">Số lượng tồn kho</label>
-                    <input type="number" name="stock_quantity" value="{{ $variant->stock_quantity }}" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                    <input type="number" name="stock_quantity" value="{{ old('stock_quantity', $variant->stock_quantity) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    @error('stock_quantity') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 

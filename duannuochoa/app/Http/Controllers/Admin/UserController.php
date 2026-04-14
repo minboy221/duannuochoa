@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\UserRequest;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -23,17 +22,9 @@ class UserController extends Controller
         return view('admin.users.create', compact('roles'));
     }
 
-    public function store(Request $request)
+    public function store(UserRequest $request)
     {
-        $request->validate([
-            'role_id' => 'required|exists:roles,role_id',
-            'username' => 'required|string|max:255|unique:users,username',
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email',
-            'password' => 'required|string|min:6',
-        ]);
-
-        $data = $request->all();
+        $data = $request->validated();
         $data['password'] = Hash::make($request->password);
 
         User::create($data);
@@ -46,17 +37,9 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user', 'roles'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UserRequest $request, User $user)
     {
-        $request->validate([
-            'role_id' => 'required|exists:roles,role_id',
-            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
-            'full_name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $data = $request->all();
+        $data = $request->validated();
         if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
         } else {

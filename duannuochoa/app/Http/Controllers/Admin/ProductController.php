@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Brand;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -23,17 +23,9 @@ class ProductController extends Controller
         return view('admin.products.create', compact('categories', 'brands'));
     }
 
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,category_id',
-            'brand_id' => 'required|exists:brands,brand_id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-        ]);
-
-        Product::create($request->all());
+        Product::create($request->validated());
         return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công.');
     }
 
@@ -44,17 +36,9 @@ class ProductController extends Controller
         return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
-        $request->validate([
-            'category_id' => 'required|exists:categories,category_id',
-            'brand_id' => 'required|exists:brands,brand_id',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'base_price' => 'required|numeric|min:0',
-        ]);
-
-        $product->update($request->all());
+        $product->update($request->validated());
         return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công.');
     }
 

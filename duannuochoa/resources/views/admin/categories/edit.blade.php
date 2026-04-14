@@ -6,17 +6,15 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.categories.update', $category) }}" method="POST">
-            @csrf @method('PUT')
-            <div class="mb-4">
-                <label class="block text-sm font-bold mb-2">Tên Danh mục</label>
-                <input type="text" name="name" value="{{ $category->name }}" class="w-full rounded-lg border-gray-300 p-3" required>
+        <form action="{{ route('admin.categories.update', $category) }}" method="POST" novalidate>
+{{-- ... --}}
+13:                 <input type="text" name="name" value="{{ old('name', $category->name) }}" class="w-full rounded-lg border-gray-300 p-3">
                 @error('name') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Mô tả</label>
-                <textarea name="description" class="w-full rounded-lg border-gray-300 p-3" rows="4">{{ $category->description }}</textarea>
+                <textarea name="description" class="w-full rounded-lg border-gray-300 p-3" rows="4">{{ old('description', $category->description) }}</textarea>
                 @error('description') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
