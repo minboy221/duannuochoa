@@ -18,6 +18,7 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-surface-container-low text-on-surface-variant text-xs font-bold uppercase tracking-wider">
+                    <th class="px-6 py-4">Hình ảnh</th>
                     <th class="px-6 py-4">Sản Phẩm</th>
                     <th class="px-6 py-4">Danh mục</th>
                     <th class="px-6 py-4">Nhãn hàng</th>
@@ -29,6 +30,15 @@
             <tbody class="divide-y divide-surface-container">
                 @foreach($products as $product)
                 <tr class="hover:bg-slate-50 transition-colors group">
+                    <td class="px-6 py-4">
+                        @if($product->img)
+                            <img src="{{ asset('storage/' . $product->img) }}" alt="{{ $product->name }}" class="w-12 h-12 object-cover rounded-lg">
+                        @else
+                            <div class="w-12 h-12 bg-surface-container rounded-lg flex items-center justify-center">
+                                <span class="material-symbols-outlined text-on-surface-variant">image</span>
+                            </div>
+                        @endif
+                    </td>
                     <td class="px-6 py-4">
                         <div class="font-bold text-primary">{{ $product->name }}</div>
                         <div class="text-xs text-on-surface-variant max-w-[200px] truncate">{{ $product->description }}</div>

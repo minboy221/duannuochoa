@@ -6,7 +6,7 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-3xl">
-        <form action="{{ route('admin.products.store') }}" method="POST" novalidate>
+        <form action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf
             
             <div class="mb-4">
@@ -55,6 +55,10 @@
                         <span class="text-on-surface">Sản phẩm Bán chạy</span>
                     </label>
                 </div>
+            </div>            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Hình ảnh sản phẩm</label>
+                <input type="file" name="img" class="w-full rounded-lg border-gray-300 p-2 border">
+                @error('img') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
 

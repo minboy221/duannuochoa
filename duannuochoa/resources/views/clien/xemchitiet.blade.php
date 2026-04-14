@@ -1,4 +1,4 @@
-@extends('layout.app')
+@extends('layouts.app')
 @section('content')
     <main class="pt-24 pb-20 max-w-7xl mx-auto px-6 lg:px-12">
         <!-- Product Details Section -->
@@ -6,10 +6,9 @@
             <!-- Image Gallery (Asymmetric Layout) -->
             <div class="lg:col-span-7 grid grid-cols-2 gap-4">
                 <div class="col-span-2 aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-low group">
-                    <img alt="Xmen Kinetic Blue Main View"
+                    <img alt="{{ $product->name }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        data-alt="Premium glass cologne bottle with deep blue liquid against a minimalist light blue background, sharp studio lighting, high contrast"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCI16loZY9s4I0XnKvYw0q_mtSvIyEpoAlsslDa4Gv9k3I97Q3U-FezXO9g010n4W3_9TXaCX3J5Db8eEKO71DEY93rfmHDoO67V6aBQY9bqZs_HYBJK0o4wmWsylfb3UdEoRozluRXInZ2hYSBGoJvCjc2s4gjOVlMtAUPQYoXvfdzNiGVQuCq2n1A3T6fku-Aynoo9hbAoROpj1f3IxjItoWGXq7UVbBjK6KDOE-gguqKIuBG643-VKRjdpGcv-_MO22K4FR2eKl2" />
+                        src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                 </div>
                 <div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low">
                     <img alt="Xmen Kinetic Blue Detail 1" class="w-full h-full object-cover"
@@ -43,27 +42,59 @@
                             <span class="ml-2 text-on-surface-variant text-sm font-medium">(128 đánh giá)</span>
                         </div>
                     </div>
-                    <h1 class="text-5xl font-extrabold text-primary tracking-tight leading-tight">Xmen Kinetic Blue</h1>
-                    <p class="text-2xl font-bold text-on-surface">585,000đ</p>
+                    <h1 class="text-5xl font-extrabold text-primary tracking-tight leading-tight">{{ $product->name }}</h1>
+                    <p class="text-2xl font-bold text-on-surface" id="display-price">{{ number_format($product->base_price) }}đ</p>
                 </div>
                 <p class="text-on-surface-variant leading-relaxed text-lg">
-                    Đánh thức năng lượng bứt phá với Xmen Kinetic Blue. Một hương thơm mạnh mẽ, sảng khoái kết hợp giữa
-                    nốt hương biển tươi mát và sự trầm ấm của gỗ.
+                    {{ $product->description }}
                 </p>
                 <!-- Options -->
                 <div class="space-y-4">
-                    <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant">Dung tích</h3>
-                    <div class="flex gap-4">
+                    <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant flex justify-between">
+                        <span>Dung tích</span>
+                        <span id="display-stock" class="text-primary normal-case">Tồn kho: {{ $product->variants->sum('stock_quantity') }}</span>
+                    </h3>
+                    <div class="flex flex-wrap gap-4">
+                        @forelse($product->variants as $variant)
                         <button
-                            class="flex-1 py-3 px-6 rounded-xl border-2 border-primary bg-primary-container/10 text-primary font-bold transition-all">
-                            100ml
+                            class="variant-btn py-3 px-6 rounded-xl border-2 transition-all font-bold 
+                            {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }}"
+                            data-price="{{ number_format($variant->price) }}đ"
+                            data-stock="{{ $variant->stock_quantity }}"
+                            onclick="selectVariant(this)">
+                            {{ $variant->volume_id }}ml
                         </button>
-                        <button
-                            class="flex-1 py-3 px-6 rounded-xl border-2 border-transparent bg-surface-container-high text-on-surface-variant font-bold hover:bg-surface-container-highest transition-all">
-                            50ml
-                        </button>
+                        @empty
+                        <p class="text-sm text-outline">Sản phẩm này hiện chưa có biến thể dung tích.</p>
+                        @endforelse
                     </div>
                 </div>
+
+                <script>
+                    function selectVariant(element) {
+                        // Reset all buttons
+                        document.querySelectorAll('.variant-btn').forEach(btn => {
+                            btn.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
+                            btn.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                        });
+
+                        // Highlight selected button
+                        element.classList.remove('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                        element.classList.add('border-primary', 'bg-primary-container/10', 'text-primary');
+
+                        // Update price and stock
+                        document.getElementById('display-price').innerText = element.getAttribute('data-price');
+                        document.getElementById('display-stock').innerText = 'Tồn kho: ' + element.getAttribute('data-stock');
+                    }
+
+                    // Initial price/stock if variants exist
+                    window.addEventListener('DOMContentLoaded', (event) => {
+                        const firstVariant = document.querySelector('.variant-btn');
+                        if (firstVariant) {
+                            firstVariant.click();
+                        }
+                    });
+                </script>
                 <!-- Fragrance Pyramid -->
                 <div class="p-6 rounded-lg bg-surface-container-low space-y-6">
                     <h3 class="font-bold text-sm uppercase tracking-widest text-primary">Tầng Hương Đặc Trưng</h3>

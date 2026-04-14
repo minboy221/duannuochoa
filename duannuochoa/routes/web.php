@@ -25,7 +25,7 @@ Route::get('gioi-thieu', [HomeController::class, 'about'])->name('about');
 Route::get('san-pham', [HomeController::class, 'sanpham'])->name('sanpham');
 Route::get('lien-he', [HomeController::class, 'lienhe'])->name('lienhe');
 Route::get('gio-hang', [HomeController::class, 'giohang'])->name('giohang');
-Route::get('xem-chi-tiet', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
+Route::get('xem-chi-tiet/{product}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 //trang admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');

@@ -6,7 +6,7 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-3xl">
-        <form action="{{ route('admin.products.update', $product) }}" method="POST" novalidate>
+        <form action="{{ route('admin.products.update', $product) }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf @method('PUT')
             
             <div class="mb-4">
@@ -54,6 +54,16 @@
                         <span class="text-on-surface">Sản phẩm Bán chạy</span>
                     </label>
                 </div>
+            </div>            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Hình ảnh sản phẩm</label>
+                @if($product->img)
+                    <div class="mb-2">
+                        <img src="{{ asset('storage/' . $product->img) }}" alt="{{ $product->name }}" class="w-32 h-32 object-cover rounded-lg border">
+                    </div>
+                @endif
+                <input type="file" name="img" class="w-full rounded-lg border-gray-300 p-2 border">
+                <p class="text-xs text-on-surface-variant mt-1">Để trống nếu không muốn thay đổi ảnh.</p>
+                @error('img') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-6">
