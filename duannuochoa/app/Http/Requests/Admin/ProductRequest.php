@@ -19,6 +19,8 @@ class ProductRequest extends FormRequest
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'base_price' => 'required|numeric|min:0',
+            'is_featured' => 'nullable|boolean',
+            'is_bestseller' => 'nullable|boolean',
         ];
     }
 

@@ -25,7 +25,7 @@
             <div class="grid grid-cols-2 gap-4 mb-6">
                 <div>
                     <label class="block text-sm font-bold mb-2">Giá bán (VNĐ)</label>
-                    <input type="number" name="price" value="{{ old('price', $variant->price) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    <input type="text" name="price" value="{{ old('price', $variant->price) != '' ? number_format((float)str_replace(',', '', old('price', $variant->price))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
                     @error('price') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>

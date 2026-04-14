@@ -109,8 +109,16 @@ class AuthController extends Controller
         $credentials = $request->validated();
 
         $fieldType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        $user = User::where($fieldType, $request->login)->first();
 
-        if (Auth::attempt([$fieldType => $request->login, 'password' => $request->password], $request->remember)) {
+        if ($user && Hash::check($request->password, $user->password)) {
+            if (!$user->is_active) {
+                return back()->withErrors([
+                    'login' => 'Tài khoản của bạn đã bị khóa bởi quản trị viên.',
+                ])->onlyInput('login');
+            }
+
+            Auth::login($user, $request->remember);
             $request->session()->regenerate();
             
             // Redirect Admin directly to dashboard

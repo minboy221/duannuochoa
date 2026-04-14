@@ -156,7 +156,7 @@
                                     class="px-3 py-1 bg-primary-container/20 text-primary text-xs font-bold rounded-full">Nước
                                     hoa</span>
                             </td>
-                            <td class="px-6 py-4 font-medium">325.000 ₫</td>
+                            <td class="px-6 py-4 font-medium">325,000 ₫</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -203,7 +203,7 @@
                                     class="px-3 py-1 bg-secondary-container/20 text-secondary text-xs font-bold rounded-full">Sữa
                                     tắm</span>
                             </td>
-                            <td class="px-6 py-4 font-medium">145.000 ₫</td>
+                            <td class="px-6 py-4 font-medium">145,000 ₫</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -250,7 +250,7 @@
                                     class="px-3 py-1 bg-tertiary-container/20 text-tertiary text-xs font-bold rounded-full">Gel
                                     vuốt tóc</span>
                             </td>
-                            <td class="px-6 py-4 font-medium">85.000 ₫</td>
+                            <td class="px-6 py-4 font-medium">85,000 ₫</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -297,7 +297,7 @@
                                     class="px-3 py-1 bg-primary-container/20 text-primary text-xs font-bold rounded-full">Nước
                                     hoa</span>
                             </td>
-                            <td class="px-6 py-4 font-medium">450.000 ₫</td>
+                            <td class="px-6 py-4 font-medium">450,000 ₫</td>
                             <td class="px-6 py-4">
                                 <div class="flex items-center gap-2">
                                     <div class="w-24 h-1.5 bg-surface-container rounded-full overflow-hidden">
@@ -326,7 +326,7 @@
                 </table>
                 <!-- Pagination -->
                 <div class="bg-surface-container-low px-6 py-4 flex items-center justify-between">
-                    <span class="text-sm text-on-surface-variant font-medium">Hiển thị từ 1 đến 4 trong số 1.284 kết
+                    <span class="text-sm text-on-surface-variant font-medium">Hiển thị từ 1 đến 4 trong số 1,284 kết
                         quả</span>
                     <div class="flex items-center gap-1">
                         <button

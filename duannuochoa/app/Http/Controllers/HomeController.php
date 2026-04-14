@@ -8,7 +8,9 @@ class HomeController extends Controller
 {
     public function index()
     {
-        return view('clien.home');
+        $featuredProducts = \App\Models\Product::with('category')->where('is_featured', true)->take(4)->get();
+        $bestsellingProducts = \App\Models\Product::with('category')->where('is_bestseller', true)->take(4)->get();
+        return view('clien.home', compact('featuredProducts', 'bestsellingProducts'));
     }
     //phần giới thiệu
     public function about()

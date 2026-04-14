@@ -19,6 +19,8 @@ class Product extends Model
         'name',
         'description',
         'base_price',
+        'is_featured',
+        'is_bestseller',
         'created_at',
     ];
 

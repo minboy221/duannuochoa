@@ -23,7 +23,7 @@
                         <p class="text-on-surface-variant text-sm mt-1">Hương trầm nội lực, nam tính</p>
                     </div>
                     <div class="flex flex-col items-center gap-4">
-                        <span class="font-headline text-lg font-bold text-primary">185.000đ</span>
+                        <span class="font-headline text-lg font-bold text-primary">185,000đ</span>
                         <div class="flex items-center bg-surface-container-low rounded-full px-4 py-2">
                             <button class="text-primary hover:text-primary-dim transition-colors">
                                 <span class="material-symbols-outlined text-xl">remove</span>
@@ -37,7 +37,7 @@
                     <div class="text-right min-w-[120px]">
                         <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền
                         </p>
-                        <p class="font-headline text-xl font-bold text-on-surface">185.000đ</p>
+                        <p class="font-headline text-xl font-bold text-on-surface">185,000đ</p>
                     </div>
                     <button class="text-error opacity-50 hover:opacity-100 transition-opacity">
                         <span class="material-symbols-outlined">delete</span>
@@ -56,7 +56,7 @@
                         <p class="text-on-surface-variant text-sm mt-1">Hương thơm nồng cháy, quyến rũ</p>
                     </div>
                     <div class="flex flex-col items-center gap-4">
-                        <span class="font-headline text-lg font-bold text-primary">162.000đ</span>
+                        <span class="font-headline text-lg font-bold text-primary">162,000đ</span>
                         <div class="flex items-center bg-surface-container-low rounded-full px-4 py-2">
                             <button class="text-primary hover:text-primary-dim transition-colors">
                                 <span class="material-symbols-outlined text-xl">remove</span>
@@ -70,7 +70,7 @@
                     <div class="text-right min-w-[120px]">
                         <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền
                         </p>
-                        <p class="font-headline text-xl font-bold text-on-surface">162.000đ</p>
+                        <p class="font-headline text-xl font-bold text-on-surface">162,000đ</p>
                     </div>
                     <button class="text-error opacity-50 hover:opacity-100 transition-opacity">
                         <span class="material-symbols-outlined">delete</span>
@@ -105,7 +105,7 @@
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tạm tính</span>
-                            <span class="font-bold text-on-surface">347.000đ</span>
+                            <span class="font-bold text-on-surface">347,000đ</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Phí vận chuyển</span>
@@ -115,7 +115,7 @@
                     <div class="pt-6 border-t border-surface-container-high">
                         <div class="flex justify-between items-end mb-8">
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
-                            <span class="font-headline text-3xl font-extrabold text-primary">347.000đ</span>
+                            <span class="font-headline text-3xl font-extrabold text-primary">347,000đ</span>
                         </div>
                         <button
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
@@ -176,7 +176,7 @@
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuA86OnizyWVhlt2rnG_uhXBwVR_63TY9zIqPThz5eLejHwVMtNiOvAOrpPRJDB6aOuGOllpScLLE1MaTdDcSg_M5DfQhvXkVm_X_61ihtvN2a7-pvdOjymwlt3Po3R-vV1_v0j6DxmoXWBOIY170C8nzLR0OPOelorVkXiqKSqmS_aRSK9OD3k9ote2ZkotfpcRcRqXzMoku46ZDs2KyaaymvntZnJHa0FiRvX3lfGlAviTsioAXH9ZNlMxquEefg3nrRbrkVkXxaBr" />
                     </div>
                     <h4 class="font-bold text-on-surface mb-1">Lăn Khử Mùi Fire</h4>
-                    <p class="text-primary font-bold">78.000đ</p>
+                    <p class="text-primary font-bold">78,000đ</p>
                     <button
                         class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
                         vào</button>
@@ -189,7 +189,7 @@
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7k4j1RgyHrfIjiNc8fhoQ55uhS0NwdrYScrnSzFUiJnOM47V63v64JRuyUsWYgwLz4Hfbnk0dji39jzqW6H8cwN2nYww66LZY-qBt2mwuDgAO9SVOb1lvRopY7jp6EiOnT7Ry6I6mWStIeCt6DexYW7sE0UtCMtAKC5cfRCFzxIQuGx7OtMrkZHnrn1QQpMh2-ZKdXXrQNyW6zRRiulbV2rf5b8gygB_j2umDJvZGY3VoNYOhO5t_ybZptP-HvHb5GT0vN_KDeGTG" />
                     </div>
                     <h4 class="font-bold text-on-surface mb-1">Sữa Rửa Mặt Sạch Sâu</h4>
-                    <p class="text-primary font-bold">95.000đ</p>
+                    <p class="text-primary font-bold">95,000đ</p>
                     <button
                         class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
                         vào</button>

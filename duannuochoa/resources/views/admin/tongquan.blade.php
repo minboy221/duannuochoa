@@ -31,7 +31,7 @@
                     <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12.5%</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Tổng doanh thu</p>
-                <h3 class="text-2xl font-extrabold text-on-background">482.900$</h3>
+                <h3 class="text-2xl font-extrabold text-on-background">482,900$</h3>
                 <div class="mt-4 h-12 flex items-end gap-1">
                     <div class="w-full bg-primary/20 rounded-t-sm h-[40%]"></div>
                     <div class="w-full bg-primary/20 rounded-t-sm h-[60%]"></div>
@@ -52,7 +52,7 @@
                         84$</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Tổng đơn hàng</p>
-                <h3 class="text-2xl font-extrabold text-on-background">5.741</h3>
+                <h3 class="text-2xl font-extrabold text-on-background">5,741</h3>
                 <p class="text-xs mt-4 text-on-surface-variant italic">240 đơn hàng từ nửa đêm</p>
             </div>
             <!-- Card 3: Customers -->
@@ -65,7 +65,7 @@
                     <span class="text-xs font-bold text-tertiary bg-tertiary-container/20 px-2 py-1 rounded-full">Mới</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Khách hàng mới</p>
-                <h3 class="text-2xl font-extrabold text-on-background">1.284</h3>
+                <h3 class="text-2xl font-extrabold text-on-background">1,284</h3>
                 <div class="mt-4 flex -space-x-2">
                     <img alt="User" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest object-cover"
                         data-alt="Portrait of a young man with a slight smile and casual hairstyle"
@@ -133,7 +133,7 @@
                     <div
                         class="absolute top-[80px] left-[78%] -translate-x-1/2 bg-inverse-surface text-on-primary px-3 py-2 rounded-lg text-xs shadow-xl">
                         <span class="block opacity-70">Tháng 11, 22</span>
-                        <span class="font-bold">64.200$</span>
+                        <span class="font-bold">64,200$</span>
                     </div>
                 </div>
                 <div class="flex justify-between mt-6 text-xs font-medium text-outline">

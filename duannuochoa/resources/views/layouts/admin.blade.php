@@ -166,6 +166,16 @@
                 <p class="text-xs text-on-surface-variant">Quản trị viên cấp cao</p>
             </div>
         </div>
+        <div class="pt-4 mt-4 border-t border-outline-variant/20">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center space-x-3 p-4 rounded-xl hover:text-error transition-all text-on-surface-variant font-medium text-left">
+                    <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    <span>Đăng xuất</span>
+                </button>
+            </form>
+        </div>
     </aside>
     <!-- TopNavBar Shell -->
     <header
@@ -191,6 +201,29 @@
         </div>
     </header>
     @yield('content')
+    <script>
+        // Tự động định dạng hàng nghìn có dấu phẩy cho các input mang class .currency-input
+        document.addEventListener('input', function (e) {
+            if (e.target.classList.contains('currency-input')) {
+                // Xóa mọi ký tự không phải số
+                let val = e.target.value.replace(/[^0-9]/g, '');
+                if (val) {
+                    // Định dạng lại có dấu phẩy
+                    e.target.value = new Intl.NumberFormat('en-US').format(val);
+                } else {
+                    e.target.value = '';
+                }
+            }
+        });
+
+        // Bỏ dấu phẩy trước khi submit form để backend lưu số thành công
+        document.addEventListener('submit', function (e) {
+            let currencyInputs = e.target.querySelectorAll('.currency-input');
+            currencyInputs.forEach(input => {
+                input.value = input.value.replace(/,/g, '');
+            });
+        });
+    </script>
 </body>
 
 </html>

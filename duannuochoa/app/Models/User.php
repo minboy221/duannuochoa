@@ -13,35 +13,34 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
+    /**
+     * The primary key associated with the table.
+     *
+     * @var string
+     */
     protected $primaryKey = 'user_id';
-    public $timestamps = false;
 
     /**
      * Indicates if the model should be timestamped.
      *
      * @var bool
      */
-    /**
-     * The primary key associated with the table.
-     *
-     * @var string
-     */
+    public $timestamps = false;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
     protected $fillable = [
-        'role_id',
         'username',
         'full_name',
         'email',
-        'phone',
-        'address',
         'password',
         'phone',
         'address',
         'avatar',
+        'is_active',
     ];
 
     /**

@@ -302,7 +302,7 @@
                 <!-- Table Footer / Pagination -->
                 <div class="p-6 border-t border-surface-container-low flex justify-between items-center">
                     <p class="text-sm text-on-surface-variant">Hiển thị <span class="font-bold text-on-surface">1 -
-                            4</span> trên <span class="font-bold text-on-surface">1.284</span> kết quả</p>
+                            4</span> trên <span class="font-bold text-on-surface">1,284</span> kết quả</p>
                     <div class="flex items-center gap-2">
                         <button
                             class="p-2 rounded-full hover:bg-surface-container-low text-on-surface-variant disabled:opacity-50"

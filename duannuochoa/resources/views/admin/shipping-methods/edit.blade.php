@@ -17,8 +17,8 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Phí Vận chuyển (VNĐ)</label>
-                <input type="number" name="fee" value="{{ old('fee', $shippingMethod->fee) }}" class="w-full rounded-lg border-gray-300 p-3">
-                @error('fee') <span class="text-error text-sm">{{ $message }}</span> @enderror
+                    <input type="text" name="fee" value="{{ old('fee', $shippingMethod->fee) != '' ? number_format((float)str_replace(',', '', old('fee', $shippingMethod->fee))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
+                    @error('fee') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="flex gap-4">

@@ -18,7 +18,7 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-bold mb-2">Giá trị giảm</label>
-                    <input type="number" name="discount_value" value="{{ old('discount_value', $discount->discount_value) }}" class="w-full rounded-lg border-gray-300 p-3">
+                    <input type="text" name="discount_value" value="{{ old('discount_value', $discount->discount_value) != '' ? number_format((float)str_replace(',', '', old('discount_value', $discount->discount_value))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
                     @error('discount_value') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
@@ -33,8 +33,8 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá trị đơn hàng tối thiểu (VNĐ)</label>
-                <input type="number" name="min_order_value" value="{{ old('min_order_value', $discount->min_order_value) }}" class="w-full rounded-lg border-gray-300 p-3">
-                @error('min_order_value') <span class="text-error text-sm">{{ $message }}</span> @enderror
+                    <input type="text" name="min_order_value" value="{{ old('min_order_value', $discount->min_order_value) != '' ? number_format((float)str_replace(',', '', old('min_order_value', $discount->min_order_value))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
+                    @error('min_order_value') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
