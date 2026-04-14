@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\BrandRequest;
 
 class BrandController extends Controller
 {
@@ -19,14 +19,9 @@ class BrandController extends Controller
         return view('admin.brands.create');
     }
 
-    public function store(Request $request)
+    public function store(BrandRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'logo_url' => 'nullable|url',
-        ]);
-
-        Brand::create($request->all());
+        Brand::create($request->validated());
         return redirect()->route('admin.brands.index')->with('success', 'Thêm nhãn hàng thành công.');
     }
 
@@ -35,14 +30,9 @@ class BrandController extends Controller
         return view('admin.brands.edit', compact('brand'));
     }
 
-    public function update(Request $request, Brand $brand)
+    public function update(BrandRequest $request, Brand $brand)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'logo_url' => 'nullable|url',
-        ]);
-
-        $brand->update($request->all());
+        $brand->update($request->validated());
         return redirect()->route('admin.brands.index')->with('success', 'Cập nhật nhãn hàng thành công.');
     }
 

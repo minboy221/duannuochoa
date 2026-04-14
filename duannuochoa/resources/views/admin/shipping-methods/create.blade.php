@@ -6,17 +6,19 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.shipping-methods.store') }}" method="POST">
+        <form action="{{ route('admin.shipping-methods.store') }}" method="POST" novalidate>
             @csrf
-            <div class="mb-4 text-error">@if ($errors->any()) {{ $errors->first() }} @endif</div>
+            
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Tên Đơn vị / Phương thức</label>
-                <input type="text" name="name" class="w-full rounded-lg border-gray-300 p-3" required>
+                <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-lg border-gray-300 p-3">
+                @error('name') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Phí Vận chuyển (VNĐ)</label>
-                <input type="number" name="fee" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                <input type="number" name="fee" value="{{ old('fee', 0) }}" class="w-full rounded-lg border-gray-300 p-3">
+                @error('fee') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="flex gap-4">
