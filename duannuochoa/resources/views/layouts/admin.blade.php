@@ -151,6 +151,16 @@
                 <p class="text-xs text-on-surface-variant">Quản trị viên cấp cao</p>
             </div>
         </div>
+        <div class="pt-4 mt-4 border-t border-outline-variant/20">
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="w-full flex items-center space-x-3 p-4 rounded-xl hover:text-error transition-all text-on-surface-variant font-medium text-left">
+                    <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    <span>Đăng xuất</span>
+                </button>
+            </form>
+        </div>
     </aside>
     <!-- TopNavBar Shell -->
     <header
