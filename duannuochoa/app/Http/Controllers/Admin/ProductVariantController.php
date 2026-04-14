@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ProductVariant;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ProductVariantRequest;
 
 class ProductVariantController extends Controller
 {
@@ -21,16 +21,9 @@ class ProductVariantController extends Controller
         return view('admin.variants.create', compact('product'));
     }
 
-    public function store(Request $request, Product $product)
+    public function store(ProductVariantRequest $request, Product $product)
     {
-        $request->validate([
-            'volume_id' => 'required|integer',
-            'color' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-        ]);
-
-        $data = $request->all();
+        $data = $request->validated();
         $data['product_id'] = $product->product_id;
         ProductVariant::create($data);
 
@@ -42,16 +35,9 @@ class ProductVariantController extends Controller
         return view('admin.variants.edit', compact('variant'));
     }
 
-    public function update(Request $request, ProductVariant $variant)
+    public function update(ProductVariantRequest $request, ProductVariant $variant)
     {
-        $request->validate([
-            'volume_id' => 'required|integer',
-            'color' => 'nullable|string',
-            'price' => 'required|numeric|min:0',
-            'stock_quantity' => 'required|integer|min:0',
-        ]);
-
-        $variant->update($request->all());
+        $variant->update($request->validated());
         return redirect()->route('admin.products.variants.index', $variant->product_id)->with('success', 'Cập nhật biến thể thành công.');
     }
 

@@ -13,7 +13,6 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
-
     /**
      * The primary key associated with the table.
      *
@@ -40,7 +39,6 @@ class User extends Authenticatable
         'password',
         'phone',
         'address',
-        'role_id',
         'avatar',
         'is_active',
     ];

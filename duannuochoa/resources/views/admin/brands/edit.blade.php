@@ -6,17 +6,17 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.brands.update', $brand) }}" method="POST">
+        <form action="{{ route('admin.brands.update', $brand) }}" method="POST" novalidate>
             @csrf @method('PUT')
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Tên Nhãn hàng</label>
-                <input type="text" name="name" value="{{ $brand->name }}" class="w-full rounded-lg border-gray-300 p-3" required>
+                <input type="text" name="name" value="{{ old('name', $brand->name) }}" class="w-full rounded-lg border-gray-300 p-3">
                 @error('name') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Đường dẫn / Link Logo</label>
-                <input type="url" name="logo_url" value="{{ $brand->logo_url }}" class="w-full rounded-lg border-gray-300 p-3">
+                <input type="url" name="logo_url" value="{{ old('logo_url', $brand->logo_url) }}" class="w-full rounded-lg border-gray-300 p-3">
                 @error('logo_url') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 

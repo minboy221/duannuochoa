@@ -6,17 +6,9 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-xl">
-        <form action="{{ route('admin.orders.update', $order) }}" method="POST">
-            @csrf @method('PUT')
-            <div class="mb-6">
-                <label class="block text-sm font-bold mb-3">Tình trạng đơn hàng hiện tại</label>
-                <div class="space-y-3">
-                    @php
-                        $statuses = ['Chờ xác nhận', 'Đang giao', 'Đã hoàn thành', 'Đã hủy'];
-                    @endphp
-                    @foreach($statuses as $status)
-                        <label class="flex items-center gap-3 p-3 border rounded-lg cursor-pointer hover:bg-slate-50 transition-colors {{ $order->status == $status ? 'border-primary bg-primary/5' : 'border-gray-200' }}">
-                            <input type="radio" name="status" value="{{ $status }}" class="w-5 h-5 text-primary" {{ $order->status == $status ? 'checked' : '' }}>
+        <form action="{{ route('admin.orders.update', $order) }}" method="POST" novalidate>
+{{-- ... --}}
+19:                             <input type="radio" name="status" value="{{ $status }}" class="w-5 h-5 text-primary" {{ old('status', $order->status) == $status ? 'checked' : '' }}>
                             <span class="font-medium">{{ $status }}</span>
                         </label>
                     @endforeach

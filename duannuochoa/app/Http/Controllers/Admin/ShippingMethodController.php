@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\ShippingMethod;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\ShippingMethodRequest;
 
 class ShippingMethodController extends Controller
 {
@@ -19,14 +19,9 @@ class ShippingMethodController extends Controller
         return view('admin.shipping-methods.create');
     }
 
-    public function store(Request $request)
+    public function store(ShippingMethodRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'fee' => 'required|numeric|min:0',
-        ]);
-
-        ShippingMethod::create($request->all());
+        ShippingMethod::create($request->validated());
         return redirect()->route('admin.shipping-methods.index')->with('success', 'Thêm phương thức vận chuyển thành công.');
     }
 
@@ -35,14 +30,9 @@ class ShippingMethodController extends Controller
         return view('admin.shipping-methods.edit', compact('shippingMethod'));
     }
 
-    public function update(Request $request, ShippingMethod $shippingMethod)
+    public function update(ShippingMethodRequest $request, ShippingMethod $shippingMethod)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'fee' => 'required|numeric|min:0',
-        ]);
-
-        $shippingMethod->update($request->all());
+        $shippingMethod->update($request->validated());
         return redirect()->route('admin.shipping-methods.index')->with('success', 'Cập nhật phương thức vận chuyển thành công.');
     }
 

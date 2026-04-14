@@ -6,42 +6,46 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-3xl">
-        <form action="{{ route('admin.products.update', $product) }}" method="POST">
+        <form action="{{ route('admin.products.update', $product) }}" method="POST" novalidate>
             @csrf @method('PUT')
-            <div class="mb-4 text-error">@if ($errors->any()) {{ $errors->first() }} @endif</div>
             
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Tên Sản phẩm</label>
-                <input type="text" name="name" value="{{ $product->name }}" class="w-full rounded-lg border-gray-300 p-3" required>
+                <input type="text" name="name" value="{{ old('name', $product->name) }}" class="w-full rounded-lg border-gray-300 p-3">
+                @error('name') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-bold mb-2">Danh mục</label>
-                    <select name="category_id" class="w-full rounded-lg border-gray-300 p-3" required>
+                    <select name="category_id" class="w-full rounded-lg border-gray-300 p-3">
                         @foreach($categories as $category)
-                            <option value="{{ $category->category_id }}" {{ $product->category_id == $category->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            <option value="{{ $category->category_id }}" {{ old('category_id', $product->category_id) == $category->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
                         @endforeach
                     </select>
+                    @error('category_id') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-2">Thương hiệu</label>
-                    <select name="brand_id" class="w-full rounded-lg border-gray-300 p-3" required>
+                    <select name="brand_id" class="w-full rounded-lg border-gray-300 p-3">
                         @foreach($brands as $brand)
-                            <option value="{{ $brand->brand_id }}" {{ $product->brand_id == $brand->brand_id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                            <option value="{{ $brand->brand_id }}" {{ old('brand_id', $product->brand_id) == $brand->brand_id ? 'selected' : '' }}>{{ $brand->name }}</option>
                         @endforeach
                     </select>
+                    @error('brand_id') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá cơ bản (VNĐ)</label>
-                <input type="text" name="base_price" value="{{ number_format($product->base_price) }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
+                    <input type="text" name="base_price" value="{{ old('base_price', $product->base_price) != '' ? number_format((float)str_replace(',', '', old('base_price', $product->base_price))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
+                    @error('base_price') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Bài viết Mô tả hương thơm</label>
-                <textarea name="description" class="w-full rounded-lg border-gray-300 p-3" rows="6">{{ $product->description }}</textarea>
+                <textarea name="description" class="w-full rounded-lg border-gray-300 p-3" rows="6">{{ old('description', $product->description) }}</textarea>
+                @error('description') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
             <div class="flex gap-4">

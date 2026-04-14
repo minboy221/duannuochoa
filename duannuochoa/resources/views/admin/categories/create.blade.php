@@ -6,7 +6,7 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.categories.store') }}" method="POST">
+        <form action="{{ route('admin.categories.store') }}" method="POST" novalidate>
             @csrf
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Tên Danh mục</label>
