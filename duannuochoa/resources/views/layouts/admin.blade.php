@@ -116,30 +116,45 @@
             <p class="text-[10px] text-on-surface-variant tracking-widest uppercase mt-1">Cổng Quản trị</p>
         </div>
         <nav class="flex flex-col gap-2 flex-1">
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-200 transition-all duration-200 scale-95 active:scale-90"
-                href="#">
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.tongquan') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.tongquan') }}">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span>Tổng quan</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200"
-                href="#">
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.categories.index') }}">
+                <span class="material-symbols-outlined" data-icon="category">category</span>
+                <span>Danh mục</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.brands.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.brands.index') }}">
+                <span class="material-symbols-outlined" data-icon="branding_watermark">branding_watermark</span>
+                <span>Thương hiệu</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.products.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.products.index') }}">
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span>Sản phẩm</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200"
-                href="#">
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.orders.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.orders.index') }}">
                 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
                 <span>Đơn hàng</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200"
-                href="#">
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.users.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>
-                <span>Khách hàng</span>
+                <span>Người dùng</span>
             </a>
-            <a class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-600 hover:bg-blue-50 hover:text-blue-700 transition-all duration-200"
-                href="#">
-                <span class="material-symbols-outlined" data-icon="settings">settings</span>
-                <span>Cài đặt</span>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.discounts.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.discounts.index') }}">
+                <span class="material-symbols-outlined" data-icon="local_offer">local_offer</span>
+                <span>Khuyến mãi</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.shipping-methods.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.shipping-methods.index') }}">
+                <span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
+                <span>Vận chuyển</span>
             </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-slate-200 flex items-center gap-3 px-2">
