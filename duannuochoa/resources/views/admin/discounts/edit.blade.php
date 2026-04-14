@@ -17,7 +17,7 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-bold mb-2">Giá trị giảm</label>
-                    <input type="number" name="discount_value" value="{{ $discount->discount_value }}" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                    <input type="text" name="discount_value" value="{{ number_format($discount->discount_value) }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-2">Loại giảm</label>
@@ -30,7 +30,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá trị đơn hàng tối thiểu (VNĐ)</label>
-                <input type="number" name="min_order_value" value="{{ $discount->min_order_value }}" class="w-full rounded-lg border-gray-300 p-3">
+                <input type="text" name="min_order_value" value="{{ number_format($discount->min_order_value) }}" class="currency-input w-full rounded-lg border-gray-300 p-3">
             </div>
 
             <div class="grid grid-cols-2 gap-4 mb-4">

@@ -71,7 +71,7 @@
                     </div>
                     <h3 class="font-bold text-lg">Xmen Boss</h3>
                     <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
-                    <p class="text-primary font-black text-xl">450.000đ</p>
+                    <p class="text-primary font-black text-xl">450,000đ</p>
                 </div>
                 <div
                     class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
@@ -82,14 +82,14 @@
                     </div>
                     <h3 class="font-bold text-lg">Xmen Wood</h3>
                     <p class="text-outline text-sm mb-4">Mạnh mẽ &amp; Cuốn hút</p>
-                    <p class="text-primary font-black text-xl">420.000đ</p>
+                    <p class="text-primary font-black text-xl">420,000đ</p>
                 </div>
                 <div
                     class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all">
                     <div class="flex-1 p-8">
                         <h3 class="font-headline text-2xl font-bold">Xmen Fire</h3>
                         <p class="text-outline-variant mb-4">Nồng nàn, nam tính với các nốt hương gỗ cháy.</p>
-                        <p class="text-primary font-black text-2xl mb-4">390.000đ</p>
+                        <p class="text-primary font-black text-2xl mb-4">390,000đ</p>
                         <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Thêm vào
                             giỏ</button>
                     </div>
@@ -137,7 +137,7 @@
                         <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Ocean Breeze</h4>
                         <p class="text-sm text-outline mb-4">Hương biển mát lạnh</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">480.000đ</span>
+                            <span class="text-primary font-black text-xl">480,000đ</span>
                             <button
                                 class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
                                 <span class="material-symbols-outlined">add</span>
@@ -169,7 +169,7 @@
                         <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Velocity</h4>
                         <p class="text-sm text-outline mb-4">Năng lượng bứt phá</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">420.000đ</span>
+                            <span class="text-primary font-black text-xl">420,000đ</span>
                             <button
                                 class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
                                 <span class="material-symbols-outlined">add</span>
@@ -200,7 +200,7 @@
                         <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Signature</h4>
                         <p class="text-sm text-outline mb-4">Dấu ấn riêng biệt</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">550.000đ</span>
+                            <span class="text-primary font-black text-xl">550,000đ</span>
                             <button
                                 class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
                                 <span class="material-symbols-outlined">add</span>
@@ -231,7 +231,7 @@
                         <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Urban</h4>
                         <p class="text-sm text-outline mb-4">Hơi thở thành thị</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">380.000đ</span>
+                            <span class="text-primary font-black text-xl">380,000đ</span>
                             <button
                                 class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
                                 <span class="material-symbols-outlined">add</span>
@@ -335,7 +335,7 @@
                     <span class="material-symbols-outlined text-orange-500"
                         style="font-variation-settings: 'FILL' 1;">star</span>
                 </div>
-                <p class="text-outline">Hơn 500.000+ người đàn ông tin dùng mỗi năm</p>
+                <p class="text-outline">Hơn 500,000+ người đàn ông tin dùng mỗi năm</p>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div class="bg-surface-container-lowest p-8 rounded-lg shadow-sm">

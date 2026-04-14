@@ -54,7 +54,7 @@
                             max="1000000" min="0" step="50000" type="range" />
                         <div class="flex justify-between mt-4 text-sm font-semibold text-on-surface-variant">
                             <span>0đ</span>
-                            <span>1.000.000đ+</span>
+                            <span>1,000,000đ+</span>
                         </div>
                     </div>
                 </section>
@@ -144,7 +144,7 @@
                             </div>
                             <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight">X-Men Fire -
                                 Năng Lượng Cháy Bỏng</h3>
-                            <p class="text-primary font-black text-2xl tracking-tight">185.000đ</p>
+                            <p class="text-primary font-black text-2xl tracking-tight">185,000đ</p>
                         </div>
                     </div>
                     <!-- Card 2 -->
@@ -182,7 +182,7 @@
                             </div>
                             <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight">X-Men For
                                 Boss Luxury</h3>
-                            <p class="text-primary font-black text-2xl tracking-tight">420.000đ</p>
+                            <p class="text-primary font-black text-2xl tracking-tight">420,000đ</p>
                         </div>
                     </div>
                     <!-- Card 3 -->
@@ -224,8 +224,8 @@
                             <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight">X-Men Go -
                                 Citrus Fresh</h3>
                             <div class="flex items-end gap-3">
-                                <p class="text-primary font-black text-2xl tracking-tight">165.000đ</p>
-                                <p class="text-outline-variant line-through text-sm mb-1">195.000đ</p>
+                                <p class="text-primary font-black text-2xl tracking-tight">165,000đ</p>
+                                <p class="text-outline-variant line-through text-sm mb-1">195,000đ</p>
                             </div>
                         </div>
                     </div>
@@ -264,7 +264,7 @@
                             </div>
                             <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight">X-Men Cool -
                                 Băng Lạnh</h3>
-                            <p class="text-primary font-black text-2xl tracking-tight">145.000đ</p>
+                            <p class="text-primary font-black text-2xl tracking-tight">145,000đ</p>
                         </div>
                     </div>
                 </div>

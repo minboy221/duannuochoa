@@ -172,7 +172,7 @@
                                 </div>
                             </div>
                             <div class="flex justify-between items-center pt-4 border-t border-slate-100">
-                                <span class="font-bold text-lg">450.000₫</span>
+                                <span class="font-bold text-lg">450,000₫</span>
                                 <button
                                     class="bg-surface-container-highest text-primary px-4 py-2 rounded-full text-sm font-bold group-hover:bg-primary group-hover:text-on-primary transition-colors">Chi
                                     tiết</button>
@@ -201,7 +201,7 @@
                                 </div>
                             </div>
                             <div class="flex justify-between items-center pt-4 border-t border-slate-100">
-                                <span class="font-bold text-lg">720.000₫</span>
+                                <span class="font-bold text-lg">720,000₫</span>
                                 <button
                                     class="bg-surface-container-highest text-primary px-4 py-2 rounded-full text-sm font-bold group-hover:bg-primary group-hover:text-on-primary transition-colors">Mua
                                     lại</button>
@@ -215,7 +215,7 @@
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="stars"
                             style="font-variation-settings: 'FILL' 1;">stars</span>
                         <h4 class="text-sm font-medium opacity-80">Điểm tích lũy</h4>
-                        <p class="text-3xl font-black">1.250</p>
+                        <p class="text-3xl font-black">1,250</p>
                     </div>
                     <div class="bg-tertiary-container p-6 rounded-lg text-on-tertiary-container">
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="local_shipping"

@@ -16,7 +16,7 @@
 
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Phí Vận chuyển (VNĐ)</label>
-                <input type="number" name="fee" value="{{ $shippingMethod->fee }}" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                <input type="text" name="fee" value="{{ number_format($shippingMethod->fee) }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
             </div>
 
             <div class="flex gap-4">

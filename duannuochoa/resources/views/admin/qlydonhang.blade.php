@@ -137,7 +137,7 @@
                                 <span class="font-semibold text-on-surface">Nguyễn Lãm</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold">850.000 ₫</td>
+                        <td class="px-6 py-5 font-bold">850,000 ₫</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 rounded-full bg-primary"></div>
@@ -174,7 +174,7 @@
                                 <span class="font-semibold text-on-surface">Trần Hoàng</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold">1.250.000 ₫</td>
+                        <td class="px-6 py-5 font-bold">1,250,000 ₫</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 rounded-full bg-secondary"></div>
@@ -211,7 +211,7 @@
                                 <span class="font-semibold text-on-surface">Phạm Văn</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold">450.000 ₫</td>
+                        <td class="px-6 py-5 font-bold">450,000 ₫</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 rounded-full bg-tertiary"></div>
@@ -248,7 +248,7 @@
                                 <span class="font-semibold text-on-surface">Lê Tú</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold">2.100.000 ₫</td>
+                        <td class="px-6 py-5 font-bold">2,100,000 ₫</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 rounded-full bg-primary"></div>
@@ -285,7 +285,7 @@
                                 <span class="font-semibold text-on-surface">Đinh Hữu</span>
                             </div>
                         </td>
-                        <td class="px-6 py-5 font-bold">990.000 ₫</td>
+                        <td class="px-6 py-5 font-bold">990,000 ₫</td>
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-2">
                                 <div class="w-2 h-2 rounded-full bg-secondary"></div>

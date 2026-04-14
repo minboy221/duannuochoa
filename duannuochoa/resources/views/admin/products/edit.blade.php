@@ -36,7 +36,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá cơ bản (VNĐ)</label>
-                <input type="number" name="base_price" value="{{ $product->base_price }}" class="w-full rounded-lg border-gray-300 p-3" required min="0">
+                <input type="text" name="base_price" value="{{ number_format($product->base_price) }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
             </div>
 
             <div class="mb-6">

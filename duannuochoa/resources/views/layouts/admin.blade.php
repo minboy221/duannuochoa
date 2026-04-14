@@ -201,6 +201,29 @@
         </div>
     </header>
     @yield('content')
+    <script>
+        // Tự động định dạng hàng nghìn có dấu phẩy cho các input mang class .currency-input
+        document.addEventListener('input', function (e) {
+            if (e.target.classList.contains('currency-input')) {
+                // Xóa mọi ký tự không phải số
+                let val = e.target.value.replace(/[^0-9]/g, '');
+                if (val) {
+                    // Định dạng lại có dấu phẩy
+                    e.target.value = new Intl.NumberFormat('en-US').format(val);
+                } else {
+                    e.target.value = '';
+                }
+            }
+        });
+
+        // Bỏ dấu phẩy trước khi submit form để backend lưu số thành công
+        document.addEventListener('submit', function (e) {
+            let currencyInputs = e.target.querySelectorAll('.currency-input');
+            currencyInputs.forEach(input => {
+                input.value = input.value.replace(/,/g, '');
+            });
+        });
+    </script>
 </body>
 
 </html>

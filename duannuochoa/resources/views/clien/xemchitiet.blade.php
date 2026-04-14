@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <h1 class="text-5xl font-extrabold text-primary tracking-tight leading-tight">Xmen Kinetic Blue</h1>
-                    <p class="text-2xl font-bold text-on-surface">585.000đ</p>
+                    <p class="text-2xl font-bold text-on-surface">585,000đ</p>
                 </div>
                 <p class="text-on-surface-variant leading-relaxed text-lg">
                     Đánh thức năng lượng bứt phá với Xmen Kinetic Blue. Một hương thơm mạnh mẽ, sảng khoái kết hợp giữa
@@ -368,7 +368,7 @@
                     <div class="space-y-1">
                         <p class="text-xs font-bold text-tertiary uppercase">Warm &amp; Spicy</p>
                         <h4 class="font-bold text-lg text-on-surface">Xmen Fire Energy</h4>
-                        <p class="text-primary font-bold">545.000đ</p>
+                        <p class="text-primary font-bold">545,000đ</p>
                     </div>
                 </div>
                 <!-- Related Card 2 -->
@@ -386,7 +386,7 @@
                     <div class="space-y-1">
                         <p class="text-xs font-bold text-secondary uppercase">Fresh &amp; Earthy</p>
                         <h4 class="font-bold text-lg text-on-surface">Xmen Green Nature</h4>
-                        <p class="text-primary font-bold">525.000đ</p>
+                        <p class="text-primary font-bold">525,000đ</p>
                     </div>
                 </div>
                 <!-- Related Card 3 -->
@@ -404,7 +404,7 @@
                     <div class="space-y-1">
                         <p class="text-xs font-bold text-on-surface-variant uppercase">Deep &amp; Intense</p>
                         <h4 class="font-bold text-lg text-on-surface">Xmen Black Edition</h4>
-                        <p class="text-primary font-bold">620.000đ</p>
+                        <p class="text-primary font-bold">620,000đ</p>
                     </div>
                 </div>
                 <!-- Related Card 4 -->
@@ -422,7 +422,7 @@
                     <div class="space-y-1">
                         <p class="text-xs font-bold text-primary-container uppercase">Light &amp; Citrus</p>
                         <h4 class="font-bold text-lg text-on-surface">Xmen Pure Citric</h4>
-                        <p class="text-primary font-bold">495.000đ</p>
+                        <p class="text-primary font-bold">495,000đ</p>
                     </div>
                 </div>
             </div>

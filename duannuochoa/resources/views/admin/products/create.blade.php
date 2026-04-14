@@ -36,7 +36,7 @@
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá cơ bản (VNĐ) - Dùng để tham khảo</label>
-                <input type="number" name="base_price" class="w-full rounded-lg border-gray-300 p-3" required min="0" value="0">
+                <input type="text" name="base_price" class="currency-input w-full rounded-lg border-gray-300 p-3" required value="0">
             </div>
 
             <div class="mb-6">
