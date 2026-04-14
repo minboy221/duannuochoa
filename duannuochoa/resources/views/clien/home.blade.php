@@ -55,15 +55,18 @@
                                 <p class="text-primary font-semibold">Sản phẩm Nổi bật</p>
                             </div>
                             <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMwqmq3Pecj-lgmuDdelVlH6FdmSNeIbtLNRa3q2WHUTcXl8z8BvYQ5CGi8twizyZwyB2KImekckngCDQQ7sOmzlJscO049-_7k38M3ae4rOE3nO-gQR_iXFI8MkWdUa3_W-TZeoRDv7McKttfJI4amb1aiKRiryUJn6Y6WKyegUCEXMAoNlMzkeJTz2vnk3sErFe7Kg8nYxR7xgL67seGVJr726ayucnrScesCy96GX91gu0_2Bue9G6sJLAplW5G-MCbLueRnHf1" />
-                            <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                                src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                            <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
+                                <a href="{{ route('xemchitiet', $item) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
                                 <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
                                     <span class="material-symbols-outlined">add_shopping_cart</span>
                                 </button>
                             </div>
                         </div>
                     @elseif($loop->iteration == 4)
-                        <div class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all">
+                        <div class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all cursor-pointer" onclick="window.location='{{ route('xemchitiet', $item) }}'">
                             <div class="flex-1 p-8">
                                 <h3 class="font-headline text-2xl font-bold">{{ $item->name }}</h3>
                                 <p class="text-outline-variant mb-4">Hương thơm độc đáo dành cho phái mạnh.</p>
@@ -72,14 +75,14 @@
                             </div>
                             <div class="flex-1 h-full overflow-hidden">
                                 <img class="w-full h-full object-cover" 
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpTT1mN5U2tBnhQU4C2EI8Btlz42_7PVcdxu4YX8HR-sQ6pJvc47kH2B_hCAPcMkQ6-Yj_W_Nte0Pwo0UUXASmEiz70E9mrUFu0upXC8qx479vkFo1XeYGeLzxoxeV60OHTmKNE4pKjKubdJgmREks5ivzE8Rjc94v1SDcSs82gXJ3csCbb0tviHbrEsSeQD67h80Hz2oj2xhhQhnBTiE_b6KFXL5Np0nXaQYWq-2ZjCMv3pyEhQ2nIVt3t1tOX1Tq_VU3UPuxRUPm" />
+                                    src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                             </div>
                         </div>
                     @else
-                        <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
+                        <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all cursor-pointer" onclick="window.location='{{ route('xemchitiet', $item) }}'">
                             <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
                                 <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
+                                    src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                             </div>
                             <h3 class="font-bold text-lg">{{ $item->name }}</h3>
                             <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
@@ -101,11 +104,11 @@
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
                 @forelse($bestsellingProducts as $item)
-                <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer">
+                <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer" onclick="window.location='{{ route('xemchitiet', $item) }}'">
                     <div class="relative overflow-hidden rounded-lg aspect-square mb-4">
                         <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             data-alt="Clean minimal glass perfume bottle with silver cap on a blue satin fabric background"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZTch63Ld-T9ytNAkIf70Z60fspqcO5XzsWfQWjRCILKa60ZYyWqDJPkejBoXoL7eq4lFDWruqUs7ETGejSgPS6a-qPf3ZwlZdlzbv9GcbOGZZKC4hjWP3TB0PNj-apld9OcpkrLL0skL5pOo4XgZk3UzSfApVvzcmXq6ZHatMmOHSkcNRndMcjNCqL51RivALuZkRn-7pLiGIw6LN3cx0-p13nb6wdITcZhOfrNDXANy-2UG11VZtW87kILlomSpC4MKPqYbq_hO" />
+                            src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                         <span class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container text-xs font-bold px-3 py-1 rounded-full">BEST SELLER</span>
                     </div>
                     <div class="px-4 pb-6">
