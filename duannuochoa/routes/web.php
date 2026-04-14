@@ -35,7 +35,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('brands', \App\Http\Controllers\Admin\BrandController::class);
     Route::resource('products', \App\Http\Controllers\Admin\ProductController::class);
     Route::resource('products.variants', \App\Http\Controllers\Admin\ProductVariantController::class)->shallow();
-    Route::resource('users', \App\Http\Controllers\Admin\UserController::class);
+    Route::post('users/{user}/toggle-status', [\App\Http\Controllers\Admin\UserController::class, 'toggleStatus'])->name('users.toggle-status');
+    Route::resource('users', \App\Http\Controllers\Admin\UserController::class)->except(['destroy', 'edit', 'update']);
     Route::resource('discounts', \App\Http\Controllers\Admin\DiscountController::class);
     Route::resource('shipping-methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);

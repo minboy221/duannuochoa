@@ -22,6 +22,7 @@
                     <th class="px-6 py-4">Tên người dùng</th>
                     <th class="px-6 py-4">Email / SĐT</th>
                     <th class="px-6 py-4">Vai trò</th>
+                    <th class="px-6 py-4">Trạng thái</th>
                     <th class="px-6 py-4 text-right">Thao tác</th>
                 </tr>
             </thead>
@@ -42,16 +43,25 @@
                             {{ $user->role ? $user->role->role_name : 'N/A' }}
                         </span>
                     </td>
+                    <td class="px-6 py-4">
+                        @if($user->is_active)
+                            <span class="px-3 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">Hoạt động</span>
+                        @else
+                            <span class="px-3 py-1 bg-red-100 text-red-700 text-xs font-bold rounded-full">Bị khóa</span>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2">
-                        <a href="{{ route('admin.users.edit', $user) }}" class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors">
-                            <span class="material-symbols-outlined text-xl">edit</span>
+                        <a href="{{ route('admin.users.show', $user) }}" class="p-2 hover:bg-surface-container rounded-lg text-on-surface-variant transition-colors" title="Xem chi tiết">
+                            <span class="material-symbols-outlined text-xl">visibility</span>
                         </a>
-                        <form action="{{ route('admin.users.destroy', $user) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn xóa?');">
-                            @csrf @method('DELETE')
-                            <button class="p-2 hover:bg-error/10 rounded-lg text-error transition-colors">
-                                <span class="material-symbols-outlined text-xl">delete</span>
+                        @if(auth()->id() !== $user->user_id)
+                        <form action="{{ route('admin.users.toggle-status', $user) }}" method="POST" onsubmit="return confirm('Bạn có chắc muốn {{ $user->is_active ? "khóa" : "mở khóa" }} tài khoản này?');">
+                            @csrf
+                            <button class="p-2 {{ $user->is_active ? 'hover:bg-error/10 text-error' : 'hover:bg-green-100 text-green-700' }} rounded-lg transition-colors" title="{{ $user->is_active ? 'Khóa tài khoản' : 'Mở khóa tài khoản' }}">
+                                <span class="material-symbols-outlined text-xl">{{ $user->is_active ? 'lock' : 'lock_open' }}</span>
                             </button>
                         </form>
+                        @endif
                     </td>
                 </tr>
                 @endforeach

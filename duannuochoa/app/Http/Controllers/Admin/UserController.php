@@ -13,13 +13,13 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('role')->get();
+        $users = User::with('role')->where('role_id', '!=', 1)->get();
         return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where('role_id', '!=', 1)->get();
         return view('admin.users.create', compact('roles'));
     }
 
@@ -40,36 +40,28 @@ class UserController extends Controller
         return redirect()->route('admin.users.index')->with('success', 'Thêm tài khoản thành công.');
     }
 
-    public function edit(User $user)
+    public function show(User $user)
     {
-        $roles = Role::all();
-        return view('admin.users.edit', compact('user', 'roles'));
+        if ($user->role_id == 1) {
+            return redirect()->route('admin.users.index')->with('error', 'Không thể xem chi tiết tài khoản Admin.');
+        }
+        return view('admin.users.show', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function toggleStatus(User $user)
     {
-        $request->validate([
-            'role_id' => 'required|exists:roles,role_id',
-            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
-            'full_name' => 'required|string|max:255',
-            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->user_id, 'user_id')],
-            'password' => 'nullable|string|min:6',
-        ]);
-
-        $data = $request->all();
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        } else {
-            unset($data['password']);
+        if ($user->role_id == 1) {
+             return redirect()->route('admin.users.index')->with('error', 'Không thể thao tác trên tài khoản Admin.');
+        }
+        // Prevent admin from locking themselves out
+        if (auth()->id() == $user->user_id) {
+             return redirect()->route('admin.users.index')->with('error', 'Không thể khóa tài khoản của chính mình.');
         }
 
-        $user->update($data);
-        return redirect()->route('admin.users.index')->with('success', 'Cập nhật tài khoản thành công.');
-    }
+        $user->is_active = !$user->is_active;
+        $user->save();
 
-    public function destroy(User $user)
-    {
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'Xóa tài khoản thành công.');
+        $status = $user->is_active ? 'mở khóa' : 'khóa';
+        return redirect()->route('admin.users.index')->with('success', "Đã $status tài khoản {$user->username}.");
     }
 }
