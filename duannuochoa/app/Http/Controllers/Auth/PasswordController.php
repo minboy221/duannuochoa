@@ -10,6 +10,8 @@ use App\Mail\OtpMail;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Auth\ChangePasswordRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
 
 class PasswordController extends Controller
 {
@@ -18,13 +20,8 @@ class PasswordController extends Controller
         return view('auth.change-password');
     }
 
-    public function sendOtp(Request $request)
+    public function sendOtp(ChangePasswordRequest $request)
     {
-        $request->validate([
-            'current_password' => 'required|current_password',
-            'new_password' => 'required|string|min:8|confirmed',
-        ]);
-
         $user = Auth::user();
         $otp = sprintf("%06d", mt_rand(1, 999999));
         $expiresAt = Carbon::now()->addMinutes(10);
@@ -58,10 +55,8 @@ class PasswordController extends Controller
         return view('auth.verify-change-otp');
     }
 
-    public function update(Request $request)
+    public function update(VerifyOtpRequest $request)
     {
-        $request->validate(['otp' => 'required|string|size:6']);
-        
         $user = Auth::user();
         $newPassword = session('change_password_new');
 

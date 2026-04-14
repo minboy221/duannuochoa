@@ -7,11 +7,13 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\OtpMail;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\VerifyOtpRequest;
 
 class AuthController extends Controller
 {
@@ -20,21 +22,8 @@ class AuthController extends Controller
         return view('auth.register');
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'username' => 'required|string|max:255|unique:users',
-            'full_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8|confirmed',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-        ]);
-
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-        }
-
         // Generate OTP
         $otp = sprintf("%06d", mt_rand(1, 999999));
         $expiresAt = Carbon::now()->addMinutes(10);
@@ -72,9 +61,8 @@ class AuthController extends Controller
         return view('auth.verify-register-otp');
     }
 
-    public function verifyRegisterOtp(Request $request)
+    public function verifyRegisterOtp(VerifyOtpRequest $request)
     {
-        $request->validate(['otp' => 'required|string|size:6']);
         $email = session('register_email');
         $registerData = session('register_data');
 
@@ -116,17 +104,20 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'login' => 'required|string',
-            'password' => 'required|string',
-        ]);
+        $credentials = $request->validated();
 
         $fieldType = filter_var($request->login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
 
         if (Auth::attempt([$fieldType => $request->login, 'password' => $request->password], $request->remember)) {
             $request->session()->regenerate();
+            
+            // Redirect Admin directly to dashboard
+            if (Auth::user()->role_id == 1) {
+                return redirect()->route('tongquan')->with('success', 'Chào mừng Quản trị viên!');
+            }
+
             return redirect()->intended('/')->with('success', 'Chào mừng bạn quay lại!');
         }
 

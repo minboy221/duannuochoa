@@ -21,11 +21,11 @@
                 </div>
             @endif
 
-            <form action="{{ route('login') }}" method="POST">
+            <form action="{{ route('login') }}" method="POST" novalidate>
                 @csrf
                 <div class="form-group">
                     <label for="login">Email hoặc Tên đăng nhập</label>
-                    <input type="text" id="login" name="login" value="{{ old('login') }}" required autofocus placeholder="example@gmail.com">
+                    <input type="text" id="login" name="login" value="{{ old('login') }}" autofocus placeholder="example@gmail.com">
                     @error('login')
                         <div class="error-message">{{ $message }}</div>
                     @enderror
@@ -36,7 +36,7 @@
                         <label for="password">Mật khẩu</label>
                         <a href="{{ route('password.request') }}" style="font-size: 13px; color: var(--primary); text-decoration: none;">Quên mật khẩu?</a>
                     </div>
-                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <input type="password" id="password" name="password" placeholder="••••••••">
                     @error('password')
                         <div class="error-message">{{ $message }}</div>
                     @enderror

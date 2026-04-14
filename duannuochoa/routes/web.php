@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
+use App\Http\Controllers\ProfileController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('gioi-thieu', [HomeController::class, 'about'])->name('about');
@@ -58,8 +59,7 @@ Route::middleware('guest')->group(function () {
     Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.update');
 });
 
-use App\Http\Controllers\ProfileController;
-
+// Authenticated user routes
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');

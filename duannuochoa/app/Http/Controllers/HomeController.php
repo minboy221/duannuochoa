@@ -60,4 +60,10 @@ class HomeController extends Controller
     {
         return view('admin.qlytaikhoan');
     }
+
+    //quản lý đơn hàng
+    public function qlydonhang()
+    {
+        return view('admin.qlydonhang');
+    }
 }

@@ -13,6 +13,24 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Seed Roles
+        \Illuminate\Support\Facades\DB::table('roles')->updateOrInsert(
+            ['role_id' => 1], ['role_name' => 'Admin']
+        );
+        \Illuminate\Support\Facades\DB::table('roles')->updateOrInsert(
+            ['role_id' => 2], ['role_name' => 'User']
+        );
+
+        // Seed Admin Account
+        \Illuminate\Support\Facades\DB::table('users')->updateOrInsert(
+            ['email' => 'admin@gmail.com'],
+            [
+                'username' => 'admin',
+                'full_name' => 'Administrator',
+                'password' => \Illuminate\Support\Facades\Hash::make('admin123'),
+                'role_id' => 1,
+                'created_at' => \Carbon\Carbon::now(),
+            ]
+        );
         \App\Models\Role::firstOrCreate(['role_name' => 'Admin']);
         \App\Models\Role::firstOrCreate(['role_name' => 'Staff']);
         \App\Models\Role::firstOrCreate(['role_name' => 'Customer']);

@@ -22,11 +22,11 @@
                 </div>
             @endif
 
-            <form action="{{ route('register.otp') }}" method="POST">
+            <form action="{{ route('register.otp') }}" method="POST" novalidate>
                 @csrf
                 <div class="form-group">
                     <label for="otp" style="text-align: center;">Nhập mã OTP 6 số</label>
-                    <input type="text" id="otp" name="otp" required autofocus 
+                    <input type="text" id="otp" name="otp" autofocus 
                            placeholder="123456" maxlength="6" 
                            style="text-align: center; letter-spacing: 10px; font-size: 24px; font-weight: 700;">
                     @error('otp')

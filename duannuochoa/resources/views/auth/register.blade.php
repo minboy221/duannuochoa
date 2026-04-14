@@ -15,12 +15,12 @@
                 <p>Tham gia với chúng tôi ngay hôm nay</p>
             </div>
 
-            <form action="{{ route('register') }}" method="POST">
+            <form action="{{ route('register') }}" method="POST" novalidate>
                 @csrf
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div class="form-group">
                         <label for="username">Tên đăng nhập</label>
-                        <input type="text" id="username" name="username" value="{{ old('username') }}" required placeholder="tuanpham">
+                        <input type="text" id="username" name="username" value="{{ old('username') }}" placeholder="tuanpham">
                         @error('username')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
