@@ -47,58 +47,48 @@
                         class="material-symbols-outlined">arrow_forward</span></a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div
-                    class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest shadow-sm hover:shadow-2xl transition-all duration-500">
-                    <div class="absolute top-6 left-6 z-10">
-                        <h3 class="font-headline text-3xl font-bold text-on-surface">Xmen Active</h3>
-                        <p class="text-primary font-semibold">Tươi mát &amp; Năng động</p>
-                    </div>
-                    <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        data-alt="Close-up of a premium blue glass perfume bottle on a reflective white surface with blue water ripples background"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMwqmq3Pecj-lgmuDdelVlH6FdmSNeIbtLNRa3q2WHUTcXl8z8BvYQ5CGi8twizyZwyB2KImekckngCDQQ7sOmzlJscO049-_7k38M3ae4rOE3nO-gQR_iXFI8MkWdUa3_W-TZeoRDv7McKttfJI4amb1aiKRiryUJn6Y6WKyegUCEXMAoNlMzkeJTz2vnk3sErFe7Kg8nYxR7xgL67seGVJr726ayucnrScesCy96GX91gu0_2Bue9G6sJLAplW5G-MCbLueRnHf1" />
-                    <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
-                            <span class="material-symbols-outlined">add_shopping_cart</span>
-                        </button>
-                    </div>
-                </div>
-                <div
-                    class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
-                    <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            data-alt="Sleek black perfume bottle on a dark stone background with dramatic warm spotlighting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
-                    </div>
-                    <h3 class="font-bold text-lg">Xmen Boss</h3>
-                    <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
-                    <p class="text-primary font-black text-xl">450,000đ</p>
-                </div>
-                <div
-                    class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
-                    <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            data-alt="Square glass fragrance bottle with orange liquid against a minimalist light grey wall"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUKKTuiUPTd5sI2eXRviw5n4KWh5sVitYI14xKfF4FnEEjJ-uF5ifCB3LlxGqupD6vIXAEoH3ghnuO6LPBCEAMgyw1AoucNxH8A9euWLR-xK8_VW3oVmt-wj0fPR26WucbHRXRNuiKYWxjIPlMvcsjYPPAP7tbg3fKYGRDY2_UCkWccSQ_TqJkWOMDajK27zHhOol3SSmOQA0f8M0AVutR6SZYrAYXyjavrM4oxPZ3r7Bqpz-d866OkeIEAJRh_CZQw17oKKpCGSY5" />
-                    </div>
-                    <h3 class="font-bold text-lg">Xmen Wood</h3>
-                    <p class="text-outline text-sm mb-4">Mạnh mẽ &amp; Cuốn hút</p>
-                    <p class="text-primary font-black text-xl">420,000đ</p>
-                </div>
-                <div
-                    class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all">
-                    <div class="flex-1 p-8">
-                        <h3 class="font-headline text-2xl font-bold">Xmen Fire</h3>
-                        <p class="text-outline-variant mb-4">Nồng nàn, nam tính với các nốt hương gỗ cháy.</p>
-                        <p class="text-primary font-black text-2xl mb-4">390,000đ</p>
-                        <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Thêm vào
-                            giỏ</button>
-                    </div>
-                    <div class="flex-1 h-full overflow-hidden">
-                        <img class="w-full h-full object-cover"
-                            data-alt="Luxury perfume bottle surrounded by red glowing embers and dark volcanic rocks"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpTT1mN5U2tBnhQU4C2EI8Btlz42_7PVcdxu4YX8HR-sQ6pJvc47kH2B_hCAPcMkQ6-Yj_W_Nte0Pwo0UUXASmEiz70E9mrUFu0upXC8qx479vkFo1XeYGeLzxoxeV60OHTmKNE4pKjKubdJgmREks5ivzE8Rjc94v1SDcSs82gXJ3csCbb0tviHbrEsSeQD67h80Hz2oj2xhhQhnBTiE_b6KFXL5Np0nXaQYWq-2ZjCMv3pyEhQ2nIVt3t1tOX1Tq_VU3UPuxRUPm" />
-                    </div>
-                </div>
+                @forelse($featuredProducts as $item)
+                    @if($loop->iteration == 1)
+                        <div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest shadow-sm hover:shadow-2xl transition-all duration-500">
+                            <div class="absolute top-6 left-6 z-10">
+                                <h3 class="font-headline text-3xl font-bold text-on-surface">{{ $item->name }}</h3>
+                                <p class="text-primary font-semibold">Sản phẩm Nổi bật</p>
+                            </div>
+                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMwqmq3Pecj-lgmuDdelVlH6FdmSNeIbtLNRa3q2WHUTcXl8z8BvYQ5CGi8twizyZwyB2KImekckngCDQQ7sOmzlJscO049-_7k38M3ae4rOE3nO-gQR_iXFI8MkWdUa3_W-TZeoRDv7McKttfJI4amb1aiKRiryUJn6Y6WKyegUCEXMAoNlMzkeJTz2vnk3sErFe7Kg8nYxR7xgL67seGVJr726ayucnrScesCy96GX91gu0_2Bue9G6sJLAplW5G-MCbLueRnHf1" />
+                            <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
+                                    <span class="material-symbols-outlined">add_shopping_cart</span>
+                                </button>
+                            </div>
+                        </div>
+                    @elseif($loop->iteration == 4)
+                        <div class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all">
+                            <div class="flex-1 p-8">
+                                <h3 class="font-headline text-2xl font-bold">{{ $item->name }}</h3>
+                                <p class="text-outline-variant mb-4">Hương thơm độc đáo dành cho phái mạnh.</p>
+                                <p class="text-primary font-black text-2xl mb-4">{{ number_format($item->base_price) }}đ</p>
+                                <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Thêm vào giỏ</button>
+                            </div>
+                            <div class="flex-1 h-full overflow-hidden">
+                                <img class="w-full h-full object-cover" 
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpTT1mN5U2tBnhQU4C2EI8Btlz42_7PVcdxu4YX8HR-sQ6pJvc47kH2B_hCAPcMkQ6-Yj_W_Nte0Pwo0UUXASmEiz70E9mrUFu0upXC8qx479vkFo1XeYGeLzxoxeV60OHTmKNE4pKjKubdJgmREks5ivzE8Rjc94v1SDcSs82gXJ3csCbb0tviHbrEsSeQD67h80Hz2oj2xhhQhnBTiE_b6KFXL5Np0nXaQYWq-2ZjCMv3pyEhQ2nIVt3t1tOX1Tq_VU3UPuxRUPm" />
+                            </div>
+                        </div>
+                    @else
+                        <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
+                            <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
+                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
+                            </div>
+                            <h3 class="font-bold text-lg">{{ $item->name }}</h3>
+                            <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
+                            <p class="text-primary font-black text-xl">{{ number_format($item->base_price) }}đ</p>
+                        </div>
+                    @endif
+                @empty
+                    <p class="col-span-1 md:col-span-4 text-center py-8 text-outline">Chưa có sản phẩm nổi bật nào được chọn.</p>
+                @endforelse
             </div>
         </div>
     </section>
@@ -110,34 +100,27 @@
                 <p class="text-outline max-w-md mx-auto">Những lựa chọn hàng đầu của phái mạnh Việt Nam năm 2024</p>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Product Card 1 -->
+                @forelse($bestsellingProducts as $item)
                 <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer">
                     <div class="relative overflow-hidden rounded-lg aspect-square mb-4">
                         <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                             data-alt="Clean minimal glass perfume bottle with silver cap on a blue satin fabric background"
                             src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNZTch63Ld-T9ytNAkIf70Z60fspqcO5XzsWfQWjRCILKa60ZYyWqDJPkejBoXoL7eq4lFDWruqUs7ETGejSgPS6a-qPf3ZwlZdlzbv9GcbOGZZKC4hjWP3TB0PNj-apld9OcpkrLL0skL5pOo4XgZk3UzSfApVvzcmXq6ZHatMmOHSkcNRndMcjNCqL51RivALuZkRn-7pLiGIw6LN3cx0-p13nb6wdITcZhOfrNDXANy-2UG11VZtW87kILlomSpC4MKPqYbq_hO" />
-                        <span
-                            class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container text-xs font-bold px-3 py-1 rounded-full">BEST
-                            SELLER</span>
+                        <span class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container text-xs font-bold px-3 py-1 rounded-full">BEST SELLER</span>
                     </div>
                     <div class="px-4 pb-6">
                         <div class="flex items-center gap-1 mb-2">
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-orange-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-orange-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-orange-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-orange-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-orange-400 text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
                             <span class="text-xs text-outline-variant ml-2">(1.2k)</span>
                         </div>
-                        <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Ocean Breeze</h4>
-                        <p class="text-sm text-outline mb-4">Hương biển mát lạnh</p>
+                        <h4 class="font-bold text-lg text-on-surface mb-1">{{ $item->name }}</h4>
+                        <p class="text-sm text-outline mb-4">Sản phẩm bán chạy nhất</p>
                         <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">480,000đ</span>
+                            <span class="text-primary font-black text-xl">{{ number_format($item->base_price) }}đ</span>
                             <button
                                 class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
                                 <span class="material-symbols-outlined">add</span>
@@ -145,100 +128,9 @@
                         </div>
                     </div>
                 </div>
-                <!-- Repeat for more products... (kept to 4 total for layout) -->
-                <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-lg aspect-square mb-4">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            data-alt="Blue perfume bottle spray mist captured in high speed photography with droplets in air"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAraD79qKhs6QmhgBqVs0hwCfiNPsF8_7kPFKKhNBL9NZ7tZnS_bzvwDLlC0I9kguIvjtwD9McWGWFwEsRr5JSw9LVWSCUg7E3ML7su8IVPaw6NlZVSC3O79XlaaekGKNLD_ewX-3ZgefRDupNBLXZzbyh3zNNJ4KnTR8I3LDVMm6_oKf6cvQnTxu17n7cAgXG6qtUGaXaBW-mJG6qZ1SZOURBmH-8b0k5lenu1qlToRukmZ6_MEhU0vj2Qrq8ST9j8rgQWU1GM9in7" />
-                    </div>
-                    <div class="px-4 pb-6">
-                        <div class="flex items-center gap-1 mb-2">
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 0;">star</span>
-                            <span class="text-xs text-outline-variant ml-2">(850)</span>
-                        </div>
-                        <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Velocity</h4>
-                        <p class="text-sm text-outline mb-4">Năng lượng bứt phá</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">420,000đ</span>
-                            <button
-                                class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
-                                <span class="material-symbols-outlined">add</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-lg aspect-square mb-4">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            data-alt="Premium perfume bottle standing on a wooden surface with soft blurred background"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZcko6Z0talcpAVBNoMCTnUq8Cqp1crt65zNk3gmULNcCVImPZb2RUimseaJ-rsMu795oZOOLsQ-Iahbhu1YWqIh7f4hfVEVGweL3TG6mpeHUG_ddt8yliTxc8tR-nQViSRkfVdiPsrPmlhXF1baq7v5EvBtS99_nK6Tzzh27nCy419eA7Ft-KvTJa9JquVEg_p5ohCk-paxeouVK53DPI_W_c7d_T2tZzhzLN_1D38y3JPl3FEXVotrh2FnGiJ0WGRFVgD4nWjq0K" />
-                    </div>
-                    <div class="px-4 pb-6">
-                        <div class="flex items-center gap-1 mb-2">
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="text-xs text-outline-variant ml-2">(920)</span>
-                        </div>
-                        <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Signature</h4>
-                        <p class="text-sm text-outline mb-4">Dấu ấn riêng biệt</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">550,000đ</span>
-                            <button
-                                class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
-                                <span class="material-symbols-outlined">add</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="bg-surface-container-lowest rounded-lg p-2 shadow-sm group cursor-pointer">
-                    <div class="relative overflow-hidden rounded-lg aspect-square mb-4">
-                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            data-alt="Collection of minimalist luxury perfume bottles arranged on a white marble slab"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD31hHrts7CuSbfVlhvdQvqYuChVuAy0nyoi5sQiRCXoVhdQI3Xm-HAX93J8esD8VOKehgfcBh_PbsyqYJ3LD5VfeRMjfwrNCW2B3xQPMvtcY49Ir4CfGrxsPL618-OIVjkfUtGz670hrM22Ue7o1JtvmdgpKOZrBYM5M8kDfZWSCyQ9Cnmu52XUrrphgqn7JGSBM0uj54NZhpZSA6wjK276FiAmRk-Khf5Jnnp-fHNwveE9q5wMWTq7xxMED4wobNvElHj-uoqqqYH" />
-                    </div>
-                    <div class="px-4 pb-6">
-                        <div class="flex items-center gap-1 mb-2">
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-orange-400 text-sm"
-                                style="font-variation-settings: 'FILL' 0;">star</span>
-                            <span class="text-xs text-outline-variant ml-2">(640)</span>
-                        </div>
-                        <h4 class="font-bold text-lg text-on-surface mb-1">Xmen Urban</h4>
-                        <p class="text-sm text-outline mb-4">Hơi thở thành thị</p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-primary font-black text-xl">380,000đ</span>
-                            <button
-                                class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
-                                <span class="material-symbols-outlined">add</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                @empty
+                <p class="col-span-1 sm:col-span-2 lg:col-span-4 text-center py-8 text-outline">Chưa có sản phẩm bán chạy nào được chọn.</p>
+                @endforelse
             </div>
         </div>
     </section>

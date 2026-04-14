@@ -25,7 +25,10 @@ class ProductController extends Controller
 
     public function store(ProductRequest $request)
     {
-        Product::create($request->validated());
+        $data = $request->validated();
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_bestseller'] = $request->has('is_bestseller');
+        Product::create($data);
         return redirect()->route('admin.products.index')->with('success', 'Thêm sản phẩm thành công.');
     }
 
@@ -38,7 +41,10 @@ class ProductController extends Controller
 
     public function update(ProductRequest $request, Product $product)
     {
-        $product->update($request->validated());
+        $data = $request->validated();
+        $data['is_featured'] = $request->has('is_featured');
+        $data['is_bestseller'] = $request->has('is_bestseller');
+        $product->update($data);
         return redirect()->route('admin.products.index')->with('success', 'Cập nhật sản phẩm thành công.');
     }
 

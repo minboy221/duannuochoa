@@ -42,6 +42,20 @@
                     @error('base_price') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Trạng thái Hiển thị Trang chủ</label>
+                <div class="flex gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="is_featured" value="1" {{ old('is_featured', $product->is_featured) ? 'checked' : '' }} class="rounded border-gray-300 text-primary focus:ring-primary h-5 w-5">
+                        <span class="text-on-surface">Sản phẩm Nổi bật</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="is_bestseller" value="1" {{ old('is_bestseller', $product->is_bestseller) ? 'checked' : '' }} class="rounded border-gray-300 text-primary focus:ring-primary h-5 w-5">
+                        <span class="text-on-surface">Sản phẩm Bán chạy</span>
+                    </label>
+                </div>
+            </div>
+
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Bài viết Mô tả hương thơm</label>
                 <textarea name="description" class="w-full rounded-lg border-gray-300 p-3" rows="6">{{ old('description', $product->description) }}</textarea>
