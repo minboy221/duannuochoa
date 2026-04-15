@@ -31,6 +31,8 @@ Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->
 Route::post('gio-hang/them', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
 Route::put('gio-hang/cap-nhat', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 Route::delete('gio-hang/xoa/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+Route::get('gio-hang', [HomeController::class, 'giohang'])->name('giohang');
+Route::get('xem-chi-tiet/{product}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 //trang admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');

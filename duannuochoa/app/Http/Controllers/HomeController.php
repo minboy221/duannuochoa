@@ -20,7 +20,8 @@ class HomeController extends Controller
     //phần sản phẩm
     public function sanpham()
     {
-        return view('clien.sanpham');
+        $products = \App\Models\Product::with('category')->paginate(12);
+        return view('clien.sanpham', compact('products'));
     }
     //phần liên hệ
     public function lienhe()
@@ -46,6 +47,9 @@ class HomeController extends Controller
     public function xemchitiet($id)
     {
         $product = \App\Models\Product::with('variants')->findOrFail($id);
+    public function xemchitiet(\App\Models\Product $product)
+    {
+        $product->load('variants');
         return view('clien.xemchitiet', compact('product'));
     }
     //phần trang admin tổng quan
