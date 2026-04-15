@@ -30,7 +30,7 @@
                             <span>Thông tin cá nhân</span>
                         </a>
                         <a class="flex items-center space-x-3 p-4 rounded-xl hover:bg-surface-container-high transition-all text-on-surface-variant font-medium"
-                            href="#order-history">
+                            href="{{ route('lichsu') }}">
                             <span class="material-symbols-outlined" data-icon="history">history</span>
                             <span>Lịch sử đơn hàng</span>
                         </a>

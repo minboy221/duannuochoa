@@ -68,6 +68,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');
+    Route::get('lich-su-don-hang', [HomeController::class, 'lichsu'])->name('lichsu');
     Route::post('tai-khoan', [ProfileController::class, 'update'])->name('profile.update');
     
     Route::get('change-password', [PasswordController::class, 'showChangeForm'])->name('password.change');

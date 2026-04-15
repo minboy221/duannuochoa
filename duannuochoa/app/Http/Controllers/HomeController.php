@@ -49,6 +49,16 @@ class HomeController extends Controller{
 
         return view('clien.taikhoan', compact('availableVouchers', 'userVouchers'));
     }
+
+    public function lichsu()
+    {
+        $orders = \App\Models\Order::where('user_id', Auth::id())
+            ->with(['orderItems.variant.product'])
+            ->latest()
+            ->get();
+
+        return view('clien.lichsudonhang', compact('orders'));
+    }
     //phần đăng nhập, đăng ký
     public function dangnhap()
     {
