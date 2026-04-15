@@ -39,4 +39,14 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class, 'product_id', 'product_id');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class, 'product_id', 'product_id');
+    }
+
+    public function averageRating()
+    {
+        return $this->reviews()->avg('rating') ?: 0;
+    }
 }

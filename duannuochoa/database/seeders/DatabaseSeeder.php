@@ -35,6 +35,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Role::firstOrCreate(['role_name' => 'Staff']);
         \App\Models\Role::firstOrCreate(['role_name' => 'Customer']);
 
+        
         // Seed Categories
         $cat1 = \App\Models\Category::firstOrCreate(['name' => 'Nước hoa Nam'], ['description' => 'Các loại nước hoa dành cho nam giới']);
         $cat2 = \App\Models\Category::firstOrCreate(['name' => 'Nước hoa Nữ'], ['description' => 'Các loại nước hoa dành cho nữ giới']);

@@ -55,14 +55,9 @@
                                 <p class="text-primary font-semibold">Sản phẩm Nổi bật</p>
                             </div>
                             <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMwqmq3Pecj-lgmuDdelVlH6FdmSNeIbtLNRa3q2WHUTcXl8z8BvYQ5CGi8twizyZwyB2KImekckngCDQQ7sOmzlJscO049-_7k38M3ae4rOE3nO-gQR_iXFI8MkWdUa3_W-TZeoRDv7McKttfJI4amb1aiKRiryUJn6Y6WKyegUCEXMAoNlMzkeJTz2vnk3sErFe7Kg8nYxR7xgL67seGVJr726ayucnrScesCy96GX91gu0_2Bue9G6sJLAplW5G-MCbLueRnHf1" />
-                            <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="inline-block p-4 rounded-full kinetic-gradient text-white shadow-lg">
-                                    <span class="material-symbols-outlined">visibility</span>
-                                </a>
                                 src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                             <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                                <a href="{{ route('xemchitiet', $item) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform">
+                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform">
                                     <span class="material-symbols-outlined">visibility</span>
                                 </a>
                                 <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
@@ -88,10 +83,8 @@
                             <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
                                 <a href="{{ route('xemchitiet', $item->product_id) }}">
                                     <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
+                                        src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                                 </a>
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                    src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                             </div>
                             <h3 class="font-bold text-lg"><a href="{{ route('xemchitiet', $item->product_id) }}">{{ $item->name }}</a></h3>
                             <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>

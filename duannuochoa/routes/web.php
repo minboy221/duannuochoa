@@ -77,6 +77,8 @@ Route::middleware('auth')->group(function () {
     Route::post('change-password', [PasswordController::class, 'sendOtp'])->name('password.change.send');
     Route::get('change-password/verify', [PasswordController::class, 'showOtpForm'])->name('password.change.otp.form');
     Route::post('change-password/verify', [PasswordController::class, 'update'])->name('password.change.update');
+
+    Route::post('reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
 });
 
 // Admin routes

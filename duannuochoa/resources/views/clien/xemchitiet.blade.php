@@ -10,16 +10,6 @@
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                         src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                 </div>
-                <div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low">
-                    <img alt="Xmen Kinetic Blue Detail 1" class="w-full h-full object-cover"
-                        data-alt="Close up of perfume spray mist captured in motion with dramatic lighting against a dark blue gradient background"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCPQ-8TwT857mVCoJro7Hf6PSFpYF6hg9W8O0wTEBabbTHbbNzMwdxuoNmQfpcYzPZek4dTDAOp5ZKv6lSoDbZfM8LrIwrrCPwoBcikeO2cVKdY_WR0Xg6oqNwmLEFpwaA2_QCDLT9FYytXjlkYRoofsh4eoYJ7POyrGOtpRFTXD6EdrP8MNNvqRErGLSZlGKmE-4lPjbPFnRTXruK2cRwlTdLsND9ZXWOyfWKQyZ-BKGZ8JsZrEIHW2vMKKFyWGwZ3uXQs8cWUC_MX" />
-                </div>
-                <div class="aspect-square rounded-lg overflow-hidden bg-surface-container-low">
-                    <img alt="Xmen Kinetic Blue Detail 2" class="w-full h-full object-cover"
-                        data-alt="Ingredients of a fresh fragrance including sliced bergamot and cedar wood pieces on a clean white surface"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBniXs6ii6rA8OGdQ0fK5aIA0qPB3OTKg2FXxcuzKvuEBP7IDBTR2caljjLwjSlXNPqwz4Xb6JS58z0u6p2vJ1lDFVSnBETklail7zKIDXU5DbtUHmwd9U2TsSSa-DdFwPmSlovfOv_fHNgMDedquILLU69urYMQs6zlmyxUk3WwwNOUytXY8Ym9Qsbgym4riExcNoJ3IZNAhK7sbWss-fN8ccp0iO2uuLDcxP7t7F3qqJTFogcb6Ja7LnzuqnqhhkSmGRPRVxcUkBH" />
-                </div>
             </div>
             <!-- Content Info -->
             <div class="lg:col-span-5 sticky top-32 space-y-8">
@@ -29,38 +19,22 @@
                         <span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nổi bật</span>
                         @endif
                         <div class="flex text-tertiary">
-                            <!-- Placeholder ratings -->
-                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
-                            <span class="ml-2 text-on-surface-variant text-sm font-medium">(128 đánh giá)</span>
+                            @for($i = 1; $i <= 5; $i++)
+                                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' {{ $i <= $averageRating ? 1 : 0 }};">star</span>
+                            @endfor
+                            <span class="ml-2 text-on-surface-variant text-sm font-medium">({{ $reviewsCount }} đánh giá)</span>
                         </div>
                     </div>
                     <h1 class="text-5xl font-extrabold text-primary tracking-tight leading-tight">{{ $product->name }}</h1>
-                    <p class="text-2xl font-bold text-on-surface">
+                    <p class="text-3xl font-bold text-primary" id="display-price">
                         {{ number_format($product->base_price) }}đ
                     </p>
                 </div>
+
                 <p class="text-on-surface-variant leading-relaxed text-lg">
                     {!! nl2br(e($product->description ?? 'Đánh thức năng lượng bứt phá với sản phẩm này.')) !!}
                 </p>
-                <!-- Options -->
-                <div class="space-y-4">
-                    <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant">Phân loại</h3>
-                    <div class="flex flex-wrap gap-4">
-                        @foreach($product->variants as $variant)
-                        <button
-                            class="py-3 px-6 rounded-xl border-2 {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} font-bold transition-all focus:border-primary">
-                            {{ $variant->volume_id ? $variant->volume_id.'ml' : ($variant->color ?? 'Mặc định') }}
-                        </button>
-                        @endforeach
-                    <p class="text-2xl font-bold text-on-surface" id="display-price">{{ number_format($product->base_price) }}đ</p>
-                </div>
-                <p class="text-on-surface-variant leading-relaxed text-lg">
-                    {{ $product->description }}
-                </p>
+
                 <!-- Options -->
                 <div class="space-y-4">
                     <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant flex justify-between">
@@ -179,28 +153,24 @@
                     <div class="space-y-4">
                         <h2 class="text-3xl font-black text-on-surface tracking-tight">Đánh Giá Sản Phẩm</h2>
                         <div class="flex items-center gap-4">
-                            <div class="text-6xl font-black text-primary">4.8</div>
+                            <div class="text-6xl font-black text-primary">{{ number_format($averageRating, 1) }}</div>
                             <div class="space-y-1">
                                 <div class="flex text-tertiary">
-                                    <span class="material-symbols-outlined"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined"
-                                        style="font-variation-settings: 'FILL' 1;">star_half</span>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' {{ $i <= floor($averageRating) ? 1 : ($i - $averageRating < 1 ? 1 : 0) }};">{{ $i <= ceil($averageRating) && $i - $averageRating > 0 && $i - $averageRating < 1 ? 'star_half' : 'star' }}</span>
+                                    @endfor
                                 </div>
-                                <p class="text-sm font-medium text-on-surface-variant">Dựa trên 128 nhận xét</p>
+                                <p class="text-sm font-medium text-on-surface-variant">Dựa trên {{ $reviewsCount }} nhận xét</p>
                             </div>
                         </div>
                     </div>
                     <!-- Write a Review Form -->
+                    @if($canReview)
                     <div class="bg-surface-container-low p-8 rounded-lg shadow-sm space-y-6">
                         <h3 class="text-xl font-bold text-on-surface">Viết đánh giá của bạn</h3>
-                        <form class="space-y-4">
+                        <form action="{{ route('review.store') }}" method="POST" class="space-y-4">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->product_id }}">
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Đánh
                                     giá của bạn</label>
@@ -236,15 +206,15 @@
                                 <label class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Họ và
                                     tên</label>
                                 <input
-                                    class="w-full bg-white border border-surface-container-high rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none"
-                                    placeholder="Nhập tên của bạn" type="text" />
+                                    class="w-full bg-white border border-surface-container-high rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none opacity-50"
+                                    value="{{ Auth::user()->full_name }}" readonly type="text" />
                             </div>
                             <div class="space-y-2">
                                 <label class="text-sm font-bold text-on-surface-variant uppercase tracking-wider">Nhận
                                     xét</label>
-                                <textarea
+                                <textarea name="content"
                                     class="w-full bg-white border border-surface-container-high rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none resize-none"
-                                    placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..." rows="4"></textarea>
+                                    placeholder="Chia sẻ trải nghiệm của bạn về sản phẩm..." rows="4" required></textarea>
                             </div>
                             <button
                                 class="w-full py-4 rounded-xl bg-primary text-on-primary font-bold hover:bg-primary-dim transition-all shadow-lg shadow-primary/10"
@@ -253,11 +223,23 @@
                             </button>
                         </form>
                     </div>
+                    @else
+                    <div class="bg-surface-container-low p-8 rounded-lg shadow-sm text-center space-y-4">
+                        <div class="flex justify-center">
+                            <span class="material-symbols-outlined text-5xl text-outline-variant">rate_review</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-on-surface">Bạn muốn đánh giá sản phẩm?</h3>
+                        <p class="text-on-surface-variant">Bạn chỉ có thể để lại đánh giá sau khi đã mua và nhận được sản phẩm này.</p>
+                        @guest
+                        <a href="{{ route('login') }}" class="inline-block py-3 px-8 rounded-xl bg-primary text-on-primary font-bold">Đăng nhập ngay</a>
+                        @endguest
+                    </div>
+                    @endif
                 </div>
                 <!-- Review List -->
                 <div class="lg:col-span-8 space-y-8">
                     <div class="flex items-center justify-between border-b border-surface-container pb-4">
-                        <h3 class="font-bold text-lg">Tất cả nhận xét (128)</h3>
+                        <h3 class="font-bold text-lg">Tất cả nhận xét ({{ $reviewsCount }})</h3>
                         <div class="flex items-center gap-2 text-sm font-medium text-on-surface-variant">
                             Sắp xếp theo:
                             <select class="bg-transparent border-none focus:ring-0 cursor-pointer font-bold text-primary">
@@ -268,117 +250,35 @@
                         </div>
                     </div>
                     <div class="space-y-8">
-                        <!-- Review Item 1 -->
+                        @forelse($product->reviews as $review)
                         <div class="space-y-4 pb-8 border-b border-surface-container-low">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-4">
                                     <div
                                         class="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center text-primary font-bold">
-                                        NH
+                                        {{ substr($review->user->full_name, 0, 2) }}
                                     </div>
                                     <div>
-                                        <h4 class="font-bold text-on-surface">Nguyễn Hoàng</h4>
-                                        <p class="text-xs text-on-surface-variant">20 tháng 5, 2024</p>
+                                        <h4 class="font-bold text-on-surface">{{ $review->user->full_name }}</h4>
+                                        <p class="text-xs text-on-surface-variant">{{ $review->created_at }}</p>
                                     </div>
                                 </div>
                                 <div class="flex text-tertiary">
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
+                                    @for($i = 1; $i <= 5; $i++)
+                                        <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' {{ $i <= $review->rating ? 1 : 0 }};">star</span>
+                                    @endfor
                                 </div>
                             </div>
                             <p class="text-on-surface-variant leading-relaxed">
-                                Mùi hương rất nam tính và lưu hương cực lâu. Mình xịt từ sáng mà đến tối vẫn còn nghe
-                                thoang thoảng mùi gỗ trầm ấm. Rất đáng đồng tiền bát gạo!
+                                {{ $review->content }}
                             </p>
-                            <div class="flex items-center gap-4 text-xs font-bold text-on-surface-variant">
-                                <button class="flex items-center gap-1 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined text-sm">thumb_up</span> Hữu ích (12)
-                                </button>
-                                <button class="hover:text-primary transition-colors">Phản hồi</button>
-                            </div>
                         </div>
-                        <!-- Review Item 2 -->
-                        <div class="space-y-4 pb-8 border-b border-surface-container-low">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-12 h-12 rounded-full bg-secondary-container/20 flex items-center justify-center text-secondary font-bold">
-                                        TM
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-on-surface">Trần Minh</h4>
-                                        <p class="text-xs text-on-surface-variant">15 tháng 5, 2024</p>
-                                    </div>
-                                </div>
-                                <div class="flex text-tertiary">
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 0;">star</span>
-                                </div>
-                            </div>
-                            <p class="text-on-surface-variant leading-relaxed">
-                                Giao hàng nhanh, đóng gói cẩn thận. Mùi hương biển lúc đầu rất sảng khoái, sau đó chuyển
-                                sang tông gỗ ấm áp. Phù hợp dùng hàng ngày đi làm hoặc đi chơi.
-                            </p>
-                            <div class="flex items-center gap-4 text-xs font-bold text-on-surface-variant">
-                                <button class="flex items-center gap-1 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined text-sm">thumb_up</span> Hữu ích (5)
-                                </button>
-                                <button class="hover:text-primary transition-colors">Phản hồi</button>
-                            </div>
+                        @empty
+                        <div class="py-12 text-center space-y-4">
+                            <span class="material-symbols-outlined text-6xl text-outline-variant">chat_bubble_outline</span>
+                            <p class="text-on-surface-variant">Chưa có đánh giá nào cho sản phẩm này.</p>
                         </div>
-                        <!-- Review Item 3 -->
-                        <div class="space-y-4 pb-8">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center gap-4">
-                                    <div
-                                        class="w-12 h-12 rounded-full bg-tertiary-container/20 flex items-center justify-center text-tertiary font-bold">
-                                        LH
-                                    </div>
-                                    <div>
-                                        <h4 class="font-bold text-on-surface">Lê Huy</h4>
-                                        <p class="text-xs text-on-surface-variant">10 tháng 5, 2024</p>
-                                    </div>
-                                </div>
-                                <div class="flex text-tertiary">
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                    <span class="material-symbols-outlined text-sm"
-                                        style="font-variation-settings: 'FILL' 1;">star</span>
-                                </div>
-                            </div>
-                            <p class="text-on-surface-variant leading-relaxed">
-                                Vừa mới nhận hàng xong. Thiết kế chai cầm rất chắc tay và sang trọng. Xịt thử thấy mùi
-                                thơm mát lạnh đúng kiểu Kinetic. Rất hài lòng!
-                            </p>
-                            <div class="flex items-center gap-4 text-xs font-bold text-on-surface-variant">
-                                <button class="flex items-center gap-1 hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined text-sm">thumb_up</span> Hữu ích (8)
-                                </button>
-                                <button class="hover:text-primary transition-colors">Phản hồi</button>
-                            </div>
-                        </div>
+                        @endforelse
                         <button
                             class="w-full py-4 rounded-xl border-2 border-surface-container-high text-on-surface-variant font-bold hover:bg-surface-container-low transition-all">
                             Xem thêm đánh giá
@@ -399,78 +299,26 @@
                 </a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                <!-- Related Card 1 -->
+                @forelse($relatedProducts as $related)
                 <div class="group bg-surface-container-lowest p-4 rounded-lg hover:shadow-xl transition-all duration-500">
                     <div class="aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-6 relative">
-                        <img alt="Xmen Fire Energy"
+                        <img alt="{{ $related->name }}"
                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            data-alt="Modern perfume bottle in a warm orange setting with soft shadows, minimalist aesthetic"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAE8pQC-75mV2kvh1ysP3BlNxlvAmvNVxcYygMuyvPStEEjDUDd5o4A4IXM3hXh_XWyhVmanZ1yWEHPgIBneCWl6DQZd_0UlrqQ5ptyYAkXAurPngRsN7JEX0NphrMrWuZ3TADGDMwnVQtGKkgZRSh50ldQVBqOVHg3eWFgebw8Tx5gHsxED7sMf7oYsF5xxcB4V8HgN_pZUC-714Vd4ole1aiuzsJicIcCSA7WRVdvOMZyJjW6a_-LnyYedoPdYP4ozwqolCWxSJ7I" />
-                        <button
+                            src="{{ $related->img ? asset('storage/' . $related->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                        <a href="{{ route('xemchitiet', $related->product_id) }}"
                             class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">
-                            <span class="material-symbols-outlined" data-icon="add">add</span>
-                        </button>
+                            <span class="material-symbols-outlined">visibility</span>
+                        </a>
                     </div>
                     <div class="space-y-1">
-                        <p class="text-xs font-bold text-tertiary uppercase">Warm &amp; Spicy</p>
-                        <h4 class="font-bold text-lg text-on-surface">Xmen Fire Energy</h4>
-                        <p class="text-primary font-bold">545,000đ</p>
+                        <p class="text-xs font-bold text-tertiary uppercase">{{ $related->category->name ?? 'Fragrance' }}</p>
+                        <h4 class="font-bold text-lg text-on-surface"><a href="{{ route('xemchitiet', $related->product_id) }}">{{ $related->name }}</a></h4>
+                        <p class="text-primary font-bold">{{ number_format($related->base_price) }}đ</p>
                     </div>
                 </div>
-                <!-- Related Card 2 -->
-                <div class="group bg-surface-container-lowest p-4 rounded-lg hover:shadow-xl transition-all duration-500">
-                    <div class="aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-6 relative">
-                        <img alt="Xmen Green Nature"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            data-alt="Dark green glass perfume bottle resting on a mossy stone, forest background, moody cinematic lighting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6ewa-iJUOAMRPP9o89O1M2kPHizCQV7OhVTdjBAhuS1grY60-L_OhQK3-XJI-q5jkMVLxN5FYHPNPzvCBME85pFlqdji62U6RivdV05e9cd5icw7hndDVIlgJBxkl19pi5eTHC-g4Mm5KX4mKSYc_iiqvYPI66Uml0d1NZVq4skkj6fPsOICcmnD3VgNRR3ZIIkSAh6vyFP4kCFiSFsGYXoCl0kyZINSsUkRYdpWDcCFSXxQ9tVz21HX4fUzLFNGeArP5UrAZev7j" />
-                        <button
-                            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">
-                            <span class="material-symbols-outlined" data-icon="add">add</span>
-                        </button>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-xs font-bold text-secondary uppercase">Fresh &amp; Earthy</p>
-                        <h4 class="font-bold text-lg text-on-surface">Xmen Green Nature</h4>
-                        <p class="text-primary font-bold">525,000đ</p>
-                    </div>
-                </div>
-                <!-- Related Card 3 -->
-                <div class="group bg-surface-container-lowest p-4 rounded-lg hover:shadow-xl transition-all duration-500">
-                    <div class="aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-6 relative">
-                        <img alt="Xmen Black Edition"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            data-alt="Sleek black perfume bottle with silver cap on a mirrored surface, dramatic top light, luxury feel"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUjCk1HqLZ8gtBp4ZaucKT8DIIRlUTmOuIkqnQmHBmw9zdsllaFSFGoidKquz5QX_BD5euCg5ptJ8W5DhOnwqkUG5cdKoHl5J8PkwP9mk5idvkDXAwDQOd1XnUyOLebgDSHoqOVGrhieg1DGHF5ZGsONDKKKAEehuYLqDOWX0oJsttb6IHMslpZyf82owosQeUohKAxKva0BqjNqMsyseIhd5I279fjlqvgmM8wMMKEsdCbw-tleB4CYsERdqtseNTihhEAjsYr09a" />
-                        <button
-                            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">
-                            <span class="material-symbols-outlined" data-icon="add">add</span>
-                        </button>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-xs font-bold text-on-surface-variant uppercase">Deep &amp; Intense</p>
-                        <h4 class="font-bold text-lg text-on-surface">Xmen Black Edition</h4>
-                        <p class="text-primary font-bold">620,000đ</p>
-                    </div>
-                </div>
-                <!-- Related Card 4 -->
-                <div class="group bg-surface-container-lowest p-4 rounded-lg hover:shadow-xl transition-all duration-500">
-                    <div class="aspect-[3/4] rounded-lg overflow-hidden bg-surface-container-low mb-6 relative">
-                        <img alt="Xmen Pure Citric"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            data-alt="Clear fragrance bottle with light yellow liquid against a bright sunny window, airy and fresh mood"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDABW1a3eSw5LojdqHvbFeYasQv2mb0Un-aseq-dZceZ1HEXpRvPetSKx5qxjdOe2ScuFAqO9kRsfG0vx9GNBtayuM3H4RiQFChiloxp8YxrNVblaHgCUBf5_beHm7HWSCvd1Q4IqkSs0cTfrOyDuoIykP46uCAfDWPPAlyEwiLVjeibOMKgggTyqZR4xnLytYi4WPuEu7eP4z9oIZTYqAsKMf6Dt_R88oayY-hM42oS6k-qes45eEwrefma1FrFRKiGijyEhykBBxt" />
-                        <button
-                            class="absolute bottom-4 right-4 w-12 h-12 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all">
-                            <span class="material-symbols-outlined" data-icon="add">add</span>
-                        </button>
-                    </div>
-                    <div class="space-y-1">
-                        <p class="text-xs font-bold text-primary-container uppercase">Light &amp; Citrus</p>
-                        <h4 class="font-bold text-lg text-on-surface">Xmen Pure Citric</h4>
-                        <p class="text-primary font-bold">495,000đ</p>
-                    </div>
-                </div>
+                @empty
+                <p class="col-span-4 text-center text-on-surface-variant">Không có sản phẩm nào tương tự.</p>
+                @endforelse
             </div>
         </section>
     </main>
