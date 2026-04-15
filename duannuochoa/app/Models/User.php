@@ -41,6 +41,8 @@ class User extends Authenticatable
         'address',
         'avatar',
         'is_active',
+        'role_id',
+        'xu',
     ];
 
     /**

@@ -73,6 +73,7 @@
                             data-price="{{ number_format($variant->price) }}đ"
                             data-stock="{{ $variant->stock_quantity }}"
                             data-image="{{ $variant->image ? asset('storage/' . $variant->image) : '' }}"
+                            data-variant-id="{{ $variant->variant_id }}"
                             onclick="selectVariant(this)">
                             {{ $variant->volume_id }}ml
                             @if($variant->color_code)
@@ -158,6 +159,11 @@
                             if (variantBtn && !variantBtn.classList.contains('border-primary')) {
                                 selectVariant(variantBtn, false); 
                             }
+                        }
+                        // Update hidden variant_id input
+                        const variantInput = document.querySelector('input[name="variant_id"]');
+                        if (variantInput) {
+                            variantInput.value = element.getAttribute('data-variant-id');
                         }
                     }
 

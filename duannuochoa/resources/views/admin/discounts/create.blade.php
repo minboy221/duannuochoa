@@ -50,6 +50,12 @@
                 </div>
             </div>
 
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Số xu yêu cầu để đổi (Để trống hoặc bằng 0 nếu miễn phí)</label>
+                <input type="number" name="points_required" value="{{ old('points_required', 0) }}" class="w-full rounded-lg border-gray-300 p-3" min="0">
+                @error('points_required') <span class="text-error text-sm">{{ $message }}</span> @enderror
+            </div>
+
             <div class="mb-6">
                 <label class="block text-sm font-bold mb-2">Giới hạn số lần dùng (để trống nếu không giới hạn)</label>
                 <input type="number" name="usage_limit" value="{{ old('usage_limit') }}" class="w-full rounded-lg border-gray-300 p-3">

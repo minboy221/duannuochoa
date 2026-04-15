@@ -22,6 +22,7 @@
                     <th class="px-6 py-4">Giá trị giảm</th>
                     <th class="px-6 py-4">Loại</th>
                     <th class="px-6 py-4">Đơn tối thiểu</th>
+                    <th class="px-6 py-4">Xu yêu cầu</th>
                     <th class="px-6 py-4">Thời hạn</th>
                     <th class="px-6 py-4 text-right">Thao tác</th>
                 </tr>
@@ -33,6 +34,7 @@
                     <td class="px-6 py-4 font-medium">{{ number_format($discount->discount_value) }} {{ $discount->discount_type == 'percent' ? '%' : 'VNĐ' }}</td>
                     <td class="px-6 py-4">{{ $discount->discount_type == 'percent' ? 'Phần trăm' : 'Cố định' }}</td>
                     <td class="px-6 py-4">{{ number_format($discount->min_order_value) }} đ</td>
+                    <td class="px-6 py-4 font-bold text-tertiary">{{ $discount->points_required > 0 ? number_format($discount->points_required) . ' xu' : 'Miễn phí' }}</td>
                     <td class="px-6 py-4 text-sm">
                         {{ \Carbon\Carbon::parse($discount->valid_from)->format('d/m/Y') }} - {{ \Carbon\Carbon::parse($discount->valid_to)->format('d/m/Y') }}
                     </td>

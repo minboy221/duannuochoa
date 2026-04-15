@@ -39,7 +39,25 @@ class HomeController extends Controller{
     //phần tài khoản người dùng
     public function taikhoan()
     {
-        return view('clien.taikhoan');
+        $availableVouchers = \App\Models\Discount::where('valid_to', '>', now())
+            ->where('points_required', '>', 0)
+            ->get();
+            
+        $userVouchers = \App\Models\UserDiscount::where('user_id', Auth::id())
+            ->with('discount')
+            ->get();
+
+        return view('clien.taikhoan', compact('availableVouchers', 'userVouchers'));
+    }
+
+    public function lichsu()
+    {
+        $orders = \App\Models\Order::where('user_id', Auth::id())
+            ->with(['orderItems.variant.product'])
+            ->latest()
+            ->get();
+
+        return view('clien.lichsudonhang', compact('orders'));
     }
     //phần đăng nhập, đăng ký
     public function dangnhap()
