@@ -6,9 +6,31 @@
             <!-- Image Gallery (Asymmetric Layout) -->
             <div class="lg:col-span-7 grid grid-cols-2 gap-4">
                 <div class="col-span-2 aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-low group">
-                    <img alt="{{ $product->name }}"
+                    <img id="main-product-image" alt="{{ $product->name }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                        src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                        src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" 
+                        data-default-src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                </div>
+                
+                <!-- Thumbnails -->
+                <div class="col-span-2 flex gap-4 overflow-x-auto py-2 px-1 scrollbar-hide">
+                    @php $defaultImg = $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80'; @endphp
+                    <!-- Main Product Image Thumbnail -->
+                    <button type="button" class="thumbnail-btn w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-primary" 
+                            onclick="selectThumbnail(this, '{{ $defaultImg }}')">
+                        <img src="{{ $defaultImg }}" class="w-full h-full object-cover" alt="Main image">
+                    </button>
+                    
+                    <!-- Variant Images Thumbnails -->
+                    @foreach($product->variants as $variant)
+                        @if($variant->image)
+                            <button type="button" class="thumbnail-btn w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden border-2 border-transparent hover:border-primary-container transition-all" 
+                                    data-variant-id="{{ $variant->variant_id }}"
+                                    onclick="selectThumbnail(this, '{{ asset('storage/' . $variant->image) }}')">
+                                <img src="{{ asset('storage/' . $variant->image) }}" class="w-full h-full object-cover" alt="Variant image">
+                            </button>
+                        @endif
+                    @endforeach
                 </div>
             </div>
             <!-- Content Info -->
@@ -44,12 +66,18 @@
                     <div class="flex flex-wrap gap-4">
                         @forelse($product->variants as $variant)
                         <button
-                            class="variant-btn py-3 px-6 rounded-xl border-2 transition-all font-bold 
+                            type="button"
+                            class="variant-btn py-3 px-6 rounded-xl border-2 transition-all font-bold flex items-center gap-2
                             {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }}"
+                            data-variant-id="{{ $variant->variant_id }}"
                             data-price="{{ number_format($variant->price) }}đ"
                             data-stock="{{ $variant->stock_quantity }}"
+                            data-image="{{ $variant->image ? asset('storage/' . $variant->image) : '' }}"
                             onclick="selectVariant(this)">
                             {{ $variant->volume_id }}ml
+                            @if($variant->color_code)
+                                <span class="w-4 h-4 rounded-full border border-gray-300 inline-block" style="background-color: {{ $variant->color_code }};" title="{{ $variant->color }}"></span>
+                            @endif
                         </button>
                         @empty
                         <p class="text-sm text-outline">Sản phẩm này hiện chưa có biến thể dung tích.</p>
@@ -58,7 +86,7 @@
                 </div>
 
                 <script>
-                    function selectVariant(element) {
+                    function selectVariant(element, syncThumbnail = true) {
                         // Reset all buttons
                         document.querySelectorAll('.variant-btn').forEach(btn => {
                             btn.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
@@ -72,6 +100,65 @@
                         // Update price and stock
                         document.getElementById('display-price').innerText = element.getAttribute('data-price');
                         document.getElementById('display-stock').innerText = 'Tồn kho: ' + element.getAttribute('data-stock');
+                        
+                        // Update variant ID for form submission
+                        const variantInput = document.getElementById('selected-variant-id');
+                        if (variantInput) {
+                            variantInput.value = element.getAttribute('data-variant-id');
+                        }
+
+                        // Update main image and thumbnail
+                        if (syncThumbnail) {
+                            const mainImage = document.getElementById('main-product-image');
+                            const variantImage = element.getAttribute('data-image');
+                            
+                            // Try to find the thumbnail for this variant to highlight it
+                            const variantId = element.getAttribute('data-variant-id');
+                            const thumbnail = document.querySelector(`.thumbnail-btn[data-variant-id="${variantId}"]`);
+                            
+                            document.querySelectorAll('.thumbnail-btn').forEach(btn => {
+                                btn.classList.remove('border-primary');
+                                btn.classList.add('border-transparent');
+                            });
+                            
+                            if (thumbnail) {
+                                thumbnail.classList.remove('border-transparent');
+                                thumbnail.classList.add('border-primary');
+                                mainImage.src = variantImage;
+                            } else {
+                                // Default thumbnail logic if this variant doesn't have a specific image
+                                const defaultThumb = document.querySelector('.thumbnail-btn:not([data-variant-id])');
+                                if (defaultThumb) {
+                                    defaultThumb.classList.remove('border-transparent');
+                                    defaultThumb.classList.add('border-primary');
+                                }
+                                mainImage.src = variantImage ? variantImage : mainImage.getAttribute('data-default-src');
+                            }
+                        }
+                    }
+
+                    function selectThumbnail(element, src) {
+                        // Update main image
+                        const mainImage = document.getElementById('main-product-image');
+                        mainImage.src = src;
+
+                        // Update border
+                        document.querySelectorAll('.thumbnail-btn').forEach(btn => {
+                            btn.classList.remove('border-primary');
+                            btn.classList.add('border-transparent');
+                        });
+                        element.classList.remove('border-transparent');
+                        element.classList.add('border-primary');
+
+                        // Check if thumbnail belongs to a variant
+                        const variantId = element.getAttribute('data-variant-id');
+                        if (variantId) {
+                            // Find the correspond variant button and click it to sync price/stock (passing false to avoid syncing thumb again)
+                            const variantBtn = document.querySelector(`.variant-btn[data-variant-id="${variantId}"]`);
+                            if (variantBtn && !variantBtn.classList.contains('border-primary')) {
+                                selectVariant(variantBtn, false); 
+                            }
+                        }
                     }
 
                     // Initial price/stock if variants exist
@@ -122,7 +209,7 @@
                 <form action="{{ route('cart.add') }}" method="POST" class="flex flex-col gap-4 pt-4">
                     @csrf
                     @if($product->variants->first())
-                        <input type="hidden" name="variant_id" value="{{ $product->variants->first()->variant_id }}">
+                        <input type="hidden" name="variant_id" id="selected-variant-id" value="{{ $product->variants->first()->variant_id }}">
                     @endif
                     <input type="hidden" name="quantity" value="1">
                     

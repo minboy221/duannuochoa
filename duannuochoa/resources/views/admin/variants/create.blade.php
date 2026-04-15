@@ -6,7 +6,7 @@
     </div>
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
-        <form action="{{ route('admin.products.variants.store', $product) }}" method="POST" novalidate>
+        <form action="{{ route('admin.products.variants.store', $product) }}" method="POST" enctype="multipart/form-data" novalidate>
             @csrf
             
             <div class="grid grid-cols-2 gap-4 mb-4">
@@ -16,9 +16,25 @@
                     @error('volume_id') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
-                    <label class="block text-sm font-bold mb-2">Màu sắc (Không bắt buộc)</label>
-                    <input type="text" name="color" value="{{ old('color') }}" class="w-full rounded-lg border-gray-300 p-3">
+                    <label class="block text-sm font-bold mb-2">Màu sắc (Tên)</label>
+                    <input type="text" name="color" value="{{ old('color') }}" placeholder="Ví dụ: Xanh đen" class="w-full rounded-lg border-gray-300 p-3">
                     @error('color') <span class="text-error text-sm">{{ $message }}</span> @enderror
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="block text-sm font-bold mb-2">Mã màu (Hex)</label>
+                    <div class="flex items-center gap-2">
+                        <input type="color" name="color_code" value="{{ old('color_code', '#000000') }}" class="h-12 w-20 rounded-lg border-gray-300 p-1">
+                        <input type="text" id="color_hex_display" value="{{ old('color_code', '#000000') }}" class="w-full rounded-lg border-gray-300 p-3" readonly>
+                    </div>
+                    @error('color_code') <span class="text-error text-sm">{{ $message }}</span> @enderror
+                </div>
+                <div>
+                    <label class="block text-sm font-bold mb-2">Ảnh biến thể</label>
+                    <input type="file" name="image" class="w-full rounded-lg border-gray-300 p-2 border">
+                    @error('image') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
 
@@ -42,4 +58,10 @@
         </form>
     </div>
 </main>
+
+<script>
+    document.querySelector('input[name="color_code"]').addEventListener('input', function(e) {
+        document.getElementById('color_hex_display').value = e.target.value.toUpperCase();
+    });
+</script>
 @endsection

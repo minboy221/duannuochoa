@@ -16,13 +16,18 @@
                         <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
                             <!-- Try getting product image, fallback to placeholder -->
                             <img alt="{{ $item->variant->product->name }}" class="w-full h-full object-cover"
-                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyLFknpt8y9Gex4hbyGZIAU66nggRaTUnoPn7Fo-_PPJE-Eyw6mORWDex56-o7Zi4nPM1Vp9py5yRku82IsLSRErxznI6oOA0Lk3GgwLVtfd14d060vuAZgpL3PhB4Nkl-1KczTlh6GG3D292dGYXZuJaik3F8mEdjQd_jDR6HINJJOST-Lm8azKheqCoFQVquYr8eeyN7B-kLlbW5NibvUOuaKO2BWgXxqHK_UAU07FEdDpOBsr-xkD7rYFCzTIkdf9C2TKRuB7Pn" />
+                                src="{{ $item->variant->image ? asset('storage/' . $item->variant->image) : ($item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80') }}" />
                         </div>
                         <div class="flex-grow text-center md:text-left">
                             <h3 class="font-headline text-xl font-bold text-on-surface">{{ $item->variant->product->name }}</h3>
-                            <p class="text-on-surface-variant text-sm mt-1">
-                                <!-- Example: show variant color/vol if exists -->
-                                Phân loại: {{ $item->variant->color ?? ($item->variant->volume_id . 'ml') }}
+                            <p class="text-on-surface-variant text-sm mt-1 flex items-center gap-2">
+                                Phân loại: {{ $item->variant->volume_id }}ml
+                                @if($item->variant->color)
+                                    - {{ $item->variant->color }}
+                                @endif
+                                @if($item->variant->color_code)
+                                    <span class="w-3 h-3 rounded-full border border-gray-300 inline-block" style="background-color: {{ $item->variant->color_code }};" title="{{ $item->variant->color }}"></span>
+                                @endif
                             </p>
                         </div>
                         <div class="flex flex-col items-center gap-4">
