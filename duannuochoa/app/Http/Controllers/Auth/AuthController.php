@@ -90,6 +90,7 @@ class AuthController extends Controller
             'phone' => $registerData['phone'],
             'address' => $registerData['address'],
             'role_id' => 2, // Default role: User
+            'xu' => 100, // Tặng 100 xu cho tài khoản mới
         ]);
 
         // Cleanup

@@ -1,0 +1,190 @@
+@extends('layouts.app')
+@section('content')
+<main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <!-- Billing Details -->
+        <div class="lg:col-span-8 space-y-8">
+            <header>
+                <h1 class="font-headline text-4xl font-extrabold tracking-tight text-on-surface mb-2">Thông tin thanh toán</h1>
+                <p class="text-on-surface-variant font-medium">Vui lòng điền đầy đủ thông tin giao hàng bên dưới.</p>
+            </header>
+
+            <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-6">
+                @csrf
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-on-surface-variant ml-2">Họ và tên người nhận</label>
+                        <input type="text" name="full_name" value="{{ Auth::user()->full_name }}" required
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="text-sm font-bold text-on-surface-variant ml-2">Số điện thoại</label>
+                        <input type="tel" name="phone" value="{{ Auth::user()->phone }}" required
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">
+                    </div>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-sm font-bold text-on-surface-variant ml-2">Địa chỉ nhận hàng</label>
+                        <textarea name="address" rows="3" required
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">{{ Auth::user()->address }}</textarea>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-bold text-lg text-on-surface">Phương thức vận chuyển</h3>
+                    <div class="grid grid-cols-1 gap-4">
+                        @foreach($shippingMethods as $method)
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-primary/20 has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
+                            <input type="radio" name="shipping_id" value="{{ $method->shipping_id }}" {{ $loop->first ? 'checked' : '' }} class="hidden">
+                            <span class="material-symbols-outlined text-primary mr-4">local_shipping</span>
+                            <div class="flex-grow">
+                                <p class="font-bold">{{ $method->name ?? 'Giao hàng' }}</p>
+                                <p class="text-sm text-on-surface-variant">Thời gian nhận hàng 2-3 ngày</p>
+                            </div>
+                            <span class="font-bold text-primary">{{ $method->cost > 0 ? number_format($method->cost) . 'đ' : 'Miễn phí' }}</span>
+                        </label>
+                        @endforeach
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-bold text-lg text-on-surface">Voucher hiện có</h3>
+                    @if($userVouchers->count() > 0)
+                    <div class="grid grid-cols-1 gap-4">
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-surface-container-high has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
+                            <input type="radio" name="user_discount_id" value="" checked class="hidden">
+                            <span class="material-symbols-outlined text-outline-variant mr-4">block</span>
+                            <div class="flex-grow">
+                                <p class="font-bold text-on-surface-variant">Không sử dụng voucher</p>
+                            </div>
+                        </label>
+                        @foreach($userVouchers as $uv)
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-surface-container-high has-[:checked]:border-primary has-[:checked]:bg-primary-container/10"
+                               data-code="{{ $uv->discount->code }}" 
+                               data-value="{{ $uv->discount->discount_value }}" 
+                               data-type="{{ $uv->discount->discount_type }}"
+                               data-min="{{ $uv->discount->min_order_value }}">
+                            <input type="radio" name="user_discount_id" value="{{ $uv->user_discount_id }}" class="hidden" onchange="calculateTotal()">
+                            <span class="material-symbols-outlined text-primary mr-4">confirmation_number</span>
+                            <div class="flex-grow">
+                                <p class="font-bold">{{ $uv->discount->code }}</p>
+                                <p class="text-sm text-on-surface-variant">
+                                    Giảm {{ number_format($uv->discount->discount_value) }}{{ $uv->discount->discount_type == 'percentage' ? '%' : 'đ' }} 
+                                    (Từ đơn {{ number_format($uv->discount->min_order_value) }}đ)
+                                </p>
+                            </div>
+                            @if($subtotal < $uv->discount->min_order_value)
+                                <span class="text-[10px] font-bold text-error uppercase">Chưa đủ ĐK</span>
+                            @else
+                                <span class="material-symbols-outlined text-primary opacity-0 group-has-[:checked]:opacity-100">check_circle</span>
+                            @endif
+                        </label>
+                        @endforeach
+                    </div>
+                    @else
+                    <p class="text-on-surface-variant italic p-4 bg-surface-container-low rounded-xl">Bạn chưa có voucher nào. Hãy đổi xu để lấy voucher!</p>
+                    @endif
+                </div>
+            </form>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="lg:col-span-4 lg:sticky lg:top-32">
+            <div class="bg-surface-container-lowest p-8 rounded-2xl shadow-2xl shadow-blue-900/5 space-y-6 border border-surface-container-high">
+                <h2 class="font-headline text-2xl font-bold text-on-surface border-b border-surface-container-high pb-4">Tóm tắt đơn hàng</h2>
+                
+                <div class="space-y-4 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                    @foreach($cartItems as $item)
+                    <div class="flex gap-4">
+                        <div class="w-16 h-16 bg-surface-container-low rounded-lg overflow-hidden flex-shrink-0">
+                            <img src="{{ $item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=200&q=80' }}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="flex-grow">
+                            <p class="text-sm font-bold text-on-surface line-clamp-1">{{ $item->variant->product->name }}</p>
+                            <p class="text-xs text-on-surface-variant">{{ $item->variant->volume_id }}ml x {{ $item->quantity }}</p>
+                        </div>
+                        <p class="text-sm font-bold">
+                            @php $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price; @endphp
+                            {{ number_format($price * $item->quantity) }}đ
+                        </p>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="space-y-3 pt-6 border-t border-surface-container-high">
+                    <div class="flex justify-between text-on-surface-variant">
+                        <span>Tạm tính</span>
+                        <span class="font-bold text-on-surface" id="summary-subtotal" data-val="{{ $subtotal }}">{{ number_format($subtotal) }}đ</span>
+                    </div>
+                    <div class="flex justify-between text-on-surface-variant">
+                        <span>Giảm giá</span>
+                        <span class="font-bold text-tertiary" id="summary-discount">-0đ</span>
+                    </div>
+                    <div class="flex justify-between text-on-surface-variant">
+                        <span>Phí vận chuyển</span>
+                        <span class="font-bold text-secondary">Miễn phí</span>
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-surface-container-high">
+                    <div class="flex justify-between items-end mb-8">
+                        <span class="font-bold text-on-surface">Tổng thanh toán</span>
+                        <span class="font-headline text-3xl font-extrabold text-primary" id="summary-total">{{ number_format($subtotal) }}đ</span>
+                    </div>
+                    
+                    <button type="button" onclick="document.getElementById('checkout-form').submit()"
+                        class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-2xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
+                        Xác nhận đặt hàng
+                        <span class="material-symbols-outlined">check</span>
+                    </button>
+                    
+                    <p class="text-[10px] text-center text-on-surface-variant mt-4 uppercase font-bold tracking-widest">
+                        Bằng việc nhấn đặt hàng, bạn đồng ý với các điều khoản của chúng tôi
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    function calculateTotal() {
+        const subtotal = parseInt(document.getElementById('summary-subtotal').dataset.val);
+        const selectedVoucher = document.querySelector('input[name="user_discount_id"]:checked');
+        let discountAmount = 0;
+
+        if (selectedVoucher && selectedVoucher.value !== "") {
+            const label = selectedVoucher.closest('label');
+            const type = label.dataset.type;
+            const value = parseInt(label.dataset.value);
+            const min = parseInt(label.dataset.min);
+
+            if (subtotal >= min) {
+                if (type === 'fixed') {
+                    discountAmount = value;
+                } else {
+                    discountAmount = (subtotal * value) / 100;
+                }
+            }
+        }
+
+        document.getElementById('summary-discount').innerText = '-' + discountAmount.toLocaleString() + 'đ';
+        document.getElementById('summary-total').innerText = Math.max(0, subtotal - discountAmount).toLocaleString() + 'đ';
+    }
+
+    // Initial calculation
+    window.addEventListener('load', calculateTotal);
+</script>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+    }
+</style>
+@endsection

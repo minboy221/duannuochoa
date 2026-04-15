@@ -48,6 +48,7 @@
                             {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }}"
                             data-price="{{ number_format($variant->price) }}đ"
                             data-stock="{{ $variant->stock_quantity }}"
+                            data-variant-id="{{ $variant->variant_id }}"
                             onclick="selectVariant(this)">
                             {{ $variant->volume_id }}ml
                         </button>
@@ -72,6 +73,12 @@
                         // Update price and stock
                         document.getElementById('display-price').innerText = element.getAttribute('data-price');
                         document.getElementById('display-stock').innerText = 'Tồn kho: ' + element.getAttribute('data-stock');
+                        
+                        // Update hidden variant_id input
+                        const variantInput = document.querySelector('input[name="variant_id"]');
+                        if (variantInput) {
+                            variantInput.value = element.getAttribute('data-variant-id');
+                        }
                     }
 
                     // Initial price/stock if variants exist

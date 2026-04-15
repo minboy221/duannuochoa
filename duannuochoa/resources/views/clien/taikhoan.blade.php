@@ -214,8 +214,8 @@
                     <div class="bg-gradient-to-br from-primary to-primary-container p-6 rounded-lg text-on-primary">
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="stars"
                             style="font-variation-settings: 'FILL' 1;">stars</span>
-                        <h4 class="text-sm font-medium opacity-80">Điểm tích lũy</h4>
-                        <p class="text-3xl font-black">1,250</p>
+                        <h4 class="text-sm font-medium opacity-80">Xu tích lũy</h4>
+                        <p class="text-3xl font-black">{{ number_format(Auth::user()->xu) }} xu</p>
                     </div>
                     <div class="bg-tertiary-container p-6 rounded-lg text-on-tertiary-container">
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="local_shipping"
@@ -226,8 +226,55 @@
                     <div class="bg-secondary-container p-6 rounded-lg text-on-secondary-container">
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="confirmation_number"
                             style="font-variation-settings: 'FILL' 1;">confirmation_number</span>
-                        <h4 class="text-sm font-medium opacity-80">Voucher khả dụng</h4>
-                        <p class="text-3xl font-black">04</p>
+                        <h4 class="text-sm font-medium opacity-80">Voucher của tôi</h4>
+                        <p class="text-3xl font-black">{{ $userVouchers->whereNull('used_at')->count() }}</p>
+                    </div>
+                </section>
+
+                <!-- Voucher Exchange Section -->
+                <section class="space-y-6" id="vouchers">
+                    <h2 class="text-2xl font-headline font-extrabold tracking-tight text-primary">Đổi Voucher từ Xu</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @forelse($availableVouchers as $voucher)
+                        <div class="bg-surface-container-low p-6 rounded-lg border-2 border-dashed border-primary/20 flex justify-between items-center group hover:border-primary transition-all">
+                            <div>
+                                <h4 class="font-bold text-lg text-primary">{{ $voucher->code }}</h4>
+                                <p class="text-sm text-on-surface-variant">Giảm {{ number_format($voucher->discount_value) }}{{ $voucher->discount_type == 'percentage' ? '%' : 'đ' }}</p>
+                                <p class="text-xs font-bold text-tertiary mt-2">Giá: {{ number_format($voucher->points_required) }} xu</p>
+                            </div>
+                            <form action="{{ route('vouchers.redeem') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="discount_id" value="{{ $voucher->discount_id }}">
+                                <button type="submit" @if(Auth::user()->xu < $voucher->points_required) disabled @endif
+                                    class="px-6 py-2 rounded-full font-bold text-sm transition-all
+                                    {{ Auth::user()->xu >= $voucher->points_required ? 'bg-primary text-on-primary hover:scale-105' : 'bg-surface-container-highest text-on-surface-variant cursor-not-allowed' }}">
+                                    Đổi
+                                </button>
+                            </form>
+                        </div>
+                        @empty
+                        <p class="text-on-surface-variant italic">Hiện không có voucher nào khả dụng để đổi.</p>
+                        @endforelse
+                    </div>
+
+                    <h2 class="text-2xl font-headline font-extrabold tracking-tight text-primary mt-12">Voucher của tôi</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        @forelse($userVouchers as $uv)
+                        <div class="bg-surface-container-lowest p-6 rounded-lg border border-surface-container-high flex justify-between items-center opacity-{{ $uv->used_at ? '50' : '100' }}">
+                            <div>
+                                <h4 class="font-bold text-lg {{ $uv->used_at ? 'line-through text-on-surface-variant' : 'text-on-surface' }}">{{ $uv->discount->code }}</h4>
+                                <p class="text-sm text-on-surface-variant">Hạn dùng: {{ $uv->discount->valid_to->format('d/m/Y') }}</p>
+                                @if($uv->used_at)
+                                    <span class="inline-block mt-2 px-2 py-1 rounded-md bg-surface-container text-[10px] font-bold uppercase">Đã sử dụng</span>
+                                @else
+                                    <span class="inline-block mt-2 px-2 py-1 rounded-md bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Khả dụng</span>
+                                @endif
+                            </div>
+                            <span class="material-symbols-outlined text-4xl text-primary/30">confirmation_number</span>
+                        </div>
+                        @empty
+                        <p class="text-on-surface-variant italic">Bạn chưa sở hữu voucher nào.</p>
+                        @endforelse
                     </div>
                 </section>
             </div>

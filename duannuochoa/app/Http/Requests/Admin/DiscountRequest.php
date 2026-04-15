@@ -29,6 +29,7 @@ class DiscountRequest extends FormRequest
             'valid_from' => 'required|date',
             'valid_to' => 'required|date|after_or_equal:valid_from',
             'usage_limit' => 'nullable|integer|min:1',
+            'points_required' => 'nullable|integer|min:0',
         ];
     }
 
@@ -52,6 +53,8 @@ class DiscountRequest extends FormRequest
             'valid_to.after_or_equal' => 'Ngày kết thúc phải sau hoặc bằng ngày bắt đầu.',
             'usage_limit.integer' => 'Giới hạn sử dụng phải là số nguyên.',
             'usage_limit.min' => 'Giới hạn sử dụng phải ít nhất là 1.',
+            'points_required.integer' => 'Số xu yêu cầu phải là số nguyên.',
+            'points_required.min' => 'Số xu yêu cầu không được nhỏ hơn 0.',
         ];
     }
 }

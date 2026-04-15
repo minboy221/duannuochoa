@@ -108,11 +108,11 @@
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
                             <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($subtotal ?? 0) }}đ</span>
                         </div>
-                        <button
+                        <a href="{{ route('checkout.index') }}"
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
                             Tiến hành thanh toán
                             <span class="material-symbols-outlined">arrow_forward</span>
-                        </button>
+                        </a>
                         <div class="mt-6 flex items-center justify-center gap-4">
                             <div
                                 class="flex items-center gap-1 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">
