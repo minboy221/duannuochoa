@@ -25,24 +25,37 @@
             <div class="lg:col-span-5 sticky top-32 space-y-8">
                 <div class="space-y-2">
                     <div class="flex items-center gap-2">
-                        <span
-                            class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Mới
-                            Nhất</span>
+                        @if($product->is_featured)
+                        <span class="bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Nổi bật</span>
+                        @endif
                         <div class="flex text-tertiary">
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 1;">star</span>
-                            <span class="material-symbols-outlined text-sm"
-                                style="font-variation-settings: 'FILL' 0;">star</span>
+                            <!-- Placeholder ratings -->
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+                            <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 0;">star</span>
                             <span class="ml-2 text-on-surface-variant text-sm font-medium">(128 đánh giá)</span>
                         </div>
                     </div>
                     <h1 class="text-5xl font-extrabold text-primary tracking-tight leading-tight">{{ $product->name }}</h1>
+                    <p class="text-2xl font-bold text-on-surface">
+                        {{ number_format($product->base_price) }}đ
+                    </p>
+                </div>
+                <p class="text-on-surface-variant leading-relaxed text-lg">
+                    {!! nl2br(e($product->description ?? 'Đánh thức năng lượng bứt phá với sản phẩm này.')) !!}
+                </p>
+                <!-- Options -->
+                <div class="space-y-4">
+                    <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant">Phân loại</h3>
+                    <div class="flex flex-wrap gap-4">
+                        @foreach($product->variants as $variant)
+                        <button
+                            class="py-3 px-6 rounded-xl border-2 {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }} font-bold transition-all focus:border-primary">
+                            {{ $variant->volume_id ? $variant->volume_id.'ml' : ($variant->color ?? 'Mặc định') }}
+                        </button>
+                        @endforeach
                     <p class="text-2xl font-bold text-on-surface" id="display-price">{{ number_format($product->base_price) }}đ</p>
                 </div>
                 <p class="text-on-surface-variant leading-relaxed text-lg">
@@ -132,17 +145,19 @@
                     </div>
                 </div>
                 <!-- Actions -->
-                <div class="flex flex-col gap-4 pt-4">
-                    <button
-                        class="w-full py-4 rounded-xl bg-gradient-to-r from-primary to-primary-container text-on-primary font-bold text-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
-                        Mua ngay
-                    </button>
-                    <button
+                <form action="{{ route('cart.add') }}" method="POST" class="flex flex-col gap-4 pt-4">
+                    @csrf
+                    @if($product->variants->first())
+                        <input type="hidden" name="variant_id" value="{{ $product->variants->first()->variant_id }}">
+                    @endif
+                    <input type="hidden" name="quantity" value="1">
+                    
+                    <button type="submit"
                         class="w-full py-4 rounded-xl bg-surface-container-highest text-primary font-bold text-lg hover:bg-surface-container-high transition-all flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
                         Thêm vào giỏ hàng
                     </button>
-                </div>
+                </form>
                 <div
                     class="flex justify-between items-center py-4 border-t border-surface-container-high text-sm text-on-surface-variant">
                     <div class="flex items-center gap-2">

@@ -44,6 +44,9 @@ class HomeController extends Controller
         return view('clien.dangnhap');
     }
     //phần xem chi tiết sản phẩm
+    public function xemchitiet($id)
+    {
+        $product = \App\Models\Product::with('variants')->findOrFail($id);
     public function xemchitiet(\App\Models\Product $product)
     {
         $product->load('variants');
