@@ -43,9 +43,10 @@ class HomeController extends Controller
         return view('clien.dangnhap');
     }
     //phần xem chi tiết sản phẩm
-    public function xemchitiet()
+    public function xemchitiet($id)
     {
-        return view('xemchitiet');
+        $product = \App\Models\Product::with('variants')->findOrFail($id);
+        return view('clien.xemchitiet', compact('product'));
     }
     //phần trang admin tổng quan
     public function tongquan()

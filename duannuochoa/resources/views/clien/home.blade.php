@@ -57,9 +57,9 @@
                             <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuCMwqmq3Pecj-lgmuDdelVlH6FdmSNeIbtLNRa3q2WHUTcXl8z8BvYQ5CGi8twizyZwyB2KImekckngCDQQ7sOmzlJscO049-_7k38M3ae4rOE3nO-gQR_iXFI8MkWdUa3_W-TZeoRDv7McKttfJI4amb1aiKRiryUJn6Y6WKyegUCEXMAoNlMzkeJTz2vnk3sErFe7Kg8nYxR7xgL67seGVJr726ayucnrScesCy96GX91gu0_2Bue9G6sJLAplW5G-MCbLueRnHf1" />
                             <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                                <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
+                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="inline-block p-4 rounded-full kinetic-gradient text-white shadow-lg">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
                             </div>
                         </div>
                     @elseif($loop->iteration == 4)
@@ -68,7 +68,7 @@
                                 <h3 class="font-headline text-2xl font-bold">{{ $item->name }}</h3>
                                 <p class="text-outline-variant mb-4">Hương thơm độc đáo dành cho phái mạnh.</p>
                                 <p class="text-primary font-black text-2xl mb-4">{{ number_format($item->base_price) }}đ</p>
-                                <button class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Thêm vào giỏ</button>
+                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="inline-block bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Xem chi tiết</a>
                             </div>
                             <div class="flex-1 h-full overflow-hidden">
                                 <img class="w-full h-full object-cover" 
@@ -78,10 +78,12 @@
                     @else
                         <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all">
                             <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
-                                <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
+                                <a href="{{ route('xemchitiet', $item->product_id) }}">
+                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKCuUtPhmGNoQ4JWZXxcmsRlK9CGXUAgX5aJg9NeZyK1LnTzhwcTZdt7JSeyDf4OkbCrpEOUd8IHnU5gQL6lyqFMfXfhrfhvHcK_8sC_FIudYg4na7x0IO0y4rTsThWIkHmjuQVADPbW0mC3l1X7pAE7wOoVDFw8OO3LB2xgnFqIP4avVjTwEkd2PB5WcFn8VsG9hTSjfnk1z8Ir00LXiaFUUo-QqW_zGYU8SJldN46ZdhhZvKYnxRu1vS5NRBzu1mKaSrz5jv_ceZ" />
+                                </a>
                             </div>
-                            <h3 class="font-bold text-lg">{{ $item->name }}</h3>
+                            <h3 class="font-bold text-lg"><a href="{{ route('xemchitiet', $item->product_id) }}">{{ $item->name }}</a></h3>
                             <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
                             <p class="text-primary font-black text-xl">{{ number_format($item->base_price) }}đ</p>
                         </div>
@@ -121,10 +123,9 @@
                         <p class="text-sm text-outline mb-4">Sản phẩm bán chạy nhất</p>
                         <div class="flex justify-between items-center">
                             <span class="text-primary font-black text-xl">{{ number_format($item->base_price) }}đ</span>
-                            <button
-                                class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
-                                <span class="material-symbols-outlined">add</span>
-                            </button>
+                            <a href="{{ route('xemchitiet', $item->product_id) }}" class="h-10 w-10 flex items-center justify-center rounded-full bg-surface-container-high text-primary hover:kinetic-gradient hover:text-white transition-all">
+                                <span class="material-symbols-outlined">visibility</span>
+                            </a>
                         </div>
                     </div>
                 </div>

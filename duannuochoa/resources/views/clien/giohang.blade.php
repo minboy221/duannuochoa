@@ -5,77 +5,64 @@
         <header class="mb-12">
             <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-2">Giỏ Hàng
             </h1>
-            <p class="text-on-surface-variant font-medium">Bạn có 2 sản phẩm trong giỏ hàng của mình.</p>
+            <p class="text-on-surface-variant font-medium">Bạn có {{ count($cartItems ?? []) }} sản phẩm trong giỏ hàng của mình.</p>
         </header>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <!-- Products Table Section -->
             <div class="lg:col-span-8 space-y-6">
-                <!-- Product Card 1 -->
-                <div
-                    class="bg-surface-container-lowest p-6 rounded-lg flex flex-col md:flex-row items-center gap-8 shadow-sm transition-transform hover:scale-[1.01]">
-                    <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
-                        <img alt="X-Men Perfume" class="w-full h-full object-cover"
-                            data-alt="Premium glass cologne bottle with deep blue liquid against a minimalist light blue background with soft dramatic studio lighting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyLFknpt8y9Gex4hbyGZIAU66nggRaTUnoPn7Fo-_PPJE-Eyw6mORWDex56-o7Zi4nPM1Vp9py5yRku82IsLSRErxznI6oOA0Lk3GgwLVtfd14d060vuAZgpL3PhB4Nkl-1KczTlh6GG3D292dGYXZuJaik3F8mEdjQd_jDR6HINJJOST-Lm8azKheqCoFQVquYr8eeyN7B-kLlbW5NibvUOuaKO2BWgXxqHK_UAU07FEdDpOBsr-xkD7rYFCzTIkdf9C2TKRuB7Pn" />
-                    </div>
-                    <div class="flex-grow text-center md:text-left">
-                        <h3 class="font-headline text-xl font-bold text-on-surface">X-Men For Boss Intense</h3>
-                        <p class="text-on-surface-variant text-sm mt-1">Hương trầm nội lực, nam tính</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-4">
-                        <span class="font-headline text-lg font-bold text-primary">185,000đ</span>
-                        <div class="flex items-center bg-surface-container-low rounded-full px-4 py-2">
-                            <button class="text-primary hover:text-primary-dim transition-colors">
-                                <span class="material-symbols-outlined text-xl">remove</span>
-                            </button>
-                            <span class="mx-4 font-bold text-on-surface">1</span>
-                            <button class="text-primary hover:text-primary-dim transition-colors">
-                                <span class="material-symbols-outlined text-xl">add</span>
-                            </button>
+                <!-- Product Carts -->
+                @forelse($cartItems as $item)
+                    <div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col md:flex-row items-center gap-8 shadow-sm transition-transform hover:scale-[1.01]">
+                        <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
+                            <!-- Try getting product image, fallback to placeholder -->
+                            <img alt="{{ $item->variant->product->name }}" class="w-full h-full object-cover"
+                                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCyLFknpt8y9Gex4hbyGZIAU66nggRaTUnoPn7Fo-_PPJE-Eyw6mORWDex56-o7Zi4nPM1Vp9py5yRku82IsLSRErxznI6oOA0Lk3GgwLVtfd14d060vuAZgpL3PhB4Nkl-1KczTlh6GG3D292dGYXZuJaik3F8mEdjQd_jDR6HINJJOST-Lm8azKheqCoFQVquYr8eeyN7B-kLlbW5NibvUOuaKO2BWgXxqHK_UAU07FEdDpOBsr-xkD7rYFCzTIkdf9C2TKRuB7Pn" />
                         </div>
-                    </div>
-                    <div class="text-right min-w-[120px]">
-                        <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền
-                        </p>
-                        <p class="font-headline text-xl font-bold text-on-surface">185,000đ</p>
-                    </div>
-                    <button class="text-error opacity-50 hover:opacity-100 transition-opacity">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
-                <!-- Product Card 2 -->
-                <div
-                    class="bg-surface-container-lowest p-6 rounded-lg flex flex-col md:flex-row items-center gap-8 shadow-sm transition-transform hover:scale-[1.01]">
-                    <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
-                        <img alt="X-Men Shampoo" class="w-full h-full object-cover"
-                            data-alt="Sleek black men's grooming bottle on a wet stone surface with water droplets and cool blue ambient light"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCzJ3k4jTGT08yM_hWqDcCkn1-LUSqgfsWvR2L1kDvKvkW9dU7BWWxomORckfIfMA2d1uj2LcXO1uy6wRtaR9KwCXFJ7dUSwmx_Vz_G5PkHq6lmsBnQceweN4Z0SzgcNYhUKlY3UFK4o4eZ4zip3kLUoQiBf4QqJmy_OC-5Zq-cDgCXCVjl6yA77y1IvhzUO1ccURy5Y2pJu2tX9fGRtBeKuhMj0K50gYxs-95qzztvtTRKQuZWXImUpfn8vMvTmVYZNPUdEIakYsfP" />
-                    </div>
-                    <div class="flex-grow text-center md:text-left">
-                        <h3 class="font-headline text-xl font-bold text-on-surface">Dầu Gội X-Men Fire</h3>
-                        <p class="text-on-surface-variant text-sm mt-1">Hương thơm nồng cháy, quyến rũ</p>
-                    </div>
-                    <div class="flex flex-col items-center gap-4">
-                        <span class="font-headline text-lg font-bold text-primary">162,000đ</span>
-                        <div class="flex items-center bg-surface-container-low rounded-full px-4 py-2">
-                            <button class="text-primary hover:text-primary-dim transition-colors">
-                                <span class="material-symbols-outlined text-xl">remove</span>
-                            </button>
-                            <span class="mx-4 font-bold text-on-surface">1</span>
-                            <button class="text-primary hover:text-primary-dim transition-colors">
-                                <span class="material-symbols-outlined text-xl">add</span>
-                            </button>
+                        <div class="flex-grow text-center md:text-left">
+                            <h3 class="font-headline text-xl font-bold text-on-surface">{{ $item->variant->product->name }}</h3>
+                            <p class="text-on-surface-variant text-sm mt-1">
+                                <!-- Example: show variant color/vol if exists -->
+                                Phân loại: {{ $item->variant->color ?? ($item->variant->volume_id . 'ml') }}
+                            </p>
                         </div>
+                        <div class="flex flex-col items-center gap-4">
+                            <span class="font-headline text-lg font-bold text-primary">{{ number_format($item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price) }}đ</span>
+                            <form action="{{ route('cart.update') }}" method="POST" class="flex items-center bg-surface-container-low rounded-full px-4 py-2">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="cart_item_id" value="{{ $item->cart_item_id }}">
+                                <button type="button" onclick="this.nextElementSibling.stepDown(); this.form.submit()" class="text-primary hover:text-primary-dim transition-colors">
+                                    <span class="material-symbols-outlined text-xl">remove</span>
+                                </button>
+                                <input type="number" name="quantity" value="{{ $item->quantity }}" min="1" max="{{ $item->variant->stock_quantity }}" class="w-12 text-center bg-transparent border-none font-bold text-on-surface px-1 focus:ring-0 [&::-webkit-inner-spin-button]:appearance-none" onchange="this.form.submit()">
+                                <button type="button" onclick="this.previousElementSibling.stepUp(); this.form.submit()" class="text-primary hover:text-primary-dim transition-colors">
+                                    <span class="material-symbols-outlined text-xl">add</span>
+                                </button>
+                            </form>
+                        </div>
+                        <div class="text-right min-w-[120px]">
+                            <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền</p>
+                            @php 
+                                $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price; 
+                            @endphp
+                            <p class="font-headline text-xl font-bold text-on-surface">{{ number_format($price * $item->quantity) }}đ</p>
+                        </div>
+                        <form action="{{ route('cart.remove', $item->cart_item_id) }}" method="POST" class="m-0">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-error opacity-50 hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined">delete</span>
+                            </button>
+                        </form>
                     </div>
-                    <div class="text-right min-w-[120px]">
-                        <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền
-                        </p>
-                        <p class="font-headline text-xl font-bold text-on-surface">162,000đ</p>
+                @empty
+                    <div class="bg-surface-container-lowest p-8 rounded-lg text-center shadow-sm">
+                        <span class="material-symbols-outlined text-6xl text-surface-dim mb-4">shopping_cart</span>
+                        <h2 class="text-2xl font-bold text-on-surface mb-2">Giỏ hàng trống</h2>
+                        <p class="text-on-surface-variant mb-6">Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+                        <a href="{{ route('home') }}" class="inline-block bg-primary text-on-primary px-8 py-3 rounded-full font-bold hover:bg-primary-dim transition-colors">Đi mua sắm ngay</a>
                     </div>
-                    <button class="text-error opacity-50 hover:opacity-100 transition-opacity">
-                        <span class="material-symbols-outlined">delete</span>
-                    </button>
-                </div>
+                @endforelse
                 <!-- Promo Code -->
                 <div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between mt-8">
                     <div class="flex items-center gap-3 text-on-surface-variant">
@@ -100,12 +87,16 @@
                         Tóm tắt đơn hàng</h2>
                     <div class="space-y-4">
                         <div class="flex justify-between items-center text-on-surface-variant">
-                            <span>Tổng số sản phẩm</span>
-                            <span class="font-bold text-on-surface">2</span>
+                            <span>Tổng số loại sản phẩm</span>
+                            <span class="font-bold text-on-surface">{{ count($cartItems ?? []) }}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-on-surface-variant">
+                            <span>Tổng số lượng</span>
+                            <span class="font-bold text-on-surface">{{ $totalQuantity ?? 0 }}</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tạm tính</span>
-                            <span class="font-bold text-on-surface">347,000đ</span>
+                            <span class="font-bold text-on-surface">{{ number_format($subtotal ?? 0) }}đ</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Phí vận chuyển</span>
@@ -115,7 +106,7 @@
                     <div class="pt-6 border-t border-surface-container-high">
                         <div class="flex justify-between items-end mb-8">
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
-                            <span class="font-headline text-3xl font-extrabold text-primary">347,000đ</span>
+                            <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($subtotal ?? 0) }}đ</span>
                         </div>
                         <button
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">

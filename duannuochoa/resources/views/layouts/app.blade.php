@@ -110,13 +110,13 @@
         <nav class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
             <div class="text-3xl font-black italic tracking-tighter text-blue-700">X-MEN</div>
             <div class="hidden md:flex items-center space-gap-8 gap-8">
-                <a class="text-blue-700 border-b-2 border-blue-600 pb-1 font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
+                <a class="{{ request()->routeIs('home') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('home') }}">Trang Chủ</a>
-                <a class="text-slate-600 font-medium hover:text-blue-500 transition-colors duration-300 font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
+                <a class="{{ request()->routeIs('about') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('about') }}">Giới Thiệu</a>
-                <a class="text-slate-600 font-medium hover:text-blue-500 transition-colors duration-300 font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
+                <a class="{{ request()->routeIs('sanpham', 'xemchitiet') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('sanpham') }}">Sản Phẩm</a>
-                <a class="text-slate-600 font-medium hover:text-blue-500 transition-colors duration-300 font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
+                <a class="{{ request()->routeIs('lienhe') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('lienhe') }}">Liên Hệ</a>
             </div>
             <div class="flex items-center gap-6">
