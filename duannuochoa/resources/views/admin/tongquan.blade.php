@@ -31,7 +31,7 @@
                     <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-full">+12.5%</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Tổng doanh thu</p>
-                <h3 class="text-2xl font-extrabold text-on-background">482,900$</h3>
+                <h3 class="text-2xl font-extrabold text-on-background">{{ number_format($totalRevenue, 0, ',', '.') }}$</h3>
                 <div class="mt-4 h-12 flex items-end gap-1">
                     <div class="w-full bg-primary/20 rounded-t-sm h-[40%]"></div>
                     <div class="w-full bg-primary/20 rounded-t-sm h-[60%]"></div>
@@ -52,8 +52,8 @@
                         84$</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Tổng đơn hàng</p>
-                <h3 class="text-2xl font-extrabold text-on-background">5,741</h3>
-                <p class="text-xs mt-4 text-on-surface-variant italic">240 đơn hàng từ nửa đêm</p>
+                <h3 class="text-2xl font-extrabold text-on-background">{{ number_format($totalOrders) }}</h3>
+                <p class="text-xs mt-4 text-on-surface-variant italic">{{ $ordersToday }} đơn hàng từ nửa đêm</p>
             </div>
             <!-- Card 3: Customers -->
             <div
@@ -65,7 +65,7 @@
                     <span class="text-xs font-bold text-tertiary bg-tertiary-container/20 px-2 py-1 rounded-full">Mới</span>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Khách hàng mới</p>
-                <h3 class="text-2xl font-extrabold text-on-background">1,284</h3>
+                <h3 class="text-2xl font-extrabold text-on-background">{{ number_format($totalCustomers) }}</h3>
                 <div class="mt-4 flex -space-x-2">
                     <img alt="User" class="w-8 h-8 rounded-full border-2 border-surface-container-lowest object-cover"
                         data-alt="Portrait of a young man with a slight smile and casual hairstyle"
@@ -91,11 +91,14 @@
                     <button class="text-xs font-bold text-error underline">Xem tất cả</button>
                 </div>
                 <p class="text-sm font-medium text-on-surface-variant">Cảnh báo tồn kho thấp</p>
-                <h3 class="text-2xl font-extrabold text-on-background">18 Sản phẩm</h3>
-                <div
-                    class="mt-4 p-2 bg-error-container/10 rounded-lg text-[11px] text-error font-medium flex items-center gap-2">
+                <h3 class="text-2xl font-extrabold text-on-background">{{ $lowStockCount }} Sản phẩm</h3>
+                <div class="mt-4 p-2 bg-error-container/10 rounded-lg text-[11px] text-error font-medium flex items-center gap-2">
                     <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
-                    Xmen Fire 100ml: còn 2
+                    @if($lowStockVariants->isNotEmpty())
+                        {{ $lowStockVariants->first()->product->name ?? 'Sản phẩm' }}: còn {{ $lowStockVariants->first()->stock_quantity }}
+                    @else
+                        Không có
+                    @endif
                 </div>
             </div>
         </div>
@@ -147,42 +150,42 @@
                 <div class="flex-1 flex flex-col justify-center items-center">
                     <div class="relative w-48 h-48 mb-8">
                         <svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
-                            <circle class="stroke-surface-container-high" cx="18" cy="18" fill="none" r="16"
-                                stroke-width="4"></circle>
-                            <circle class="stroke-primary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="60, 100"
-                                stroke-width="4"></circle>
-                            <circle class="stroke-secondary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="25, 100"
-                                stroke-dashoffset="-60" stroke-width="4"></circle>
-                            <circle class="stroke-tertiary" cx="18" cy="18" fill="none" r="16" stroke-dasharray="15, 100"
-                                stroke-dashoffset="-85" stroke-width="4"></circle>
+                            <circle class="stroke-surface-container-high" cx="18" cy="18" fill="none" r="16" stroke-width="4"></circle>
+                            @php
+                                $totalSales = $categoriesSales->sum('total');
+                                $colors = ['stroke-primary', 'stroke-secondary', 'stroke-tertiary', 'stroke-error', 'stroke-warning', 'stroke-emerald-500'];
+                                $bgColors = ['bg-primary', 'bg-secondary', 'bg-tertiary', 'bg-error', 'bg-warning', 'bg-emerald-500'];
+                                $offset = 0;
+                            @endphp
+                            @foreach($categoriesSales->sortByDesc('total')->take(5) as $index => $cat)
+                                @php
+                                    $percentage = $totalSales > 0 ? ($cat->total / $totalSales) * 100 : 0;
+                                    $dashArray = $percentage . ', 100';
+                                    $dashOffset = '-' . $offset;
+                                    $offset += $percentage;
+                                @endphp
+                                <circle class="{{ $colors[$index % count($colors)] }}" cx="18" cy="18" fill="none" r="16" stroke-dasharray="{{ $dashArray }}"
+                                    stroke-dashoffset="{{ $dashOffset }}" stroke-width="4"></circle>
+                            @endforeach
                         </svg>
                         <div class="absolute inset-0 flex flex-col items-center justify-center">
-                            <span class="text-2xl font-extrabold text-on-background">5.7k</span>
-                            <span class="text-[10px] uppercase font-bold text-outline">Tổng cộng</span>
+                            <span class="text-2xl font-extrabold text-on-background">{{ $totalSales >= 1000 ? round($totalSales/1000, 1) . 'k' : $totalSales }}</span>
+                            <span class="text-[10px] uppercase font-bold text-outline">Tổng SP</span>
                         </div>
                     </div>
                     <div class="w-full space-y-4">
+                        @foreach($categoriesSales->sortByDesc('total')->take(5) as $index => $cat)
+                        @php
+                            $percentage = $totalSales > 0 ? round(($cat->total / $totalSales) * 100) : 0;
+                        @endphp
                         <div class="flex justify-between items-center">
                             <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-primary"></span>
-                                <span class="text-sm font-medium text-on-surface-variant">Nước hoa Aquatic</span>
+                                <span class="w-3 h-3 rounded-full {{ $bgColors[$index % count($bgColors)] }}"></span>
+                                <span class="text-sm font-medium text-on-surface-variant">{{ $cat->name }}</span>
                             </div>
-                            <span class="text-sm font-bold">60%</span>
+                            <span class="text-sm font-bold">{{ $percentage }}%</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-secondary"></span>
-                                <span class="text-sm font-medium text-on-surface-variant">Sữa tắm</span>
-                            </div>
-                            <span class="text-sm font-bold">25%</span>
-                        </div>
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center gap-2">
-                                <span class="w-3 h-3 rounded-full bg-tertiary"></span>
-                                <span class="text-sm font-medium text-on-surface-variant">Tạo kiểu Tóc</span>
-                            </div>
-                            <span class="text-sm font-bold">15%</span>
-                        </div>
+                        @endforeach
                     </div>
                 </div>
             </div>
@@ -191,10 +194,10 @@
         <section class="bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden mb-12">
             <div class="px-8 py-6 flex justify-between items-center border-b border-slate-50">
                 <h3 class="text-xl font-bold text-on-background">Đơn hàng Gần đây</h3>
-                <button class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
+                <a href="{{ route('admin.orders.index') }}" class="text-primary font-bold text-sm flex items-center gap-1 hover:underline">
                     Xem Toàn bộ Lịch sử <span class="material-symbols-outlined text-sm"
                         data-icon="chevron_right">chevron_right</span>
-                </button>
+                </a>
             </div>
             <div class="overflow-x-auto">
                 <table class="w-full text-left">
@@ -213,84 +216,58 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-50">
+                        @forelse($recentOrders as $order)
                         <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-8 py-5 font-bold text-primary">#XM-9842</td>
+                            <td class="px-8 py-5 font-bold text-primary">#{{ $order->order_id }}</td>
                             <td class="px-8 py-5">
                                 <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold">
-                                        AN</div>
-                                    <span class="font-medium text-on-background">An Nguyễn</span>
+                                    @if($order->user && $order->user->avatar)
+                                        <img alt="User" class="w-8 h-8 rounded-full object-cover" src="{{ asset('storage/' . $order->user->avatar) }}" />
+                                    @else
+                                        <div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-[10px] font-bold">
+                                            {{ strtoupper(substr($order->user->full_name ?? $order->user->username ?? 'U', 0, 2)) }}
+                                        </div>
+                                    @endif
+                                    <span class="font-medium text-on-background">{{ $order->user->full_name ?? $order->user->username ?? 'Khách' }}</span>
                                 </div>
                             </td>
-                            <td class="px-8 py-5 text-on-surface-variant">Xmen Oxygen 100ml</td>
-                            <td class="px-8 py-5">
-                                <span
-                                    class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-emerald-100 text-emerald-700">Hoàn
-                                    tất</span>
+                            <td class="px-8 py-5 text-on-surface-variant">
+                                @if($order->orderItems->isNotEmpty())
+                                    {{ $order->orderItems->first()->variant->product->name ?? 'Sản phẩm' }}
+                                    @if($order->orderItems->count() > 1)
+                                        <span class="text-xs text-outline">(+{{ $order->orderItems->count() - 1 }} nữa)</span>
+                                    @endif
+                                @else
+                                    Không có SP
+                                @endif
                             </td>
-                            <td class="px-8 py-5 font-bold text-on-background">124.00$</td>
+                            <td class="px-8 py-5">
+                                @php
+                                    $statusColors = [
+                                        'Chờ xử lý' => 'bg-orange-100 text-orange-700',
+                                        'Đang giao hàng' => 'bg-blue-100 text-blue-700',
+                                        'Hoàn tất' => 'bg-emerald-100 text-emerald-700',
+                                        'Đã hủy' => 'bg-red-100 text-red-700',
+                                        'Đã hoàn thành' => 'bg-emerald-100 text-emerald-700',
+                                    ];
+                                    $colorClass = $statusColors[$order->status] ?? 'bg-gray-100 text-gray-700';
+                                @endphp
+                                <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase {{ $colorClass }}">
+                                    {{ $order->status }}
+                                </span>
+                            </td>
+                            <td class="px-8 py-5 font-bold text-on-background">{{ number_format($order->total_amount, 0, ',', '.') }}$</td>
                             <td class="px-8 py-5 text-right">
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
+                                <a href="{{ route('admin.orders.show', $order->order_id) }}" class="p-2 text-outline hover:text-primary transition-colors inline-block text-center mt-2">
                                     <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-                                </button>
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
-                                </button>
+                                </a>
                             </td>
                         </tr>
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-8 py-5 font-bold text-primary">#XM-9841</td>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-3">
-                                    <img alt="User" class="w-8 h-8 rounded-full object-cover"
-                                        data-alt="Headshot of a focused woman in business attire with soft natural lighting"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8xX59kZVMiL8iVGWmfkQXo2-Xyi8vdhbozaGcK4H7r1vQTT-9q0eEoKmjRneVbir-KgE2brgBcZNAhlULOb29-Sudb3N2F0FnEXmTEcyXFqTBYs8aIYD7IC8-WIosnPJ5Ud5JGBROXdSvulhMWBtcW3Lvsemm4J5wMaScwTnbhYDfl0cQbGbiM7dj5uHlYLmsWIa1PiFPrdtpTYJbsGmt8lqgvkJf8A1yqad2NBp0ZSogXriZ4BEfRtDWttYZnCnI4FDNNignOa_b" />
-                                    <span class="font-medium text-on-background">Minh Trần</span>
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-on-surface-variant">Sáp vuốt tóc Giữ nếp Cứng</td>
-                            <td class="px-8 py-5">
-                                <span
-                                    class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-100 text-blue-700">Đang
-                                    giao</span>
-                            </td>
-                            <td class="px-8 py-5 font-bold text-on-background">45.50$</td>
-                            <td class="px-8 py-5 text-right">
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-                                </button>
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
-                                </button>
-                            </td>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="px-8 py-5 text-center text-on-surface-variant">Không có đơn hàng nào</td>
                         </tr>
-                        <tr class="hover:bg-slate-50/50 transition-colors">
-                            <td class="px-8 py-5 font-bold text-primary">#XM-9840</td>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-3">
-                                    <div
-                                        class="w-8 h-8 rounded-full bg-tertiary/10 text-tertiary flex items-center justify-center text-[10px] font-bold">
-                                        HL</div>
-                                    <span class="font-medium text-on-background">Hoàng Lê</span>
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-on-surface-variant">Sữa tắm Xmen Fire</td>
-                            <td class="px-8 py-5">
-                                <span
-                                    class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-orange-100 text-orange-700">Chờ
-                                    xử lý</span>
-                            </td>
-                            <td class="px-8 py-5 font-bold text-on-background">18.20$</td>
-                            <td class="px-8 py-5 text-right">
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined" data-icon="visibility">visibility</span>
-                                </button>
-                                <button class="p-2 text-outline hover:text-primary transition-colors">
-                                    <span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
-                                </button>
-                            </td>
-                        </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>

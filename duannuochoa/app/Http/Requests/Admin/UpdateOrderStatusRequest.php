@@ -13,8 +13,26 @@ class UpdateOrderStatusRequest extends FormRequest
 
     public function rules(): array
     {
+        $order = $this->route('order');
+        $currentStatus = $order->status;
+
+        $allowedTransitions = [
+            'Chờ xác nhận' => ['Chờ xác nhận', 'Đã xác nhận', 'Đã hủy'],
+            'Đã xác nhận' => ['Đã xác nhận', 'Đang chuẩn bị hàng', 'Đã hủy'],
+            'Đang chuẩn bị hàng' => ['Đang chuẩn bị hàng', 'Đang giao', 'Đã hủy'],
+            'Đang giao' => ['Đang giao', 'Đã giao hàng', 'Đã hủy'],
+            'Đã giao hàng' => ['Đã giao hàng', 'Đã hoàn thành', 'Trả hàng/Hoàn tiền'],
+            'Đã hoàn thành' => ['Đã hoàn thành'],
+            'Đã hủy' => ['Đã hủy'],
+            'Trả hàng/Hoàn tiền' => ['Trả hàng/Hoàn tiền'],
+        ];
+
+        $validStatuses = $allowedTransitions[$currentStatus] ?? [$currentStatus];
+        $validStatusesStr = implode(',', $validStatuses);
+
         return [
-            'status' => 'required|string|in:Chờ xác nhận,Đang giao,Đã hoàn thành,Đã hủy',
+            'status' => "required|string|in:$validStatusesStr",
+            'cancel_reason' => 'required_if:status,Đã hủy|nullable|string|max:1000',
         ];
     }
 
@@ -22,7 +40,8 @@ class UpdateOrderStatusRequest extends FormRequest
     {
         return [
             'status.required' => 'Vui lòng chọn trạng thái đơn hàng.',
-            'status.in' => 'Trạng thái đơn hàng không hợp lệ.',
+            'status.in' => 'Trạng thái chuyển đổi không hợp lệ hoặc không theo đúng quy trình.',
+            'cancel_reason.required_if' => 'Vui lòng nhập lý do hủy đơn hàng.',
         ];
     }
 }

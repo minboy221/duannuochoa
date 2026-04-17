@@ -21,10 +21,47 @@ class HomeController extends Controller{
         return view('clien.about');
     }
     //phần sản phẩm
-    public function sanpham()
+    public function sanpham(Request $request)
     {
-        $products = \App\Models\Product::with('category')->paginate(12);
-        return view('clien.sanpham', compact('products'));
+        $categories = \App\Models\Category::all();
+        $brands = \App\Models\Brand::all();
+
+        $query = \App\Models\Product::with(['category', 'brand', 'reviews']);
+
+        if ($request->has('category') && is_array($request->category)) {
+            $query->whereIn('category_id', $request->category);
+        }
+
+        if ($request->filled('brand')) {
+            $query->where('brand_id', $request->brand);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('base_price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_low':
+                    $query->orderBy('base_price', 'asc');
+                    break;
+                case 'price_high':
+                    $query->orderBy('base_price', 'desc');
+                    break;
+                case 'popular':
+                    // Just sorting by ID or something for now as poor-man's popularity
+                    $query->withCount('reviews')->orderBy('reviews_count', 'desc');
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+
+        return view('clien.sanpham', compact('products', 'categories', 'brands'));
     }
     //phần liên hệ
     public function lienhe()
@@ -39,7 +76,29 @@ class HomeController extends Controller{
     //phần tài khoản người dùng
     public function taikhoan()
     {
-        return view('clien.taikhoan');
+        $availableVouchers = \App\Models\Discount::where('valid_to', '>', now())
+            ->where('points_required', '>', 0)
+            ->get();
+            
+        $userVouchers = \App\Models\UserDiscount::where('user_id', Auth::id())
+            ->with('discount')
+            ->get();
+
+        return view('clien.taikhoan', compact('availableVouchers', 'userVouchers'));
+    }
+
+    public function lichsu()
+    {
+        $orders = \App\Models\Order::where('user_id', Auth::id())
+            ->with(['orderItems.variant.product'])
+            ->latest()
+            ->get();
+
+        $reviewedProductIds = \App\Models\Review::where('user_id', Auth::id())
+            ->pluck('product_id')
+            ->toArray();
+
+        return view('clien.lichsudonhang', compact('orders', 'reviewedProductIds'));
     }
     //phần đăng nhập, đăng ký
     public function dangnhap()
@@ -76,7 +135,31 @@ class HomeController extends Controller{
     //phần trang admin tổng quan
     public function tongquan()
     {
-        return view('admin.tongquan');
+        $totalRevenue = \App\Models\Order::where('status', 'Đã hoàn thành')->sum('total_amount');
+        $totalOrders = \App\Models\Order::count();
+        $ordersToday = \App\Models\Order::whereDate('created_at', \Carbon\Carbon::today())->count();
+        $totalCustomers = \App\Models\User::count();
+        
+        $lowStockVariants = \App\Models\ProductVariant::with('product')
+            ->where('stock_quantity', '<=', 10)
+            ->get();
+        $lowStockCount = $lowStockVariants->count();
+            
+        $recentOrders = \App\Models\Order::with(['user', 'orderItems.variant.product'])
+            ->latest()
+            ->take(5)
+            ->get();
+            
+        // For basic category analytics
+        $categoriesSales = \Illuminate\Support\Facades\DB::table('order_items')
+            ->join('product_variants', 'order_items.variant_id', '=', 'product_variants.variant_id')
+            ->join('products', 'product_variants.product_id', '=', 'products.product_id')
+            ->join('categories', 'products.category_id', '=', 'categories.category_id')
+            ->select('categories.name', \Illuminate\Support\Facades\DB::raw('sum(order_items.quantity) as total'))
+            ->groupBy('categories.name')
+            ->get();
+
+        return view('admin.tongquan', compact('totalRevenue', 'totalOrders', 'ordersToday', 'totalCustomers', 'lowStockCount', 'lowStockVariants', 'recentOrders', 'categoriesSales'));
     }
     //phần trang qly sản phẩm
     public function qlysanpham()
@@ -93,5 +176,15 @@ class HomeController extends Controller{
     public function qlydonhang()
     {
         return view('admin.qlydonhang');
+    }
+
+    public function markNotified(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $order->update(['client_notified' => true]);
+        return response()->json(['success' => true]);
     }
 }

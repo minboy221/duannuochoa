@@ -21,6 +21,7 @@ class Discount extends Model
         'valid_from',
         'valid_to',
         'usage_limit',
+        'points_required',
     ];
 
     protected $casts = [
@@ -31,5 +32,11 @@ class Discount extends Model
     public function orders()
     {
         return $this->hasMany(Order::class, 'discount_id', 'discount_id');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'user_discounts', 'discount_id', 'user_id')
+                    ->withPivot('used_at', 'created_at');
     }
 }

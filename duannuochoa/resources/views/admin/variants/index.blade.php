@@ -20,13 +20,23 @@
         <div class="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold">{{ session('success') }}</div>
     @endif
 
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('admin.products.variants.index', $product) }}" class="mb-6 flex gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm biến thể theo màu sắc..." class="flex-1 bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Tìm kiếm</button>
+        @if(request('search'))
+            <a href="{{ route('admin.products.variants.index', $product) }}" class="bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-bold hover:bg-surface-container-highest transition-colors flex items-center justify-center">Xóa lọc</a>
+        @endif
+    </form>
+
     <div class="bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden mb-8 border border-surface-container">
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-surface-container-low text-on-surface-variant text-xs font-bold uppercase tracking-wider">
-                    <th class="px-6 py-4">ID</th>
+                    <th class="px-6 py-4">Ảnh</th>
                     <th class="px-6 py-4">Dung tích (ml)</th>
-                    <th class="px-6 py-4">Màu sắc</th>
+                    <th class="px-6 py-4 text-center">Màu sắc</th>
+                    <th class="px-6 py-4">Mã màu</th>
                     <th class="px-6 py-4">Giá bán</th>
                     <th class="px-6 py-4">Tồn kho</th>
                     <th class="px-6 py-4 text-right">Thao tác</th>
@@ -35,9 +45,28 @@
             <tbody class="divide-y divide-surface-container">
                 @foreach($variants as $variant)
                 <tr class="hover:bg-slate-50 transition-colors group">
-                    <td class="px-6 py-4 font-bold">{{ $variant->variant_id }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center gap-3">
+                            @if($variant->image)
+                                <img src="{{ asset('storage/' . $variant->image) }}" class="w-12 h-12 rounded-lg object-cover border border-surface-container" alt="">
+                            @else
+                                <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                    <span class="material-symbols-outlined">image</span>
+                                </div>
+                            @endif
+                            <span class="font-bold">#{{ $variant->variant_id }}</span>
+                        </div>
+                    </td>
                     <td class="px-6 py-4 font-medium">{{ $variant->volume_id }} ml</td>
-                    <td class="px-6 py-4">{{ $variant->color ?? 'Không' }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex flex-col items-center gap-1">
+                            @if($variant->color_code)
+                                <div class="w-6 h-6 rounded-full border border-gray-300 shadow-sm" style="background-color: {{ $variant->color_code }}"></div>
+                            @endif
+                            <span class="text-xs">{{ $variant->color ?? 'Không' }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-xs">{{ $variant->color_code ?? 'N/A' }}</td>
                     <td class="px-6 py-4 text-primary font-bold">{{ number_format($variant->price) }} đ</td>
                     <td class="px-6 py-4 font-bold {{ $variant->stock_quantity <= 5 ? 'text-error' : 'text-green-600' }}">{{ $variant->stock_quantity }}</td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2">
@@ -55,6 +84,11 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-end">
+        {{ $variants->appends(request()->query())->links() }}
     </div>
 </main>
 @endsection

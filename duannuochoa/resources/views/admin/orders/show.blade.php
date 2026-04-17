@@ -40,15 +40,41 @@
             
             <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
                 <h3 class="font-bold text-lg mb-4 text-primary border-b pb-2">Tổng quan đơn hàng</h3>
-                <div class="space-y-3 text-sm">
-                    <div class="flex justify-between">
-                        <span class="text-on-surface-variant">Trạng thái hiện tại:</span>
-                        <span class="font-bold">{{ $order->status }}</span>
+                <div class="space-y-4 text-sm">
+                    <div class="flex justify-between items-center">
+                        <span class="text-on-surface-variant font-medium">Trạng thái hiện tại:</span>
+                        @php
+                            $badgeStyle = match($order->status) {
+                                'Chờ xác nhận' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                'Đã xác nhận' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                'Đang chuẩn bị hàng' => 'bg-purple-100 text-purple-700 border-purple-200',
+                                'Đang giao' => 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                                'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
+                                'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
+                                'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
+                                'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
+                                default => 'bg-slate-100 text-slate-700 border-slate-200'
+                            };
+                        @endphp
+                        <span class="px-4 py-1 text-[10px] font-black rounded-full border {{ $badgeStyle }} uppercase tracking-widest shadow-sm">
+                            {{ $order->status }}
+                        </span>
                     </div>
-                    <div class="flex justify-between">
-                        <span class="text-on-surface-variant">Ngày tạo:</span>
-                        <span>{{ $order->created_at->format('d/m/Y H:i:s') }}</span>
+                    <div class="flex justify-between items-center">
+                        <span class="text-on-surface-variant font-medium">Ngày đặt hàng:</span>
+                        <span class="font-bold text-on-surface">{{ $order->created_at->format('d/m/Y H:i:s') }}</span>
                     </div>
+                    @if($order->status == 'Đã hủy' && $order->cancel_reason)
+                        <div class="pt-4 border-t mt-2">
+                            <span class="block text-red-700 font-black text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">report</span>
+                                Lý do hủy đơn hàng:
+                            </span>
+                            <div class="bg-red-50 p-4 rounded-xl border border-red-100 text-red-900 italic font-medium">
+                                "{{ $order->cancel_reason }}"
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

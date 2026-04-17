@@ -60,9 +60,16 @@
                                 <a href="{{ route('xemchitiet', $item->product_id) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform">
                                     <span class="material-symbols-outlined">visibility</span>
                                 </a>
-                                <button class="p-4 rounded-full kinetic-gradient text-white shadow-lg">
-                                    <span class="material-symbols-outlined">add_shopping_cart</span>
-                                </button>
+                                <form action="{{ route('cart.add') }}" method="POST">
+                                    @csrf
+                                    @if($item->variants->isNotEmpty())
+                                        <input type="hidden" name="variant_id" value="{{ $item->variants->first()->variant_id }}">
+                                    @endif
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="p-4 rounded-full kinetic-gradient text-white shadow-lg hover:scale-110 transition-transform">
+                                        <span class="material-symbols-outlined">add_shopping_cart</span>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @elseif($loop->iteration == 4)

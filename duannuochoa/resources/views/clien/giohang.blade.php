@@ -17,12 +17,18 @@
                             <!-- Try getting product image, fallback to placeholder -->
                             <img alt="{{ $item->variant->product->name }}" class="w-full h-full object-cover"
                                 src="{{ $item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                                src="{{ $item->variant->image ? asset('storage/' . $item->variant->image) : ($item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80') }}" />
                         </div>
                         <div class="flex-grow text-center md:text-left">
                             <h3 class="font-headline text-xl font-bold text-on-surface">{{ $item->variant->product->name }}</h3>
-                            <p class="text-on-surface-variant text-sm mt-1">
-                                <!-- Example: show variant color/vol if exists -->
-                                Phân loại: {{ $item->variant->color ?? ($item->variant->volume_id . 'ml') }}
+                            <p class="text-on-surface-variant text-sm mt-1 flex items-center gap-2">
+                                Phân loại: {{ $item->variant->volume_id }}ml
+                                @if($item->variant->color)
+                                    - {{ $item->variant->color }}
+                                @endif
+                                @if($item->variant->color_code)
+                                    <span class="w-3 h-3 rounded-full border border-gray-300 inline-block" style="background-color: {{ $item->variant->color_code }};" title="{{ $item->variant->color }}"></span>
+                                @endif
                             </p>
                         </div>
                         <div class="flex flex-col items-center gap-4">
@@ -108,11 +114,11 @@
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
                             <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($subtotal ?? 0) }}đ</span>
                         </div>
-                        <button
+                        <a href="{{ route('checkout.index') }}"
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
                             Tiến hành thanh toán
                             <span class="material-symbols-outlined">arrow_forward</span>
-                        </button>
+                        </a>
                         <div class="mt-6 flex items-center justify-center gap-4">
                             <div
                                 class="flex items-center gap-1 text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">

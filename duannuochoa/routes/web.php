@@ -25,9 +25,8 @@ Route::get('gioi-thieu', [HomeController::class, 'about'])->name('about');
 Route::get('san-pham', [HomeController::class, 'sanpham'])->name('sanpham');
 Route::get('lien-he', [HomeController::class, 'lienhe'])->name('lienhe');
 Route::get('xem-chi-tiet/{id}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
-
 // Cart Routes
-Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('giohang');
+Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
 Route::post('gio-hang/them', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
 Route::put('gio-hang/cap-nhat', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 Route::delete('gio-hang/xoa/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
@@ -47,6 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('discounts', \App\Http\Controllers\Admin\DiscountController::class);
     Route::resource('shipping-methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
+    Route::resource('reviews', \App\Http\Controllers\Admin\ReviewManagementController::class)->only(['index', 'destroy']);
 });
 
 // Authentication Routes
@@ -71,6 +71,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');
+    Route::get('lich-su-don-hang', [HomeController::class, 'lichsu'])->name('lichsu');
     Route::post('tai-khoan', [ProfileController::class, 'update'])->name('profile.update');
     
     Route::get('change-password', [PasswordController::class, 'showChangeForm'])->name('password.change');
@@ -79,6 +80,14 @@ Route::middleware('auth')->group(function () {
     Route::post('change-password/verify', [PasswordController::class, 'update'])->name('password.change.update');
 
     Route::post('reviews', [\App\Http\Controllers\ReviewController::class, 'store'])->name('review.store');
+    
+    // Voucher & Checkout
+    Route::post('vouchers/redeem', [\App\Http\Controllers\VoucherController::class, 'redeem'])->name('vouchers.redeem');
+    Route::get('thanh-toan', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('dat-hang', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
+    Route::post('don-hang/{order}/mark-notified', [\App\Http\Controllers\HomeController::class, 'markNotified'])->name('orders.mark-notified');
+    Route::get('vnpay/return', [\App\Http\Controllers\CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
+    Route::get('vnpay/ipn', [\App\Http\Controllers\CheckoutController::class, 'vnpayIPN'])->name('vnpay.ipn');
 });
 
 // Admin routes
