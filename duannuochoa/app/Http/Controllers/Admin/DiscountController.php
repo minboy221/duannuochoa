@@ -8,9 +8,14 @@ use App\Http\Requests\Admin\DiscountRequest;
 
 class DiscountController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $discounts = Discount::all();
+        $search = $request->input('search');
+
+        $discounts = Discount::when($search, function ($query, $search) {
+            return $query->where('code', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('admin.discounts.index', compact('discounts'));
     }
 

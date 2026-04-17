@@ -8,9 +8,14 @@ use App\Http\Requests\Admin\ShippingMethodRequest;
 
 class ShippingMethodController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $shippingMethods = ShippingMethod::all();
+        $search = $request->input('search');
+
+        $shippingMethods = ShippingMethod::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('admin.shipping-methods.index', compact('shippingMethods'));
     }
 

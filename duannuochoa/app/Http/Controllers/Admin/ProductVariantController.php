@@ -11,9 +11,16 @@ use Illuminate\Support\Facades\Storage;
 class ProductVariantController extends Controller
 {
     // Cần truyền product vào phương thức index vì variants thuộc về product
-    public function index(Product $product)
+    public function index(\Illuminate\Http\Request $request, Product $product)
     {
-        $variants = ProductVariant::where('product_id', $product->product_id)->get();
+        $search = $request->input('search');
+
+        $variants = ProductVariant::where('product_id', $product->product_id)
+            ->when($search, function ($query, $search) {
+                return $query->where('color', 'like', "%{$search}%");
+            })
+            ->paginate(10);
+            
         return view('admin.variants.index', compact('variants', 'product'));
     }
 

@@ -84,7 +84,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Đã thêm sản phẩm vào giỏ hàng.');
+        return redirect()->route('giohang')->with('success', 'Đã thêm sản phẩm vào giỏ hàng.');
     }
 
     public function update(Request $request)
@@ -104,7 +104,7 @@ class CartController extends Controller
         $cartItem->quantity = $request->input('quantity');
         $cartItem->save();
 
-        return redirect()->route('cart.index')->with('success', 'Đã cập nhật giỏ hàng.');
+        return redirect()->route('giohang')->with('success', 'Đã cập nhật giỏ hàng.');
     }
 
     public function remove($id)
@@ -112,6 +112,6 @@ class CartController extends Controller
         $cartItem = CartItem::findOrFail($id);
         $cartItem->delete();
 
-        return redirect()->route('cart.index')->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
+        return redirect()->route('giohang')->with('success', 'Đã xóa sản phẩm khỏi giỏ hàng.');
     }
 }

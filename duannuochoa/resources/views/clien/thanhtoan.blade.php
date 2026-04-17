@@ -9,6 +9,21 @@
                 <p class="text-on-surface-variant font-medium">Vui lòng điền đầy đủ thông tin giao hàng bên dưới.</p>
             </header>
 
+            @if ($errors->any())
+                <div class="bg-error-container text-on-error-container p-4 rounded-xl">
+                    <ul class="list-disc ml-4">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session('error'))
+                <div class="bg-error-container text-on-error-container p-4 rounded-xl">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-6">
                 @csrf
 
@@ -76,7 +91,8 @@
                     <div class="grid grid-cols-1 gap-4">
                         @foreach($shippingMethods as $method)
                         <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-primary/20 has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
-                            <input type="radio" name="shipping_id" value="{{ $method->shipping_id }}" {{ $loop->first ? 'checked' : '' }} class="hidden">
+                            <input type="radio" name="shipping_id" value="{{ $method->shipping_id }}" {{ $loop->first ? 'checked' : '' }} 
+                                   data-fee="{{ $method->fee }}" onchange="calculateTotal()" class="hidden">
                             <span class="material-symbols-outlined text-primary mr-4">local_shipping</span>
                             <div class="flex-grow">
                                 <p class="font-bold">{{ $method->name ?? 'Giao hàng' }}</p>
@@ -195,7 +211,7 @@
                     </div>
                     <div class="flex justify-between text-on-surface-variant">
                         <span>Phí vận chuyển</span>
-                        <span class="font-bold text-secondary">Miễn phí</span>
+                        <span class="font-bold text-secondary" id="summary-shipping">Miễn phí</span>
                     </div>
                 </div>
 
@@ -224,7 +240,9 @@
     function calculateTotal() {
         const subtotal = parseInt(document.getElementById('summary-subtotal').dataset.val);
         const selectedVoucher = document.querySelector('input[name="user_discount_id"]:checked');
+        const selectedShipping = document.querySelector('input[name="shipping_id"]:checked');
         let discountAmount = 0;
+        let shippingFee = 0;
 
         if (selectedVoucher && selectedVoucher.value !== "") {
             const label = selectedVoucher.closest('label');
@@ -241,8 +259,13 @@
             }
         }
 
+        if (selectedShipping) {
+            shippingFee = parseInt(selectedShipping.dataset.fee) || 0;
+        }
+
         document.getElementById('summary-discount').innerText = '-' + discountAmount.toLocaleString() + 'đ';
-        document.getElementById('summary-total').innerText = Math.max(0, subtotal - discountAmount).toLocaleString() + 'đ';
+        document.getElementById('summary-shipping').innerText = shippingFee > 0 ? shippingFee.toLocaleString() + 'đ' : 'Miễn phí';
+        document.getElementById('summary-total').innerText = Math.max(0, subtotal - discountAmount + shippingFee).toLocaleString() + 'đ';
     }
 
     // Initial calculation

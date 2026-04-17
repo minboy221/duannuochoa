@@ -26,6 +26,7 @@ class CheckoutController extends Controller
         $cart = Cart::where('user_id', $user->user_id)->first();
 
         if (!$cart || $cart->items->count() == 0) {
+            return redirect()->route('giohang')->with('error', 'Giỏ hàng của bạn đang trống.');
             return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
@@ -103,7 +104,9 @@ class CheckoutController extends Controller
                 }
             }
 
-            $totalAmount = max(0, $subtotal - $discountAmount);
+            $shippingMethod = ShippingMethod::find($request->shipping_id);
+            $shippingFee = $shippingMethod ? $shippingMethod->fee : 0;
+            $totalAmount = max(0, $subtotal - $discountAmount + $shippingFee);
 
             // Create Order
             $order = Order::create([

@@ -12,10 +12,29 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $products = Product::with(['category', 'brand'])->get();
-        return view('admin.products.index', compact('products'));
+        $search = $request->input('search');
+        $category_id = $request->input('category_id');
+        $brand_id = $request->input('brand_id');
+
+        $products = Product::with(['category', 'brand'])
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%");
+            })
+            ->when($category_id, function ($query, $category_id) {
+                return $query->where('category_id', $category_id);
+            })
+            ->when($brand_id, function ($query, $brand_id) {
+                return $query->where('brand_id', $brand_id);
+            })
+            ->orderBy('product_id', 'desc')
+            ->paginate(10);
+
+        $categories = Category::all();
+        $brands = Brand::all();
+
+        return view('admin.products.index', compact('products', 'categories', 'brands'));
     }
 
     public function create()

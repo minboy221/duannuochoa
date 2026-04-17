@@ -19,6 +19,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        view()->composer('layouts.app', function ($view) {
+            if (auth()->check()) {
+                $unnotified = \App\Models\Order::where('user_id', auth()->id())
+                    ->where('status', 'Đã hủy')
+                    ->where('client_notified', false)
+                    ->get();
+                $view->with('unnotifiedCancelledOrders', $unnotified);
+            }
+        });
     }
 }

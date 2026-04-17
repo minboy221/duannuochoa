@@ -8,9 +8,14 @@ use App\Http\Requests\Admin\CategoryRequest;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $categories = Category::all();
+        $search = $request->input('search');
+
+        $categories = Category::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('admin.categories.index', compact('categories'));
     }
 
