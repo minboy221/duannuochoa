@@ -14,6 +14,30 @@
         <div class="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold">{{ session('success') }}</div>
     @endif
 
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('admin.products.index') }}" class="mb-6 flex flex-wrap gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm sản phẩm..." class="flex-1 min-w-[200px] bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        
+        <select name="category_id" class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background focus:ring-2 focus:ring-primary">
+            <option value="">Tất cả danh mục</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->category_id }}" {{ request('category_id') == $category->category_id ? 'selected' : '' }}>{{ $category->name }}</option>
+            @endforeach
+        </select>
+
+        <select name="brand_id" class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background focus:ring-2 focus:ring-primary">
+            <option value="">Tất cả nhãn hàng</option>
+            @foreach($brands as $brand)
+                <option value="{{ $brand->brand_id }}" {{ request('brand_id') == $brand->brand_id ? 'selected' : '' }}>{{ $brand->name }}</option>
+            @endforeach
+        </select>
+
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Tìm kiếm</button>
+        @if(request('search') || request('category_id') || request('brand_id'))
+            <a href="{{ route('admin.products.index') }}" class="bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-bold hover:bg-surface-container-highest transition-colors flex items-center justify-center">Xóa lọc</a>
+        @endif
+    </form>
+
     <div class="bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden mb-8 border border-surface-container">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -66,6 +90,11 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-end">
+        {{ $products->appends(request()->query())->links() }}
     </div>
 </main>
 @endsection

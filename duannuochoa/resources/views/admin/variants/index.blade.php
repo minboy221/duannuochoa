@@ -20,6 +20,15 @@
         <div class="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold">{{ session('success') }}</div>
     @endif
 
+    <!-- Search Form -->
+    <form method="GET" action="{{ route('admin.products.variants.index', $product) }}" class="mb-6 flex gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
+        <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm biến thể theo màu sắc..." class="flex-1 bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Tìm kiếm</button>
+        @if(request('search'))
+            <a href="{{ route('admin.products.variants.index', $product) }}" class="bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-bold hover:bg-surface-container-highest transition-colors flex items-center justify-center">Xóa lọc</a>
+        @endif
+    </form>
+
     <div class="bg-surface-container-lowest rounded-lg shadow-sm overflow-hidden mb-8 border border-surface-container">
         <table class="w-full text-left border-collapse">
             <thead>
@@ -75,6 +84,11 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-6 flex justify-end">
+        {{ $variants->appends(request()->query())->links() }}
     </div>
 </main>
 @endsection

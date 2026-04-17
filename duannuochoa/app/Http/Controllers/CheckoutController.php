@@ -25,11 +25,11 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->user_id)->first();
 
-        if (!$cart || $cart->cartItems->count() == 0) {
+        if (!$cart || $cart->items->count() == 0) {
             return redirect()->route('giohang')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
-        $cartItems = $cart->cartItems()->with('variant.product')->get();
+        $cartItems = $cart->items()->with('variant.product')->get();
         $subtotal = 0;
         foreach ($cartItems as $item) {
             $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
@@ -42,12 +42,6 @@ class CheckoutController extends Controller
             ->get();
 
         $shippingMethods = ShippingMethod::all();
-        if ($shippingMethods->isEmpty()) {
-            // Seed a default if empty for demo purposes
-            $shippingMethods = collect([
-                (object)['shipping_id' => 1, 'name' => 'Giao hàng tiêu chuẩn', 'cost' => 0]
-            ]);
-        }
 
         return view('clien.thanhtoan', compact('cartItems', 'subtotal', 'userVouchers', 'shippingMethods'));
     }
@@ -65,14 +59,14 @@ class CheckoutController extends Controller
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->user_id)->first();
 
-        if (!$cart || $cart->cartItems->count() == 0) {
+        if (!$cart || $cart->items->count() == 0) {
             return redirect()->route('home')->with('error', 'Giỏ hàng trống.');
         }
 
         DB::beginTransaction();
         try {
             $subtotal = 0;
-            $cartItems = $cart->cartItems()->with('variant.product')->get();
+            $cartItems = $cart->items()->with('variant.product')->get();
             foreach ($cartItems as $item) {
                 $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
                 $subtotal += $price * $item->quantity;
@@ -101,7 +95,9 @@ class CheckoutController extends Controller
                 }
             }
 
-            $totalAmount = max(0, $subtotal - $discountAmount);
+            $shippingMethod = ShippingMethod::find($request->shipping_id);
+            $shippingFee = $shippingMethod ? $shippingMethod->fee : 0;
+            $totalAmount = max(0, $subtotal - $discountAmount + $shippingFee);
 
             // Create Order
             $order = Order::create([

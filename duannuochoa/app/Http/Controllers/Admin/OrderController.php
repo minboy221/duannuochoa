@@ -8,9 +8,21 @@ use App\Http\Requests\Admin\UpdateOrderStatusRequest;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $orders = Order::with(['user', 'shippingMethod', 'discount'])->orderBy('created_at', 'desc')->get();
+        $search = $request->input('search');
+        $status = $request->input('status');
+
+        $orders = Order::with(['user', 'shippingMethod', 'discount'])
+            ->when($search, function ($query, $search) {
+                return $query->where('order_id', 'like', "%{$search}%");
+            })
+            ->when($status, function ($query, $status) {
+                return $query->where('status', $status);
+            })
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
         return view('admin.orders.index', compact('orders'));
     }
 

@@ -18,6 +18,8 @@ class Order extends Model
         'discount_id',
         'total_amount',
         'status',
+        'cancel_reason',
+        'client_notified',
     ];
 
     public function user()

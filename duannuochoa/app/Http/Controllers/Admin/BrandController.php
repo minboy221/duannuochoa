@@ -8,9 +8,14 @@ use App\Http\Requests\Admin\BrandRequest;
 
 class BrandController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
-        $brands = Brand::all();
+        $search = $request->input('search');
+
+        $brands = Brand::when($search, function ($query, $search) {
+            return $query->where('name', 'like', "%{$search}%");
+        })->paginate(10);
+
         return view('admin.brands.index', compact('brands'));
     }
 

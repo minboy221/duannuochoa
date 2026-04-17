@@ -222,6 +222,73 @@
             </div>
         </div>
     </footer>
+    </footer>
+
+    @if(isset($unnotifiedCancelledOrders) && $unnotifiedCancelledOrders->count() > 0)
+    <!-- Cancellation Notification Modal -->
+    <div id="cancellation-modal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+        <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-8 duration-500">
+            <div class="relative h-32 bg-gradient-to-br from-red-500 to-rose-600 flex items-center justify-center">
+                <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+                <span class="material-symbols-outlined text-white text-6xl drop-shadow-lg">report_problem</span>
+            </div>
+            
+            <div class="p-8 text-center">
+                <h3 class="text-2xl font-black text-slate-800 mb-2 font-headline">Thông báo hủy đơn hàng</h3>
+                <p class="text-slate-500 text-sm mb-6">Chúng tôi rất tiếc phải thông báo rằng đơn hàng của bạn đã bị hủy.</p>
+                
+                <div class="space-y-4 max-h-60 overflow-y-auto pr-2 custom-scrollbar">
+                    @foreach($unnotifiedCancelledOrders as $order)
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-left relative overflow-hidden group">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-[10px] font-black uppercase tracking-widest text-red-500">#ORD-{{ str_pad($order->order_id, 5, '0', STR_PAD_LEFT) }}</span>
+                            <span class="text-[10px] text-slate-400 font-bold">{{ $order->updated_at->format('d/m/Y H:i') }}</span>
+                        </div>
+                        <p class="text-slate-700 text-sm font-bold mb-1">Lý do hủy:</p>
+                        <p class="text-slate-600 text-sm italic leading-relaxed font-medium">"{{ $order->cancel_reason ?? 'Không có lý do cụ thể' }}"</p>
+                        <div class="absolute right-0 bottom-0 w-24 h-24 bg-red-500/5 rounded-full -mr-12 -mb-12 group-hover:scale-150 transition-transform duration-700"></div>
+                    </div>
+                    @endforeach
+                </div>
+
+                <div class="mt-8 flex flex-col gap-3">
+                    <button id="close-cancellation-modal" class="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg active:scale-95">
+                        Tôi đã hiểu
+                    </button>
+                    <a href="{{ route('lichsu') }}" class="text-slate-400 hover:text-primary text-xs font-bold transition-colors">Xem chi tiết trong lịch sử</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('close-cancellation-modal').addEventListener('click', function() {
+            const modal = document.getElementById('cancellation-modal');
+            modal.classList.add('fade-out');
+            
+            // Mark all shown orders as notified
+            const orderIds = [@foreach($unnotifiedCancelledOrders as $order) {{ $order->order_id }}, @endforeach];
+            
+            Promise.all(orderIds.map(id => {
+                return fetch(`/don-hang/${id}/mark-notified`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                });
+            })).then(() => {
+                setTimeout(() => modal.remove(), 300);
+            });
+        });
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+        .fade-out { opacity: 0; transition: opacity 0.3s ease; }
+    </style>
+    @endif
 </body>
 
 </html>

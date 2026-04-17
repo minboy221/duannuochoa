@@ -104,6 +104,21 @@
         .font-headline {
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
+
+        /* Custom Sidebar Scrollbar */
+        .custom-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-sidebar::-webkit-scrollbar-thumb {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+        .custom-sidebar::-webkit-scrollbar-thumb:hover {
+            background: #cbd5e1;
+        }
     </style>
 </head>
 
@@ -115,7 +130,7 @@
             <h1 class="font-extrabold text-2xl tracking-tight text-blue-700">Xmen Admin</h1>
             <p class="text-[10px] text-on-surface-variant tracking-widest uppercase mt-1">Cổng Quản trị</p>
         </div>
-        <nav class="flex flex-col gap-2 flex-1">
+        <nav class="flex flex-col gap-2 flex-1 overflow-y-auto pr-2 custom-sidebar">
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.tongquan') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.tongquan') }}">
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
@@ -155,6 +170,11 @@
                 href="{{ route('admin.shipping-methods.index') }}">
                 <span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
                 <span>Vận chuyển</span>
+            </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.reviews.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.reviews.index') }}">
+                <span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+                <span>Đánh giá</span>
             </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-slate-200 flex items-center gap-3 px-2">

@@ -57,7 +57,11 @@ class HomeController extends Controller{
             ->latest()
             ->get();
 
-        return view('clien.lichsudonhang', compact('orders'));
+        $reviewedProductIds = \App\Models\Review::where('user_id', Auth::id())
+            ->pluck('product_id')
+            ->toArray();
+
+        return view('clien.lichsudonhang', compact('orders', 'reviewedProductIds'));
     }
     //phần đăng nhập, đăng ký
     public function dangnhap()
@@ -94,7 +98,31 @@ class HomeController extends Controller{
     //phần trang admin tổng quan
     public function tongquan()
     {
-        return view('admin.tongquan');
+        $totalRevenue = \App\Models\Order::where('status', 'Đã hoàn thành')->sum('total_amount');
+        $totalOrders = \App\Models\Order::count();
+        $ordersToday = \App\Models\Order::whereDate('created_at', \Carbon\Carbon::today())->count();
+        $totalCustomers = \App\Models\User::count();
+        
+        $lowStockVariants = \App\Models\ProductVariant::with('product')
+            ->where('stock_quantity', '<=', 10)
+            ->get();
+        $lowStockCount = $lowStockVariants->count();
+            
+        $recentOrders = \App\Models\Order::with(['user', 'orderItems.variant.product'])
+            ->latest()
+            ->take(5)
+            ->get();
+            
+        // For basic category analytics
+        $categoriesSales = \Illuminate\Support\Facades\DB::table('order_items')
+            ->join('product_variants', 'order_items.variant_id', '=', 'product_variants.variant_id')
+            ->join('products', 'product_variants.product_id', '=', 'products.product_id')
+            ->join('categories', 'products.category_id', '=', 'categories.category_id')
+            ->select('categories.name', \Illuminate\Support\Facades\DB::raw('sum(order_items.quantity) as total'))
+            ->groupBy('categories.name')
+            ->get();
+
+        return view('admin.tongquan', compact('totalRevenue', 'totalOrders', 'ordersToday', 'totalCustomers', 'lowStockCount', 'lowStockVariants', 'recentOrders', 'categoriesSales'));
     }
     //phần trang qly sản phẩm
     public function qlysanpham()
@@ -111,5 +139,15 @@ class HomeController extends Controller{
     public function qlydonhang()
     {
         return view('admin.qlydonhang');
+    }
+
+    public function markNotified(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
+
+        $order->update(['client_notified' => true]);
+        return response()->json(['success' => true]);
     }
 }
