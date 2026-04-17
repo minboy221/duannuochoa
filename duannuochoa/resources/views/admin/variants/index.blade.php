@@ -24,9 +24,10 @@
         <table class="w-full text-left border-collapse">
             <thead>
                 <tr class="bg-surface-container-low text-on-surface-variant text-xs font-bold uppercase tracking-wider">
-                    <th class="px-6 py-4">ID</th>
+                    <th class="px-6 py-4">Ảnh</th>
                     <th class="px-6 py-4">Dung tích (ml)</th>
-                    <th class="px-6 py-4">Màu sắc</th>
+                    <th class="px-6 py-4 text-center">Màu sắc</th>
+                    <th class="px-6 py-4">Mã màu</th>
                     <th class="px-6 py-4">Giá bán</th>
                     <th class="px-6 py-4">Tồn kho</th>
                     <th class="px-6 py-4 text-right">Thao tác</th>
@@ -35,9 +36,28 @@
             <tbody class="divide-y divide-surface-container">
                 @foreach($variants as $variant)
                 <tr class="hover:bg-slate-50 transition-colors group">
-                    <td class="px-6 py-4 font-bold">{{ $variant->variant_id }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex items-center gap-3">
+                            @if($variant->image)
+                                <img src="{{ asset('storage/' . $variant->image) }}" class="w-12 h-12 rounded-lg object-cover border border-surface-container" alt="">
+                            @else
+                                <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+                                    <span class="material-symbols-outlined">image</span>
+                                </div>
+                            @endif
+                            <span class="font-bold">#{{ $variant->variant_id }}</span>
+                        </div>
+                    </td>
                     <td class="px-6 py-4 font-medium">{{ $variant->volume_id }} ml</td>
-                    <td class="px-6 py-4">{{ $variant->color ?? 'Không' }}</td>
+                    <td class="px-6 py-4 text-center">
+                        <div class="flex flex-col items-center gap-1">
+                            @if($variant->color_code)
+                                <div class="w-6 h-6 rounded-full border border-gray-300 shadow-sm" style="background-color: {{ $variant->color_code }}"></div>
+                            @endif
+                            <span class="text-xs">{{ $variant->color ?? 'Không' }}</span>
+                        </div>
+                    </td>
+                    <td class="px-6 py-4 font-mono text-xs">{{ $variant->color_code ?? 'N/A' }}</td>
                     <td class="px-6 py-4 text-primary font-bold">{{ number_format($variant->price) }} đ</td>
                     <td class="px-6 py-4 font-bold {{ $variant->stock_quantity <= 5 ? 'text-error' : 'text-green-600' }}">{{ $variant->stock_quantity }}</td>
                     <td class="px-6 py-4 text-right flex justify-end gap-2">
