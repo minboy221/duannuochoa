@@ -26,7 +26,7 @@ Route::get('san-pham', [HomeController::class, 'sanpham'])->name('sanpham');
 Route::get('lien-he', [HomeController::class, 'lienhe'])->name('lienhe');
 Route::get('xem-chi-tiet/{id}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 // Cart Routes
-Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('giohang');
+Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
 Route::post('gio-hang/them', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
 Route::put('gio-hang/cap-nhat', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 Route::delete('gio-hang/xoa/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
@@ -84,6 +84,8 @@ Route::middleware('auth')->group(function () {
     Route::get('thanh-toan', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('dat-hang', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('don-hang/{order}/mark-notified', [\App\Http\Controllers\HomeController::class, 'markNotified'])->name('orders.mark-notified');
+    Route::get('vnpay/return', [\App\Http\Controllers\CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
+    Route::get('vnpay/ipn', [\App\Http\Controllers\CheckoutController::class, 'vnpayIPN'])->name('vnpay.ipn');
 });
 
 // Admin routes

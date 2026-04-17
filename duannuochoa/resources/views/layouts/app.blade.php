@@ -129,7 +129,7 @@
                 <div class="flex gap-4">
                     <button
                         class="p-2 hover:bg-primary-container/20 rounded-full transition-colors scale-95 active:scale-90 duration-300">
-                        <a href="{{ route('giohang') }}">
+                        <a href="{{ route('cart.index') }}">
                             <span class="material-symbols-outlined text-primary">shopping_cart</span>
                         </a>
                     </button>
