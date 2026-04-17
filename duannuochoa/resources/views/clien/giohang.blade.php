@@ -16,6 +16,7 @@
                         <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
                             <!-- Try getting product image, fallback to placeholder -->
                             <img alt="{{ $item->variant->product->name }}" class="w-full h-full object-cover"
+                                src="{{ $item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                                 src="{{ $item->variant->image ? asset('storage/' . $item->variant->image) : ($item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80') }}" />
                         </div>
                         <div class="flex-grow text-center md:text-left">

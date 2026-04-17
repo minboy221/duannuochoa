@@ -7,8 +7,10 @@
 
     <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-2xl">
         <form action="{{ route('admin.brands.store') }}" method="POST" novalidate>
-{{-- ... --}}
-13:                 <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-lg border-gray-300 p-3">
+            @csrf
+            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Tên Nhãn hàng</label>
+                <input type="text" name="name" value="{{ old('name') }}" class="w-full rounded-lg border-gray-300 p-3">
                 @error('name') <span class="text-error text-sm">{{ $message }}</span> @enderror
             </div>
 

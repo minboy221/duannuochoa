@@ -52,7 +52,7 @@
                         <div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest shadow-sm hover:shadow-2xl transition-all duration-500">
                             <div class="absolute top-6 left-6 z-10">
                                 <h3 class="font-headline text-3xl font-bold text-on-surface">{{ $item->name }}</h3>
-                                <p class="text-primary font-semibold">Sản phẩm Nổi bật</p>
+                                <p class="text-primary font-bold text-sm uppercase tracking-wider">Sản phẩm Nổi bật</p>
                             </div>
                             <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                                 src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
