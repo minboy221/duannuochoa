@@ -11,21 +11,63 @@
 
             <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-6">
                 @csrf
+
+                @if(session('error'))
+                <div class="bg-error-container/10 border border-error/20 text-error p-4 rounded-xl flex items-center gap-3">
+                    <span class="material-symbols-outlined">error</span>
+                    <p class="font-bold text-sm">{{ session('error') }}</p>
+                </div>
+                @endif
+
+                @if($errors->any())
+                <div class="bg-error-container/10 border border-error/20 text-error p-4 rounded-xl space-y-1">
+                    <div class="flex items-center gap-3 mb-2">
+                        <span class="material-symbols-outlined">report</span>
+                        <p class="font-bold">Vui lòng kiểm tra lại thông tin:</p>
+                    </div>
+                    <ul class="list-disc list-inside text-sm ml-9">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="space-y-2">
                         <label class="text-sm font-bold text-on-surface-variant ml-2">Họ và tên người nhận</label>
-                        <input type="text" name="full_name" value="{{ Auth::user()->full_name }}" required
-                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">
+                        <input type="text" name="full_name" value="{{ old('full_name', Auth::user()->full_name) }}" required
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all @error('full_name') ring-2 ring-error/50 @enderror">
+                        @error('full_name')
+                            <p class="text-error text-xs font-bold ml-2 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">info</span> {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div class="space-y-2">
                         <label class="text-sm font-bold text-on-surface-variant ml-2">Số điện thoại</label>
-                        <input type="tel" name="phone" value="{{ Auth::user()->phone }}" required
-                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">
+                        <input type="tel" name="phone" value="{{ old('phone', Auth::user()->phone) }}" required
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all @error('phone') ring-2 ring-error/50 @enderror">
+                        @error('phone')
+                            <p class="text-error text-xs font-bold ml-2 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">info</span> {{ $message }}
+                            </p>
+                        @enderror
                     </div>
                     <div class="md:col-span-2 space-y-2">
                         <label class="text-sm font-bold text-on-surface-variant ml-2">Địa chỉ nhận hàng</label>
                         <textarea name="address" rows="3" required
-                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all">{{ Auth::user()->address }}</textarea>
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all @error('address') ring-2 ring-error/50 @enderror">{{ old('address', Auth::user()->address) }}</textarea>
+                        @error('address')
+                            <p class="text-error text-xs font-bold ml-2 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-sm">info</span> {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                    <div class="md:col-span-2 space-y-2">
+                        <label class="text-sm font-bold text-on-surface-variant ml-2">Ghi chú (Tùy chọn)</label>
+                        <textarea name="note" rows="2"
+                            class="w-full bg-surface-container-low border-none rounded-xl px-6 py-4 focus:ring-2 focus:ring-primary/20 transition-all"
+                            placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi giao..."></textarea>
                     </div>
                 </div>
 
@@ -40,10 +82,42 @@
                                 <p class="font-bold">{{ $method->name ?? 'Giao hàng' }}</p>
                                 <p class="text-sm text-on-surface-variant">Thời gian nhận hàng 2-3 ngày</p>
                             </div>
-                            <span class="font-bold text-primary">{{ $method->cost > 0 ? number_format($method->cost) . 'đ' : 'Miễn phí' }}</span>
+                            <span class="font-bold text-primary">{{ $method->fee > 0 ? number_format($method->fee) . 'đ' : 'Miễn phí' }}</span>
                         </label>
                         @endforeach
                     </div>
+                    @error('shipping_id')
+                        <p class="text-error text-xs font-bold ml-2 flex items-center gap-1 mt-2">
+                            <span class="material-symbols-outlined text-sm">info</span> {{ $message }}
+                        </p>
+                    @enderror
+                </div>
+
+                <div class="space-y-4">
+                    <h3 class="font-bold text-lg text-on-surface">Phương thức thanh toán</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-primary/20 has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
+                            <input type="radio" name="payment_method" value="cod" checked class="sr-only">
+                            <span class="material-symbols-outlined text-primary mr-4">payments</span>
+                            <div class="flex-grow">
+                                <p class="font-bold">Tiền mặt (COD)</p>
+                                <p class="text-[10px] text-on-surface-variant uppercase font-bold">Thanh toán khi nhận hàng</p>
+                            </div>
+                        </label>
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-primary/20 has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
+                            <input type="radio" name="payment_method" value="vnpay" class="sr-only">
+                            <span class="material-symbols-outlined text-primary mr-4">account_balance</span>
+                            <div class="flex-grow">
+                                <p class="font-bold">VNPay</p>
+                                <p class="text-[10px] text-on-surface-variant uppercase font-bold">Thanh toán trực tuyến</p>
+                            </div>
+                        </label>
+                    </div>
+                    @error('payment_method')
+                        <p class="text-error text-xs font-bold ml-2 flex items-center gap-1 mt-2">
+                            <span class="material-symbols-outlined text-sm">info</span> {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 <div class="space-y-4">

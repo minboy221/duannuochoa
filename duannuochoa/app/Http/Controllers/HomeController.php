@@ -21,10 +21,47 @@ class HomeController extends Controller{
         return view('clien.about');
     }
     //phần sản phẩm
-    public function sanpham()
+    public function sanpham(Request $request)
     {
-        $products = \App\Models\Product::with('category')->paginate(12);
-        return view('clien.sanpham', compact('products'));
+        $categories = \App\Models\Category::all();
+        $brands = \App\Models\Brand::all();
+
+        $query = \App\Models\Product::with(['category', 'brand', 'reviews']);
+
+        if ($request->has('category') && is_array($request->category)) {
+            $query->whereIn('category_id', $request->category);
+        }
+
+        if ($request->filled('brand')) {
+            $query->where('brand_id', $request->brand);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('base_price', '<=', $request->max_price);
+        }
+
+        if ($request->filled('sort')) {
+            switch ($request->sort) {
+                case 'price_low':
+                    $query->orderBy('base_price', 'asc');
+                    break;
+                case 'price_high':
+                    $query->orderBy('base_price', 'desc');
+                    break;
+                case 'popular':
+                    // Just sorting by ID or something for now as poor-man's popularity
+                    $query->withCount('reviews')->orderBy('reviews_count', 'desc');
+                    break;
+                default:
+                    $query->latest();
+            }
+        } else {
+            $query->latest();
+        }
+
+        $products = $query->paginate(12)->withQueryString();
+
+        return view('clien.sanpham', compact('products', 'categories', 'brands'));
     }
     //phần liên hệ
     public function lienhe()

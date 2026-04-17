@@ -18,6 +18,12 @@ class Order extends Model
         'discount_id',
         'total_amount',
         'status',
+        'full_name',
+        'phone',
+        'address',
+        'note',
+        'payment_method',
+        'payment_status',
     ];
 
     public function user()
