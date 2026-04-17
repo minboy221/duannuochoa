@@ -4,15 +4,15 @@
         <!-- Product Details Section -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <!-- Image Gallery (Asymmetric Layout) -->
-            <div class="lg:col-span-7 grid grid-cols-2 gap-4">
-                <div class="col-span-2 aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-low group">
+            <div class="lg:col-span-5 grid grid-cols-1 gap-4">
+                <div class="col-span-1 aspect-square rounded-2xl overflow-hidden bg-surface-container-lowest shadow-sm group p-8 flex items-center justify-center">
                     <img alt="{{ $product->name }}"
-                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
                         src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                 </div>
             </div>
             <!-- Content Info -->
-            <div class="lg:col-span-5 sticky top-32 space-y-8">
+            <div class="lg:col-span-7 sticky top-32 space-y-8 pl-0 lg:pl-12">
                 <div class="space-y-2">
                     <div class="flex items-center gap-2">
                         @if($product->is_featured)
@@ -82,42 +82,7 @@
                         }
                     });
                 </script>
-                <!-- Fragrance Pyramid -->
-                <div class="p-6 rounded-lg bg-surface-container-low space-y-6">
-                    <h3 class="font-bold text-sm uppercase tracking-widest text-primary">Tầng Hương Đặc Trưng</h3>
-                    <div class="space-y-4">
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-primary">
-                                <span class="material-symbols-outlined" data-icon="eco">eco</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-on-surface-variant uppercase">Hương Đầu</p>
-                                <p class="font-semibold">Cam Bergamot, Bưởi, Hương Biển</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-secondary">
-                                <span class="material-symbols-outlined" data-icon="filter_vintage">filter_vintage</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-on-surface-variant uppercase">Hương Giữa</p>
-                                <p class="font-semibold">Hoa Oải Hương, Lá Xô Thơm, Nhục Đậu Khấu</p>
-                            </div>
-                        </div>
-                        <div class="flex items-center gap-4">
-                            <div
-                                class="w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-tertiary">
-                                <span class="material-symbols-outlined" data-icon="forest">forest</span>
-                            </div>
-                            <div>
-                                <p class="text-xs font-bold text-on-surface-variant uppercase">Hương Cuối</p>
-                                <p class="font-semibold">Gỗ Tuyết Tùng, Hổ Phách, Xạ Hương</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
                 <!-- Actions -->
                 <form action="{{ route('cart.add') }}" method="POST" class="flex flex-col gap-4 pt-4">
                     @csrf
