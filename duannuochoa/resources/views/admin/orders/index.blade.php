@@ -15,6 +15,31 @@
         </div>
     @endif
 
+    <!-- Status Summary -->
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4 mb-8">
+        @php
+            $statuses = [
+                'Chờ xác nhận' => ['icon' => 'pending_actions', 'color' => 'amber'],
+                'Đã xác nhận' => ['icon' => 'check_circle', 'color' => 'blue'],
+                'Đang chuẩn bị hàng' => ['icon' => 'inventory_2', 'color' => 'purple'],
+                'Đang giao' => ['icon' => 'local_shipping', 'color' => 'indigo'],
+                'Đã giao hàng' => ['icon' => 'package_2', 'color' => 'cyan'],
+                'Đã hoàn thành' => ['icon' => 'task_alt', 'color' => 'green'],
+                'Đã hủy' => ['icon' => 'cancel', 'color' => 'red'],
+                'Trả hàng/Hoàn tiền' => ['icon' => 'assignment_return', 'color' => 'rose']
+            ];
+            // Since we only have paginated orders, we'd ideally pass counts from controller, 
+            // but for a quick enhancement we'll show labels. 
+            // Ideally we'd do: App\Models\Order::select('status', DB::raw('count(*) as count'))->groupBy('status')->get();
+        @endphp
+        @foreach($statuses as $label => $config)
+        <div class="bg-surface-container-lowest p-4 rounded-xl border border-{{ $config['color'] }}-100 shadow-sm flex flex-col items-center justify-center text-center">
+            <span class="material-symbols-outlined text-{{ $config['color'] }}-600 mb-2">{{ $config['icon'] }}</span>
+            <span class="text-[10px] font-black uppercase tracking-tighter text-on-surface-variant">{{ $label }}</span>
+        </div>
+        @endforeach
+    </div>
+
     <!-- Search Form -->
     <form method="GET" action="{{ route('admin.orders.index') }}" class="mb-6 flex gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
         <div class="relative flex-1">
@@ -25,15 +50,8 @@
         
         <select name="status" class="bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background focus:ring-2 focus:ring-primary w-56 text-sm font-medium">
             <option value="">Tất cả trạng thái</option>
-            @php
-                $allStatuses = [
-                    'Chờ xác nhận', 'Đã xác nhận', 'Đang chuẩn bị hàng', 
-                    'Đang giao', 'Đã giao hàng', 'Đã hoàn thành', 
-                    'Đã hủy', 'Trả hàng/Hoàn tiền'
-                ];
-            @endphp
-            @foreach($allStatuses as $status)
-                <option value="{{ $status }}" {{ request('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+            @foreach(array_keys($statuses) as $statusLabel)
+                <option value="{{ $statusLabel }}" {{ request('status') == $statusLabel ? 'selected' : '' }}>{{ $statusLabel }}</option>
             @endforeach
         </select>
 
@@ -55,6 +73,7 @@
                     <th class="px-6 py-5">Tổng tiền</th>
                     <th class="px-6 py-5">Trạng thái</th>
                     <th class="px-6 py-5">Ngày đặt</th>
+                    <th class="px-6 py-5">Thanh toán</th>
                     <th class="px-6 py-5 text-right font-bold">Thao tác</th>
                 </tr>
             </thead>
@@ -70,35 +89,78 @@
                     </td>
                     <td class="px-6 py-5 font-headline font-bold text-on-surface">{{ number_format($order->total_amount) }}đ</td>
                     <td class="px-6 py-5">
-                        @php
-                            $badgeStyle = match($order->status) {
-                                'Chờ xác nhận' => 'bg-amber-100 text-amber-700 border-amber-200',
-                                'Đã xác nhận' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                'Đang chuẩn bị hàng' => 'bg-purple-100 text-purple-700 border-purple-200',
-                                'Đang giao' => 'bg-indigo-100 text-indigo-700 border-indigo-200',
-                                'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
-                                'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
-                                'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
-                                'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
-                                default => 'bg-slate-100 text-slate-700 border-slate-200'
-                            };
-                        @endphp
-                        <span class="px-4 py-1.5 text-[10px] font-black rounded-full border {{ $badgeStyle }} uppercase tracking-widest shadow-sm">
-                            {{ $order->status }}
-                        </span>
+                        <div class="flex flex-col gap-2">
+                            @php
+                                $badgeStyle = match($order->status) {
+                                    'Chờ thanh toán' => 'bg-slate-100 text-slate-500 border-slate-200',
+                                    'Chờ xác nhận' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                    'Đã xác nhận' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                    'Đã thanh toán' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                    'Đang chuẩn bị hàng' => 'bg-purple-100 text-purple-700 border-purple-200',
+                                    'Đang giao' => 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                                    'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
+                                    'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
+                                    'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
+                                    'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
+                                    default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                };
+
+                                $nextStatus = match($order->status) {
+                                    'Chờ xác nhận' => 'Đã xác nhận',
+                                    'Đã xác nhận' => 'Đang chuẩn bị hàng',
+                                    'Đã thanh toán' => 'Đang chuẩn bị hàng',
+                                    'Đang chuẩn bị hàng' => 'Đang giao',
+                                    'Đang giao' => 'Đã giao hàng',
+                                    'Đã giao hàng' => 'Đã hoàn thành',
+                                    default => null
+                                };
+                            @endphp
+                            <span class="w-fit px-4 py-1.5 text-[10px] font-black rounded-full border {{ $badgeStyle }} uppercase tracking-widest shadow-sm">
+                                {{ $order->status }}
+                            </span>
+                            
+                            @if($nextStatus)
+                            <form action="{{ route('admin.orders.update', $order) }}" method="POST">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="{{ $nextStatus }}">
+                                <button type="submit" class="text-[9px] font-bold text-primary hover:underline flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-[12px]">double_arrow</span>
+                                    Chuyển sang {{ $nextStatus }}
+                                </button>
+                            </form>
+                            @endif
+                        </div>
                     </td>
                     <td class="px-6 py-5 text-sm font-medium text-on-surface-variant italic">
                         {{ $order->created_at->format('d/m/Y H:i') }}
                     </td>
+                    <td class="px-6 py-5">
+                        <div class="flex items-center gap-2">
+                            @if(strtolower($order->payment_method) == 'vnpay')
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-blue-600 text-sm">payments</span>
+                                </div>
+                                <span class="text-[11px] font-black text-blue-700 uppercase tracking-widest">VNPay</span>
+                            @else
+                                <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-slate-600 text-sm">local_shipping</span>
+                                </div>
+                                <span class="text-[11px] font-black text-slate-700 uppercase tracking-widest">COD</span>
+                            @endif
+                        </div>
+                    </td>
                     <td class="px-6 py-5 text-right">
                         <div class="flex justify-end gap-1">
                             <a href="{{ route('admin.orders.show', $order) }}" 
-                               class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-primary hover:text-white text-primary transition-all duration-300">
+                               class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-primary hover:text-white text-primary transition-all duration-300 transition-all shadow-sm bg-surface-container-low"
+                               title="Xem chi tiết">
                                 <span class="material-symbols-outlined text-xl">visibility</span>
                             </a>
                             <a href="{{ route('admin.orders.edit', $order) }}" 
-                               class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-on-surface-variant hover:text-white text-on-surface-variant transition-all duration-300">
-                                <span class="material-symbols-outlined text-xl">edit</span>
+                               class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-secondary hover:text-white text-secondary transition-all duration-300 shadow-sm bg-surface-container-low"
+                               title="Quản lý trạng thái">
+                                <span class="material-symbols-outlined text-xl">settings</span>
                             </a>
                         </div>
                     </td>

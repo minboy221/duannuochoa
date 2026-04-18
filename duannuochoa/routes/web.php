@@ -19,6 +19,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\PasswordController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('gioi-thieu', [HomeController::class, 'about'])->name('about');
@@ -26,7 +27,7 @@ Route::get('san-pham', [HomeController::class, 'sanpham'])->name('sanpham');
 Route::get('lien-he', [HomeController::class, 'lienhe'])->name('lienhe');
 Route::get('xem-chi-tiet/{id}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 // Cart Routes
-Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('cart.index');
+Route::get('gio-hang', [\App\Http\Controllers\CartController::class, 'index'])->name('giohang');
 Route::post('gio-hang/them', [\App\Http\Controllers\CartController::class, 'add'])->name('cart.add');
 Route::put('gio-hang/cap-nhat', [\App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 Route::delete('gio-hang/xoa/{id}', [\App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
@@ -47,6 +48,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::resource('shipping-methods', \App\Http\Controllers\Admin\ShippingMethodController::class);
     Route::resource('orders', \App\Http\Controllers\Admin\OrderController::class);
     Route::resource('reviews', \App\Http\Controllers\Admin\ReviewManagementController::class)->only(['index', 'destroy']);
+    
+    // Inventory Management
+    Route::get('inventory', [\App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('inventory.index');
+    Route::post('inventory/update-stock', [\App\Http\Controllers\Admin\InventoryController::class, 'updateStock'])->name('inventory.updateStock');
 });
 
 // Authentication Routes
@@ -72,6 +77,9 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('tai-khoan', [HomeController::class, 'taikhoan'])->name('taikhoan');
     Route::get('lich-su-don-hang', [HomeController::class, 'lichsu'])->name('lichsu');
+    Route::get('don-hang/{order}', [HomeController::class, 'chitietdonhang'])->name('donhang.show');
+    Route::post('don-hang/{order}/retry-vnpay', [CheckoutController::class, 'retryVnpay'])->name('donhang.retry-vnpay');
+    Route::post('don-hang/{order}/switch-to-cod', [CheckoutController::class, 'switchToCod'])->name('donhang.switch-to-cod');
     Route::post('tai-khoan', [ProfileController::class, 'update'])->name('profile.update');
     
     Route::get('change-password', [PasswordController::class, 'showChangeForm'])->name('password.change');

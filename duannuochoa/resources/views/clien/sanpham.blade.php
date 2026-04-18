@@ -104,14 +104,20 @@
                     <!-- Product Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
                         @forelse($products as $product)
+                        @php 
+                            $isOOS = $product->isOutOfStock(); 
+                            $isStopped = $product->status == 0;
+                            $isDisabled = $isOOS || $isStopped;
+                        @endphp
                         <div
-                            class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2">
+                            class="group relative bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-500 {{ $isDisabled ? 'opacity-70' : 'hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-2' }}">
                             <div class="aspect-[4/5] bg-surface-container-low relative overflow-hidden">
-                                <img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                <img class="w-full h-full object-cover transition-transform duration-700 {{ $isDisabled ? 'grayscale' : 'group-hover:scale-110' }}"
                                     src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                                 <!-- Overlay Actions -->
                                 <div
                                     class="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center gap-4 backdrop-blur-[2px]">
+                                    @if(!$isDisabled)
                                     <form action="{{ route('cart.add') }}" method="POST">
                                         @csrf
                                         @if($product->variants->isNotEmpty())
@@ -123,13 +129,22 @@
                                             Thêm vào giỏ
                                         </button>
                                     </form>
-                                    <a href="{{ route('xemchitiet', $product->product_id) }}"
-                                        class="bg-surface-container-lowest text-primary px-8 py-3 rounded-xl font-bold translate-y-8 group-hover:translate-y-0 transition-transform duration-500 delay-75 shadow-lg">
-                                        Xem chi tiết
+                                    @endif
+                                    <a href="{{ $isStopped ? 'javascript:void(0)' : route('xemchitiet', $product->product_id) }}"
+                                        class="bg-surface-container-lowest text-primary px-8 py-3 rounded-xl font-bold translate-y-8 group-hover:translate-y-0 transition-transform duration-500 {{ $isDisabled ? '' : 'delay-75' }} shadow-lg {{ $isStopped ? 'cursor-not-allowed opacity-50' : '' }}">
+                                        {{ $isStopped ? 'Tạm ngưng' : 'Xem chi tiết' }}
                                     </a>
                                 </div>
                                 <!-- Badges -->
-                                @if($product->is_featured)
+                                @if($isStopped)
+                                <div
+                                    class="absolute top-4 left-4 bg-surface-variant text-on-surface-variant px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-lg">
+                                    Tạm ngưng</div>
+                                @elseif($isOOS)
+                                <div
+                                    class="absolute top-4 left-4 bg-error text-on-error px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase shadow-lg">
+                                    Hết hàng</div>
+                                @elseif($product->is_featured)
                                 <div
                                     class="absolute top-4 left-4 bg-tertiary text-on-tertiary px-4 py-1 rounded-full text-xs font-black tracking-widest uppercase">
                                     Popular</div>
@@ -143,8 +158,8 @@
                                     @endfor
                                     <span class="text-xs text-on-surface-variant font-bold ml-1">({{ number_format($rating, 1) }})</span>
                                 </div>
-                                <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight">{{ $product->name }}</h3>
-                                <p class="text-primary font-black text-2xl tracking-tight">{{ number_format($product->base_price) }}đ</p>
+                                <h3 class="font-headline text-xl font-bold text-on-surface mb-2 leading-tight {{ $isDisabled ? 'text-on-surface-variant' : '' }}">{{ $product->name }}</h3>
+                                <p class="text-primary font-black text-2xl tracking-tight {{ $isDisabled ? 'opacity-50' : '' }}">{{ number_format($product->base_price) }}đ</p>
                             </div>
                         </div>
                         @empty

@@ -3,13 +3,8 @@
     <main class="pt-24 pb-20 max-w-7xl mx-auto px-6 lg:px-12">
         <!-- Product Details Section -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-            <!-- Image Gallery (Asymmetric Layout) -->
+            <!-- Image Gallery -->
             <div class="lg:col-span-5 grid grid-cols-1 gap-4">
-                <div class="col-span-1 aspect-square rounded-2xl overflow-hidden bg-surface-container-lowest shadow-sm group p-8 flex items-center justify-center">
-                    <img alt="{{ $product->name }}"
-                        class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700"
-                        src="{{ $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
-            <div class="lg:col-span-7 grid grid-cols-2 gap-4">
                 <div class="col-span-2 aspect-[4/5] rounded-lg overflow-hidden bg-surface-container-low group">
                     <img id="main-product-image" alt="{{ $product->name }}"
                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
@@ -63,24 +58,26 @@
                 </p>
 
                 <!-- Options -->
-                <div class="space-y-4">
+                <div class="space-y-4 {{ $product->status == 0 ? 'opacity-50 pointer-events-none' : '' }}">
                     <h3 class="font-bold text-sm uppercase tracking-widest text-on-surface-variant flex justify-between">
                         <span>Dung tích</span>
                         <span id="display-stock" class="text-primary normal-case">Tồn kho: {{ $product->variants->sum('stock_quantity') }}</span>
                     </h3>
                     <div class="flex flex-wrap gap-4">
                         @forelse($product->variants as $variant)
+                        @php $varOOS = $variant->stock_quantity <= 0; @endphp
                         <button
                             type="button"
+                            {{ $varOOS || $product->status == 0 ? 'disabled' : '' }}
                             class="variant-btn py-3 px-6 rounded-xl border-2 transition-all font-bold flex items-center gap-2
-                            {{ $loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest' }}"
+                            {{ ($varOOS || $product->status == 0) ? 'opacity-40 cursor-not-allowed bg-slate-100 border-slate-200' : ($loop->first ? 'border-primary bg-primary-container/10 text-primary' : 'border-transparent bg-surface-container-high text-on-surface-variant hover:bg-surface-container-highest') }}"
                             data-variant-id="{{ $variant->variant_id }}"
                             data-price="{{ number_format($variant->price) }}đ"
                             data-stock="{{ $variant->stock_quantity }}"
                             data-image="{{ $variant->image ? asset('storage/' . $variant->image) : '' }}"
-                            data-variant-id="{{ $variant->variant_id }}"
                             onclick="selectVariant(this)">
-                            {{ $variant->volume_id }}ml
+                            {{ $variant->volume->name ?? $variant->volume_id }}ml
+                            @if($varOOS) <span class="text-[10px] uppercase opacity-60">(Hết)</span> @endif
                             @if($variant->color_code)
                                 <span class="w-4 h-4 rounded-full border border-gray-300 inline-block" style="background-color: {{ $variant->color_code }};" title="{{ $variant->color }}"></span>
                             @endif
@@ -93,10 +90,14 @@
 
                 <script>
                     function selectVariant(element, syncThumbnail = true) {
+                        if (element.hasAttribute('disabled')) return;
+
                         // Reset all buttons
                         document.querySelectorAll('.variant-btn').forEach(btn => {
-                            btn.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
-                            btn.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                            if (!btn.hasAttribute('disabled')) {
+                                btn.classList.remove('border-primary', 'bg-primary-container/10', 'text-primary');
+                                btn.classList.add('border-transparent', 'bg-surface-container-high', 'text-on-surface-variant');
+                            }
                         });
 
                         // Highlight selected button
@@ -104,13 +105,28 @@
                         element.classList.add('border-primary', 'bg-primary-container/10', 'text-primary');
 
                         // Update price and stock
+                        const stock = parseInt(element.getAttribute('data-stock'));
                         document.getElementById('display-price').innerText = element.getAttribute('data-price');
-                        document.getElementById('display-stock').innerText = 'Tồn kho: ' + element.getAttribute('data-stock');
+                        document.getElementById('display-stock').innerText = 'Tồn kho: ' + stock;
                         
                         // Update variant ID for form submission
                         const variantInput = document.getElementById('selected-variant-id');
+                        const buyBtn = document.getElementById('buy-button');
                         if (variantInput) {
                             variantInput.value = element.getAttribute('data-variant-id');
+                        }
+
+                        // Update button state
+                        if (buyBtn && !buyBtn.hasAttribute('data-stopped')) {
+                            if (stock <= 0) {
+                                buyBtn.disabled = true;
+                                buyBtn.innerHTML = '<span class="material-symbols-outlined">block</span> Tạm hết hàng';
+                                buyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                            } else {
+                                buyBtn.disabled = false;
+                                buyBtn.innerHTML = '<span class="material-symbols-outlined">add_shopping_cart</span> Thêm vào giỏ hàng';
+                                buyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                            }
                         }
 
                         // Update main image and thumbnail
@@ -161,7 +177,7 @@
                         if (variantId) {
                             // Find the correspond variant button and click it to sync price/stock (passing false to avoid syncing thumb again)
                             const variantBtn = document.querySelector(`.variant-btn[data-variant-id="${variantId}"]`);
-                            if (variantBtn && !variantBtn.classList.contains('border-primary')) {
+                            if (variantBtn && !variantBtn.classList.contains('border-primary') && !variantBtn.hasAttribute('disabled')) {
                                 selectVariant(variantBtn, false); 
                             }
                         }
@@ -172,11 +188,29 @@
                         }
                     }
 
-                    // Initial price/stock if variants exist
+                    // Initial price/stock if variants exist - select FIRST AVAILABLE variant
                     window.addEventListener('DOMContentLoaded', (event) => {
-                        const firstVariant = document.querySelector('.variant-btn');
-                        if (firstVariant) {
-                            firstVariant.click();
+                        const firstAvailable = document.querySelector('.variant-btn:not([disabled])');
+                        if (firstAvailable) {
+                            firstAvailable.click();
+                        } else {
+                            // All out of stock logic or stopped logic
+                            const firstBtn = document.querySelector('.variant-btn');
+                            if (firstBtn) {
+                                // Explicitly update button UI even if none selected
+                                const buyBtn = document.getElementById('buy-button');
+                                if (buyBtn) {
+                                    if (buyBtn.hasAttribute('data-stopped')) {
+                                        buyBtn.disabled = true;
+                                        buyBtn.innerHTML = '<span class="material-symbols-outlined">block</span> Tạm dừng kinh doanh';
+                                        buyBtn.classList.add('opacity-50', 'cursor-not-allowed', 'bg-slate-200', 'text-slate-500');
+                                    } else {
+                                        buyBtn.disabled = true;
+                                        buyBtn.innerHTML = '<span class="material-symbols-outlined">block</span> Tạm hết hàng';
+                                        buyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                                    }
+                                }
+                            }
                         }
                     });
                 </script>
@@ -189,10 +223,16 @@
                     @endif
                     <input type="hidden" name="quantity" value="1">
                     
-                    <button type="submit"
+                    <button type="submit" id="buy-button"
+                        {{ $product->status == 0 ? 'disabled data-stopped=true' : '' }}
                         class="w-full py-4 rounded-xl bg-surface-container-highest text-primary font-bold text-lg hover:bg-surface-container-high transition-all flex items-center justify-center gap-2">
-                        <span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
-                        Thêm vào giỏ hàng
+                        @if($product->status == 0)
+                            <span class="material-symbols-outlined">block</span>
+                            Sản phẩm tạm dừng kinh doanh
+                        @else
+                            <span class="material-symbols-outlined" data-icon="add_shopping_cart">add_shopping_cart</span>
+                            Thêm vào giỏ hàng
+                        @endif
                     </button>
                 </form>
                 <div

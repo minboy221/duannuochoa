@@ -156,6 +156,11 @@
                 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
                 <span>Đơn hàng</span>
             </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.inventory.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.inventory.index') }}">
+                <span class="material-symbols-outlined" data-icon="box">box</span>
+                <span>Kho hàng</span>
+            </a>
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.users.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>

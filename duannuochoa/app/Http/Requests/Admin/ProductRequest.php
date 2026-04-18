@@ -22,6 +22,7 @@ class ProductRequest extends FormRequest
             'img' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'is_featured' => 'nullable|boolean',
             'is_bestseller' => 'nullable|boolean',
+            'status' => 'nullable|integer',
         ];
     }
 

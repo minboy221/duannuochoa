@@ -55,6 +55,20 @@
                     </label>
                 </div>
             </div>            <div class="mb-4">
+                <label class="block text-sm font-bold mb-2">Trạng thái kinh doanh</label>
+                <div class="flex gap-6">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="status" value="1" {{ old('status', $product->status) == '1' ? 'checked' : '' }} class="rounded-full border-gray-300 text-primary focus:ring-primary h-5 w-5">
+                        <span class="text-on-surface">Đang kinh doanh</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" name="status" value="0" {{ old('status', $product->status) == '0' ? 'checked' : '' }} class="rounded-full border-gray-300 text-primary focus:ring-primary h-5 w-5">
+                        <span class="text-on-surface">Tạm ngưng bán</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Hình ảnh sản phẩm</label>
                 @if($product->img)
                     <div class="mb-2">

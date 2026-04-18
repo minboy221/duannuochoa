@@ -49,6 +49,7 @@ class ProductController extends Controller
         $data = $request->validated();
         $data['is_featured'] = $request->has('is_featured');
         $data['is_bestseller'] = $request->has('is_bestseller');
+        $data['status'] = $request->input('status', 1);
 
         if ($request->hasFile('img')) {
             $data['img'] = $request->file('img')->store('products', 'public');
@@ -70,6 +71,7 @@ class ProductController extends Controller
         $data = $request->validated();
         $data['is_featured'] = $request->has('is_featured');
         $data['is_bestseller'] = $request->has('is_bestseller');
+        $data['status'] = $request->input('status', 0);
 
         if ($request->hasFile('img')) {
             if ($product->img) {

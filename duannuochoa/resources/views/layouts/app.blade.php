@@ -130,7 +130,6 @@
                     <button
                         class="p-2 hover:bg-primary-container/20 rounded-full transition-colors scale-95 active:scale-90 duration-300">
                         <a href="{{ route('giohang') }}" class="relative flex items-center justify-center">
-                        <a href="{{ route('cart.index') }}">
                             <span class="material-symbols-outlined text-primary">shopping_cart</span>
                             @auth
                                 @php

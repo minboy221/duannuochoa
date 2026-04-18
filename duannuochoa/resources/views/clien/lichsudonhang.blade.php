@@ -132,9 +132,9 @@
                                     <span class="text-xl font-black ml-2 text-primary">{{ number_format($order->total_amount) }}đ</span>
                                 </div>
                                 <div class="flex gap-4">
-                                    <button class="px-6 py-3 rounded-xl font-bold text-on-surface-variant bg-surface-container-highest hover:bg-surface-container-high transition-all text-sm">
+                                    <a href="{{ route('donhang.show', $order->order_id) }}" class="px-6 py-3 rounded-xl font-bold text-on-surface-variant bg-surface-container-highest hover:bg-surface-container-high transition-all text-sm flex items-center justify-center">
                                         Chi tiết
-                                    </button>
+                                    </a>
                                     @if(in_array($order->status, ['Đã giao hàng', 'Đã hoàn thành', 'Đã hủy']))
                                         <button class="px-8 py-3 rounded-xl font-bold text-white bg-primary shadow-lg hover:scale-105 active:scale-95 transition-all text-sm">
                                             Mua lại

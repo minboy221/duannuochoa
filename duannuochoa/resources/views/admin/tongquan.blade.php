@@ -82,22 +82,15 @@
                 </div>
             </div>
             <!-- Card 4: Low Stock -->
-            <div
+            <a href="{{ route('admin.inventory.index', ['status' => 'low_stock']) }}"
                 class="bg-surface-container-lowest p-6 rounded-lg shadow-sm group hover:scale-[1.02] transition-transform duration-300">
                 <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-error/10 rounded-xl">
-                        <span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+                    <div class="p-3 bg-red-100/50 rounded-xl">
+                        <span class="material-symbols-outlined text-red-600" data-icon="inventory">inventory</span>
                     </div>
-                    <button class="text-xs font-bold text-error underline">Xem tất cả</button>
-                </div>
-                <p class="text-sm font-medium text-on-surface-variant">Cảnh báo tồn kho thấp</p>
-                <h3 class="text-2xl font-extrabold text-on-background">{{ $lowStockCount }} Sản phẩm</h3>
-                <div class="mt-4 p-2 bg-error-container/10 rounded-lg text-[11px] text-error font-medium flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
-                    @if($lowStockVariants->isNotEmpty())
-                        {{ $lowStockVariants->first()->product->name ?? 'Sản phẩm' }}: còn {{ $lowStockVariants->first()->stock_quantity }}
-                    @else
-                        Không có
+                    @if($lowStockCount > 0)
+                        <span class="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-full animate-pulse">Cần nhập
+                            hàng</span>
                     @endif
                 </div>
             </div>
