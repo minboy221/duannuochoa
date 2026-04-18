@@ -22,6 +22,7 @@ class Product extends Model
         'img',
         'is_featured',
         'is_bestseller',
+        'status',
         'created_at',
     ];
 
@@ -48,5 +49,15 @@ class Product extends Model
     public function averageRating()
     {
         return $this->reviews()->avg('rating') ?: 0;
+    }
+
+    public function totalStock()
+    {
+        return $this->variants->sum('stock_quantity');
+    }
+
+    public function isOutOfStock()
+    {
+        return $this->totalStock() <= 0;
     }
 }

@@ -27,7 +27,6 @@ class CheckoutController extends Controller
 
         if (!$cart || $cart->items->count() == 0) {
             return redirect()->route('giohang')->with('error', 'Giỏ hàng của bạn đang trống.');
-            return redirect()->route('cart.index')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
         $cartItems = $cart->items()->with('variant.product')->get();
@@ -136,6 +135,16 @@ class CheckoutController extends Controller
                 // Update stock
                 $item->variant->stock_quantity -= $item->quantity;
                 $item->variant->save();
+
+                // Check for out of stock alert
+                if ($item->variant->stock_quantity <= 0) {
+                    $adminEmail = env('MAIL_ADMIN_ADDRESS', 'phamtuan20061969@gmail.com');
+                    try {
+                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\OutOfStockAlert($item->variant->load('product')));
+                    } catch (\Exception $e) {
+                        \Log::error('Out of stock mail error: ' . $e->getMessage());
+                    }
+                }
             }
 
             // Clear Cart
@@ -237,7 +246,7 @@ class CheckoutController extends Controller
             if ($request->vnp_ResponseCode == '00') {
                 $order = Order::findOrFail($request->vnp_TxnRef);
                 $order->update([
-                    'status' => 'Chờ xác nhận',
+                    'status' => 'Đã xác nhận',
                     'payment_status' => 'paid'
                 ]);
                 return redirect()->route('lichsu')->with('success', 'Thanh toán thành công qua VNPay!');
@@ -272,12 +281,44 @@ class CheckoutController extends Controller
             $order = Order::findOrFail($inputData['vnp_TxnRef']);
             if ($inputData['vnp_ResponseCode'] == '00') {
                 $order->update([
-                    'status' => 'Chờ xác nhận',
+                    'status' => 'Đã xác nhận',
                     'payment_status' => 'paid'
                 ]);
             }
             return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
         }
         return response()->json(['RspCode' => '97', 'Message' => 'Invalid Checksum']);
+    }
+
+    public function retryVnpay(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status !== 'Chờ thanh toán') {
+            return back()->with('error', 'Đơn hàng này không ở trạng thái chờ thanh toán.');
+        }
+
+        return $this->createVnpayPayment($order);
+    }
+
+    public function switchToCod(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status !== 'Chờ thanh toán') {
+            return back()->with('error', 'Không thể chuyển đổi phương thức cho đơn hàng này.');
+        }
+
+        $order->update([
+            'payment_method' => 'cod',
+            'status' => 'Chờ xác nhận',
+            'payment_status' => 'pending'
+        ]);
+
+        return redirect()->route('donhang.show', $order)->with('success', 'Đã chuyển sang phương thức Thanh toán khi nhận hàng (COD).');
     }
 }

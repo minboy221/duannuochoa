@@ -100,6 +100,17 @@ class HomeController extends Controller{
 
         return view('clien.lichsudonhang', compact('orders', 'reviewedProductIds'));
     }
+
+    public function chitietdonhang(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403, 'Bạn không có quyền xem đơn hàng này.');
+        }
+
+        $order->load(['orderItems.variant.product', 'shippingMethod', 'discount']);
+        
+        return view('clien.chitietdonhang', compact('order'));
+    }
     //phần đăng nhập, đăng ký
     public function dangnhap()
     {

@@ -40,7 +40,7 @@ class OrderController extends Controller
     public function update(UpdateOrderStatusRequest $request, Order $order)
     {
         $order->update($request->validated());
-        return redirect()->route('admin.orders.index')->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
+        return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }
 
     // Usually orders are not deleted in ecommerce, but if needed:

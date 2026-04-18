@@ -10,6 +10,51 @@
         </a>
     </div>
 
+    <!-- Status Timeline -->
+    <div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-surface-container mb-8 overflow-x-auto">
+        <div class="flex items-center min-w-[800px] justify-between relative px-4">
+            <!-- Connecting Line Background -->
+            <div class="absolute top-[26px] left-12 right-12 h-1 bg-surface-container-high z-0"></div>
+            
+            @php
+                $statusFlow = [
+                    'Chờ xác nhận' => 'pending_actions',
+                    'Đã xác nhận' => 'check_circle',
+                    'Đang chuẩn bị hàng' => 'inventory_2',
+                    'Đang giao' => 'local_shipping',
+                    'Đã giao hàng' => 'package_2',
+                    'Đã hoàn thành' => 'task_alt'
+                ];
+                
+                $currentIndex = array_search($order->status, array_keys($statusFlow));
+                if ($order->status == 'Đã hủy') $currentIndex = -1;
+            @endphp
+
+            @foreach($statusFlow as $label => $icon)
+                @php
+                    $itemIndex = array_search($label, array_keys($statusFlow));
+                    $isActive = ($itemIndex <= $currentIndex && $currentIndex !== -1);
+                    $isCurrent = ($itemIndex === $currentIndex);
+                @endphp
+                <div class="flex flex-col items-center gap-3 relative z-10 group">
+                    <div class="w-14 h-14 rounded-full flex items-center justify-center transition-all duration-500 
+                        {{ $isCurrent ? 'bg-primary text-white scale-125 shadow-xl shadow-primary/30 ring-4 ring-primary/20' : ($isActive ? 'bg-primary-container text-primary' : 'bg-surface-container-high text-outline-variant') }}">
+                        <span class="material-symbols-outlined">{{ $icon }}</span>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[10px] font-black uppercase tracking-widest {{ $isActive ? 'text-primary' : 'text-on-surface-variant' }}">{{ $label }}</p>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        @if($order->status == 'Đã hủy')
+            <div class="mt-8 pt-6 border-t border-red-100 flex items-center justify-center gap-3 text-red-600">
+                <span class="material-symbols-outlined">cancel</span>
+                <span class="font-black uppercase tracking-widest text-sm">Đơn hàng hiện đã bị hủy</span>
+            </div>
+        @endif
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div class="md:col-span-2 space-y-6">
             <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
@@ -40,26 +85,28 @@
             
             <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
                 <h3 class="font-bold text-lg mb-4 text-primary border-b pb-2">Tổng quan đơn hàng</h3>
-                <div class="space-y-4 text-sm">
-                    <div class="flex justify-between items-center">
-                        <span class="text-on-surface-variant font-medium">Trạng thái hiện tại:</span>
-                        @php
-                            $badgeStyle = match($order->status) {
-                                'Chờ xác nhận' => 'bg-amber-100 text-amber-700 border-amber-200',
-                                'Đã xác nhận' => 'bg-blue-100 text-blue-700 border-blue-200',
-                                'Đang chuẩn bị hàng' => 'bg-purple-100 text-purple-700 border-purple-200',
-                                'Đang giao' => 'bg-indigo-100 text-indigo-700 border-indigo-200',
-                                'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
-                                'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
-                                'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
-                                'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
-                                default => 'bg-slate-100 text-slate-700 border-slate-200'
-                            };
-                        @endphp
-                        <span class="px-4 py-1 text-[10px] font-black rounded-full border {{ $badgeStyle }} uppercase tracking-widest shadow-sm">
-                            {{ $order->status }}
-                        </span>
-                    </div>
+                    <div class="space-y-4 text-sm">
+                        <div class="flex justify-between items-center">
+                            <span class="text-on-surface-variant font-medium">Trạng thái hiện tại:</span>
+                            @php
+                                $badgeStyle = match($order->status) {
+                                    'Chờ thanh toán' => 'bg-slate-100 text-slate-500 border-slate-200',
+                                    'Chờ xác nhận' => 'bg-amber-100 text-amber-700 border-amber-200',
+                                    'Đã xác nhận' => 'bg-emerald-100 text-emerald-700 border-emerald-200',
+                                    'Đã thanh toán' => 'bg-blue-100 text-blue-700 border-blue-200',
+                                    'Đang chuẩn bị hàng' => 'bg-purple-100 text-purple-700 border-purple-200',
+                                    'Đang giao' => 'bg-indigo-100 text-indigo-700 border-indigo-200',
+                                    'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
+                                    'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
+                                    'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
+                                    'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
+                                    default => 'bg-slate-100 text-slate-700 border-slate-200'
+                                };
+                            @endphp
+                            <span class="px-4 py-1 text-[10px] font-black rounded-full border {{ $badgeStyle }} uppercase tracking-widest shadow-sm">
+                                {{ $order->status }}
+                            </span>
+                        </div>
                     <div class="flex justify-between items-center">
                         <span class="text-on-surface-variant font-medium">Ngày đặt hàng:</span>
                         <span class="font-bold text-on-surface">{{ $order->created_at->format('d/m/Y H:i:s') }}</span>
@@ -80,6 +127,75 @@
         </div>
         
         <div class="space-y-6">
+            <!-- Quick Status Management -->
+            <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
+                <h3 class="font-bold text-lg mb-4 text-primary border-b pb-2">Xử lý Đơn hàng</h3>
+                <form action="{{ route('admin.orders.update', $order) }}" method="POST" id="status-form">
+                    @csrf
+                    @method('PUT')
+                    <div class="space-y-3">
+                        @php
+                            $currentStatus = $order->status;
+                            $transitionRules = [
+                                'Chờ thanh toán' => ['Đã hủy', 'Chờ xác nhận'],
+                                'Chờ xác nhận' => ['Đã xác nhận', 'Đã hủy'],
+                                'Đã xác nhận' => ['Đang chuẩn bị hàng', 'Đã hủy'],
+                                'Đã thanh toán' => ['Đang chuẩn bị hàng'],
+                                'Đang chuẩn bị hàng' => ['Đang giao', 'Đã hủy'],
+                                'Đang giao' => ['Đã giao hàng'],
+                                'Đã giao hàng' => ['Đã hoàn thành', 'Trả hàng/Hoàn tiền'],
+                                'Đã hoàn thành' => [],
+                                'Đã hủy' => [],
+                                'Trả hàng/Hoàn tiền' => []
+                            ];
+                            $allowed = $transitionRules[$currentStatus] ?? [];
+                        @endphp
+
+                        @if(empty($allowed))
+                            <p class="text-xs text-on-surface-variant italic py-4 text-center bg-surface-container-low rounded-lg">Không thể thực hiện thêm thao tác nào cho đơn hàng ở trạng thái này.</p>
+                        @endif
+
+                        @foreach($allowed as $status)
+                            <label class="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:bg-primary-container/10 hover:border-primary transition-all cursor-pointer group">
+                                <input type="radio" name="status" value="{{ $status }}" class="w-4 h-4 text-primary focus:ring-primary/20 status-radio" required>
+                                <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{{ $status }}</span>
+                            </label>
+                        @endforeach
+
+                        <div id="cancel-reason-input" class="hidden mt-4 animate-in fade-in duration-300">
+                            <label class="block text-[10px] font-black uppercase text-red-600 mb-2">Lý do hủy đơn *</label>
+                            <textarea name="cancel_reason" rows="3" class="w-full text-xs bg-red-50 border-red-100 rounded-lg focus:ring-red-200 transition-all" placeholder="Nhập lý do hủy..."></textarea>
+                        </div>
+
+                        @if(!empty($allowed))
+                            <button type="submit" class="w-full mt-4 bg-primary text-white py-3 rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                                Cập nhật ngay
+                            </button>
+                        @endif
+                    </div>
+                </form>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const radios = document.querySelectorAll('.status-radio');
+                    const reasonInput = document.getElementById('cancel-reason-input');
+                    const form = document.getElementById('status-form');
+
+                    radios.forEach(radio => {
+                        radio.addEventListener('change', function() {
+                            if (this.value === 'Đã hủy') {
+                                reasonInput.classList.remove('hidden');
+                                reasonInput.querySelector('textarea').required = true;
+                            } else {
+                                reasonInput.classList.add('hidden');
+                                reasonInput.querySelector('textarea').required = false;
+                            }
+                        });
+                    });
+                });
+            </script>
+
             <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
                 <h3 class="font-bold text-lg mb-4 text-primary border-b pb-2">Thông tin Khách hàng</h3>
                 @if($order->user)
@@ -111,10 +227,6 @@
                     </div>
                 </div>
             </div>
-
-            <a href="{{ route('admin.orders.edit', $order) }}" class="block w-full text-center bg-primary text-white py-3 rounded-xl font-bold shadow-lg hover:opacity-90 transition-opacity">
-                Cập nhật trạng thái
-            </a>
         </div>
     </div>
 </main>

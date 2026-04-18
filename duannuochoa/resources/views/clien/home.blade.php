@@ -48,18 +48,26 @@
             </div>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                 @forelse($featuredProducts as $item)
+                    @php 
+                        $isOOS = $item->isOutOfStock(); 
+                        $isStopped = $item->status == 0;
+                        $isDisabled = $isOOS || $isStopped;
+                    @endphp
                     @if($loop->iteration == 1)
-                        <div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest shadow-sm hover:shadow-2xl transition-all duration-500">
+                        <div class="md:col-span-2 md:row-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest shadow-sm {{ $isDisabled ? 'opacity-70' : 'hover:shadow-2xl transition-all duration-500' }}">
                             <div class="absolute top-6 left-6 z-10">
-                                <h3 class="font-headline text-3xl font-bold text-on-surface">{{ $item->name }}</h3>
-                                <p class="text-primary font-bold text-sm uppercase tracking-wider">Sản phẩm Nổi bật</p>
+                                <h3 class="font-headline text-3xl font-bold text-on-surface {{ $isDisabled ? 'text-on-surface-variant' : '' }}">{{ $item->name }}</h3>
+                                <p class="text-primary font-bold text-sm uppercase tracking-wider">
+                                    {{ $isStopped ? 'Tạm ngưng kinh doanh' : ($isOOS ? 'Tạm hết hàng' : 'Sản phẩm Nổi bật') }}
+                                </p>
                             </div>
-                            <img class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                            <img class="w-full h-full object-cover {{ $isDisabled ? 'grayscale' : 'group-hover:scale-110' }} transition-transform duration-700" 
                                 src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                             <div class="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform">
+                                <a href="{{ $isStopped ? 'javascript:void(0)' : route('xemchitiet', $item->product_id) }}" class="p-4 rounded-full bg-white text-primary shadow-lg hover:scale-110 transition-transform {{ $isStopped ? 'cursor-not-allowed opacity-50' : '' }}">
                                     <span class="material-symbols-outlined">visibility</span>
                                 </a>
+                                @if(!$isDisabled)
                                 <form action="{{ route('cart.add') }}" method="POST">
                                     @csrf
                                     @if($item->variants->isNotEmpty())
@@ -70,32 +78,62 @@
                                         <span class="material-symbols-outlined">add_shopping_cart</span>
                                     </button>
                                 </form>
+                                @endif
                             </div>
+                            @if($isStopped)
+                                <div class="absolute inset-0 bg-black/10 flex items-center justify-center pointer-events-none">
+                                    <span class="bg-surface-variant text-on-surface-variant px-6 py-2 rounded-full font-black text-sm tracking-widest uppercase shadow-xl -rotate-12">Tạm ngưng</span>
+                                </div>
+                            @elseif($isOOS)
+                                <div class="absolute inset-0 bg-black/5 flex items-center justify-center pointer-events-none">
+                                    <span class="bg-error text-on-error px-6 py-2 rounded-full font-black text-sm tracking-widest uppercase shadow-xl rotate-12">Hết hàng</span>
+                                </div>
+                            @endif
                         </div>
                     @elseif($loop->iteration == 4)
-                        <div class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center hover:shadow-xl transition-all cursor-pointer" onclick="window.location='{{ route('xemchitiet', $item) }}'">
+                        <div class="md:col-span-2 group relative overflow-hidden rounded-lg bg-surface-container-lowest h-64 flex items-center {{ $isDisabled ? 'opacity-70' : 'hover:shadow-xl' }} transition-all cursor-pointer" onclick="{{ $isStopped ? 'return false;' : "window.location='" . route('xemchitiet', $item) . "'" }}">
                             <div class="flex-1 p-8">
-                                <h3 class="font-headline text-2xl font-bold">{{ $item->name }}</h3>
-                                <p class="text-outline-variant mb-4">Hương thơm độc đáo dành cho phái mạnh.</p>
-                                <p class="text-primary font-black text-2xl mb-4">{{ number_format($item->base_price) }}đ</p>
-                                <a href="{{ route('xemchitiet', $item->product_id) }}" class="inline-block bg-primary text-on-primary px-6 py-2 rounded-full font-bold">Xem chi tiết</a>
+                                <h3 class="font-headline text-2xl font-bold {{ $isDisabled ? 'text-on-surface-variant' : '' }}">{{ $item->name }}</h3>
+                                <p class="text-outline-variant mb-4">{{ $isStopped ? 'Sản phẩm tạm ngưng bán.' : ($isOOS ? 'Sản phẩm hiện đang tạm hết.' : 'Hương thơm độc đáo dành cho phái mạnh.') }}</p>
+                                <p class="text-primary font-black text-2xl mb-4 {{ $isDisabled ? 'opacity-50' : '' }}">{{ number_format($item->base_price) }}đ</p>
+                                <a href="{{ $isStopped ? 'javascript:void(0)' : route('xemchitiet', $item->product_id) }}" class="inline-block {{ $isDisabled ? 'bg-surface-container-high text-on-surface-variant' : 'bg-primary text-on-primary' }} px-6 py-2 rounded-full font-bold {{ $isStopped ? 'cursor-not-allowed' : '' }}">
+                                    {{ $isStopped ? 'Tạm ngưng' : ($isOOS ? 'Xem chi tiết' : 'Mua ngay') }}
+                                </a>
                             </div>
-                            <div class="flex-1 h-full overflow-hidden">
-                                <img class="w-full h-full object-cover" 
+                            <div class="flex-1 h-full overflow-hidden relative">
+                                <img class="w-full h-full object-cover {{ $isDisabled ? 'grayscale' : '' }}" 
                                     src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
+                                @if($isStopped)
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="bg-surface-variant text-on-surface-variant px-4 py-1 rounded-full font-black text-[10px] tracking-tighter uppercase shadow-md rotate-12">Tạm ngưng</span>
+                                    </div>
+                                @elseif($isOOS)
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <span class="bg-error text-on-error px-4 py-1 rounded-full font-black text-[10px] tracking-tighter uppercase shadow-md -rotate-12">Hết hàng</span>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @else
-                        <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center hover:shadow-xl transition-all cursor-pointer" onclick="window.location='{{ route('xemchitiet', $item) }}'">
-                            <div class="mb-4 h-48 w-full overflow-hidden rounded-lg">
-                                <a href="{{ route('xemchitiet', $item->product_id) }}">
-                                    <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        <div class="group relative overflow-hidden rounded-lg bg-surface-container-lowest p-6 flex flex-col items-center text-center {{ $isDisabled ? 'opacity-70' : 'hover:shadow-xl' }} transition-all cursor-pointer" onclick="{{ $isStopped ? 'return false;' : "window.location='" . route('xemchitiet', $item) . "'" }}">
+                            <div class="mb-4 h-48 w-full overflow-hidden rounded-lg relative">
+                                <a href="{{ $isStopped ? 'javascript:void(0)' : route('xemchitiet', $item->product_id) }}" class="{{ $isStopped ? 'cursor-not-allowed' : '' }}">
+                                    <img class="w-full h-full object-cover {{ $isDisabled ? 'grayscale' : 'group-hover:scale-105' }} transition-transform duration-500" 
                                         src="{{ $item->img ? asset('storage/' . $item->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                                 </a>
+                                @if($isStopped)
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <span class="bg-surface-variant text-on-surface-variant px-3 py-1 rounded-full font-black text-[10px] tracking-tighter uppercase shadow-md">Tạm ngưng</span>
+                                    </div>
+                                @elseif($isOOS)
+                                    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <span class="bg-error text-on-error px-3 py-1 rounded-full font-black text-[10px] tracking-tighter uppercase shadow-md">Hết hàng</span>
+                                    </div>
+                                @endif
                             </div>
-                            <h3 class="font-bold text-lg"><a href="{{ route('xemchitiet', $item->product_id) }}">{{ $item->name }}</a></h3>
-                            <p class="text-outline text-sm mb-4">Lịch lãm &amp; Đẳng cấp</p>
-                            <p class="text-primary font-black text-xl">{{ number_format($item->base_price) }}đ</p>
+                            <h3 class="font-bold text-lg {{ $isDisabled ? 'text-on-surface-variant' : '' }}"><a href="{{ $isStopped ? 'javascript:void(0)' : route('xemchitiet', $item->product_id) }}">{{ $item->name }}</a></h3>
+                            <p class="text-outline text-sm mb-4">{{ $isStopped ? 'Ngừng kinh doanh' : ($isOOS ? 'Tạm thời hết hàng' : 'Lịch lãm & Đẳng cấp') }}</p>
+                            <p class="text-primary font-black text-xl {{ $isDisabled ? 'opacity-50' : '' }}">{{ number_format($item->base_price) }}đ</p>
                         </div>
                     @endif
                 @empty

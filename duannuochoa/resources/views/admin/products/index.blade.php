@@ -47,6 +47,7 @@
                     <th class="px-6 py-4">Danh mục</th>
                     <th class="px-6 py-4">Nhãn hàng</th>
                     <th class="px-6 py-4">Giá cơ bản</th>
+                    <th class="px-6 py-4">Trạng thái</th>
                     <th class="px-6 py-4 text-center">Biến thể</th>
                     <th class="px-6 py-4 text-right">Thao tác</th>
                 </tr>
@@ -70,6 +71,13 @@
                     <td class="px-6 py-4 font-medium">{{ $product->category ? $product->category->name : 'N/A' }}</td>
                     <td class="px-6 py-4 font-medium">{{ $product->brand ? $product->brand->name : 'N/A' }}</td>
                     <td class="px-6 py-4">{{ number_format($product->base_price) }} đ</td>
+                    <td class="px-6 py-4">
+                        @if($product->status)
+                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Đang bán</span>
+                        @else
+                            <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Tạm ngưng</span>
+                        @endif
+                    </td>
                     <td class="px-6 py-4 text-center">
                         <a href="{{ route('admin.products.variants.index', $product) }}" class="inline-flex items-center justify-center bg-secondary/10 text-secondary px-3 py-1 rounded-full text-sm font-bold hover:bg-secondary/20">
                             Quản lý Biến thể
