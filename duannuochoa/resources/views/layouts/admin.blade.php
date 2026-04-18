@@ -181,6 +181,11 @@
                 <span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
                 <span>Đánh giá</span>
             </a>
+            <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.articles.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
+                href="{{ route('admin.articles.index') }}">
+                <span class="material-symbols-outlined" data-icon="article">article</span>
+                <span>Tin tức</span>
+            </a>
         </nav>
         <div class="mt-auto pt-6 border-t border-slate-200 flex items-center gap-3 px-2">
             <img alt="Admin User Profile" class="w-10 h-10 rounded-full object-cover border-2 border-primary"

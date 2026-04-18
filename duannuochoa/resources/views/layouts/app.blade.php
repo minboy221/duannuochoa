@@ -116,6 +116,8 @@
                     href="{{ route('about') }}">Giới Thiệu</a>
                 <a class="{{ request()->routeIs('sanpham', 'xemchitiet') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('sanpham') }}">Sản Phẩm</a>
+                <a class="{{ request()->routeIs('news.*') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
+                    href="{{ route('news.index') }}">Tin tức</a>
                 <a class="{{ request()->routeIs('lienhe') ? 'text-blue-700 border-b-2 border-blue-600 pb-1' : 'text-slate-600 hover:text-blue-500 transition-colors duration-300' }} font-medium font-['Plus_Jakarta_Sans'] font-bold tracking-tight"
                     href="{{ route('lienhe') }}">Liên Hệ</a>
             </div>

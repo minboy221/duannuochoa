@@ -1,0 +1,32 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('articles', function (Blueprint $table) {
+            $table->string('slug')->unique()->after('title');
+            $table->string('image')->nullable()->after('slug');
+            $table->text('summary')->nullable()->after('content');
+            $table->boolean('status')->default(true)->after('summary');
+            $table->timestamp('updated_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('articles', function (Blueprint $table) {
+            $table->dropColumn(['slug', 'image', 'summary', 'status', 'updated_at']);
+        });
+    }
+};

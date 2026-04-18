@@ -41,14 +41,12 @@ class CartController extends Controller
             }
         }
 
-<<<<<<< HEAD
         $recommendedProducts = \App\Models\Product::with(['category', 'brand'])
             ->inRandomOrder()
             ->take(4)
             ->get();
 
         return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'recommendedProducts'));
-=======
         return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'cart'));
     }
 
@@ -125,7 +123,6 @@ class CartController extends Controller
         }
 
         return redirect()->route('giohang')->with('success', 'Đã gỡ mã giảm giá.');
->>>>>>> cd42b91563341ca84bd58bf7ee0bb283b8310e36
     }
 
     public function add(Request $request)
