@@ -32,15 +32,18 @@ class CartController extends Controller
 
             foreach ($cartItems as $item) {
                 // If variant has its own price, use it. Otherwise use product base_price.
-                // Depending on the schema, but from ProductVariant it has 'price'.
-                // If 'price' is 0 or null, use 'product->base_price'
                 $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
                 $subtotal += $price * $item->quantity;
                 $totalQuantity += $item->quantity;
             }
         }
 
-        return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal'));
+        $recommendedProducts = \App\Models\Product::with(['category', 'brand'])
+            ->inRandomOrder()
+            ->take(4)
+            ->get();
+
+        return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'recommendedProducts'));
     }
 
     public function add(Request $request)

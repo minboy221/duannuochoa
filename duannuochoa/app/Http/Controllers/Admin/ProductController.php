@@ -86,6 +86,13 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        // Check if any variant of this product has been ordered
+        $hasOrders = \App\Models\OrderItem::whereIn('variant_id', $product->variants->pluck('variant_id'))->exists();
+
+        if ($hasOrders) {
+            return redirect()->route('admin.products.index')->with('error', 'Không thể xóa sản phẩm này vì đã có người đặt mua.');
+        }
+
         if ($product->img) {
             Storage::disk('public')->delete($product->img);
         }

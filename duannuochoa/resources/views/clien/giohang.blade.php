@@ -69,21 +69,6 @@
                         <a href="{{ route('home') }}" class="inline-block bg-primary text-on-primary px-8 py-3 rounded-full font-bold hover:bg-primary-dim transition-colors">Đi mua sắm ngay</a>
                     </div>
                 @endforelse
-                <!-- Promo Code -->
-                <div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between mt-8">
-                    <div class="flex items-center gap-3 text-on-surface-variant">
-                        <span class="material-symbols-outlined">sell</span>
-                        <span class="font-medium">Bạn có mã giảm giá?</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input
-                            class="bg-surface-container-lowest border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary/20 w-48"
-                            placeholder="Nhập mã tại đây..." type="text" />
-                        <button
-                            class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-dim transition-colors">Áp
-                            dụng</button>
-                    </div>
-                </div>
             </div>
             <!-- Summary Section -->
             <div class="lg:col-span-4 sticky top-32">
@@ -141,56 +126,41 @@
                 </a>
             </div>
         </div>
-        <!-- Recommendations Grid (Bento Style) -->
         <section class="mt-32">
             <h2 class="font-headline text-3xl font-bold text-on-surface mb-8">Có thể bạn sẽ thích</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div
-                    class="md:col-span-2 bg-primary-container/10 rounded-lg p-8 flex flex-col justify-between group overflow-hidden relative min-h-[300px]">
-                    <div class="relative z-10">
-                        <span
-                            class="bg-tertiary text-on-tertiary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Mới
-                            Nhất</span>
-                        <h3 class="font-headline text-3xl font-bold text-on-primary-container max-w-[200px]">Combo Sức
-                            Mạnh Thức Tỉnh</h3>
-                        <p class="text-on-primary-container/70 mt-4 max-w-[240px]">Trọn bộ chăm sóc toàn diện cho phái
-                            mạnh tự tin mỗi ngày.</p>
-                        <button
-                            class="mt-6 text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
-                            Xem ngay <span class="material-symbols-outlined">east</span>
-                        </button>
-                    </div>
-                    <img alt="X-Men Bundle"
-                        class="absolute -right-12 -bottom-12 w-64 h-64 object-contain rotate-12 group-hover:rotate-0 transition-transform duration-500"
-                        data-alt="Collection of men's grooming products arranged artistically on a blue textured surface with dynamic diagonal shadows"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuHyis5Qc7bU66MbdsSafDZxDPDLVXr0ZoZJ9ZV9CCReC5hIXY42-RoSEYs8eIFswk7-J_c2R3-MMnlVjqhgLlkvlqTzc0zQ1G2942X5bh_WRAzxvS8cH_MHK5i42j0YZftuySMeYnCGERapPk7YN0JjP-BnTOQx7FAvOwjHjSQlcS7w1KEU4bK3iCK6LgvZSNCDcYHwD8-sTSA8OZS_pMx8_sEqe7qxzfGNNvcFmp4XTa3lEuRYi8LaNIXK5VyP9RGL3m_8B-Dyhg" />
-                </div>
-                <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
-                    <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
-                        <img alt="Product"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            data-alt="Modern geometric perfume bottle with orange citrus notes, sunlight refraction through the glass, bright energetic atmosphere"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA86OnizyWVhlt2rnG_uhXBwVR_63TY9zIqPThz5eLejHwVMtNiOvAOrpPRJDB6aOuGOllpScLLE1MaTdDcSg_M5DfQhvXkVm_X_61ihtvN2a7-pvdOjymwlt3Po3R-vV1_v0j6DxmoXWBOIY170C8nzLR0OPOelorVkXiqKSqmS_aRSK9OD3k9ote2ZkotfpcRcRqXzMoku46ZDs2KyaaymvntZnJHa0FiRvX3lfGlAviTsioAXH9ZNlMxquEefg3nrRbrkVkXxaBr" />
-                    </div>
-                    <h4 class="font-bold text-on-surface mb-1">Lăn Khử Mùi Fire</h4>
-                    <p class="text-primary font-bold">78,000đ</p>
-                    <button
-                        class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
-                        vào</button>
-                </div>
-                <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
-                    <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
-                        <img alt="Product"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            data-alt="Dark aesthetic shot of men's facial wash bottle with water splashes and charcoal textures, professional photography"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7k4j1RgyHrfIjiNc8fhoQ55uhS0NwdrYScrnSzFUiJnOM47V63v64JRuyUsWYgwLz4Hfbnk0dji39jzqW6H8cwN2nYww66LZY-qBt2mwuDgAO9SVOb1lvRopY7jp6EiOnT7Ry6I6mWStIeCt6DexYW7sE0UtCMtAKC5cfRCFzxIQuGx7OtMrkZHnrn1QQpMh2-ZKdXXrQNyW6zRRiulbV2rf5b8gygB_j2umDJvZGY3VoNYOhO5t_ybZptP-HvHb5GT0vN_KDeGTG" />
-                    </div>
-                    <h4 class="font-bold text-on-surface mb-1">Sữa Rửa Mặt Sạch Sâu</h4>
-                    <p class="text-primary font-bold">95,000đ</p>
-                    <button
-                        class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
-                        vào</button>
-                </div>
+                @foreach($recommendedProducts as $product)
+                    @if($loop->first)
+                        <!-- Large Bento Item -->
+                        <div class="md:col-span-2 bg-primary-container/10 rounded-lg p-8 flex flex-col justify-between group overflow-hidden relative min-h-[300px]">
+                            <div class="relative z-10">
+                                <span class="bg-tertiary text-on-tertiary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Gợi ý</span>
+                                <h3 class="font-headline text-3xl font-bold text-on-primary-container max-w-[200px]">{{ $product->name }}</h3>
+                                <p class="text-on-primary-container/70 mt-4 max-w-[240px]">{{ Str::limit($product->description, 80) }}</p>
+                                <a href="{{ route('xemchitiet', $product->product_id) }}"
+                                    class="mt-6 text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
+                                    Xem ngay <span class="material-symbols-outlined">east</span>
+                                </a>
+                            </div>
+                            <img alt="{{ $product->name }}"
+                                class="absolute -right-12 -bottom-12 w-64 h-64 object-contain rotate-12 group-hover:rotate-0 transition-transform duration-500"
+                                src="{{ asset('storage/' . $product->img) }}" />
+                        </div>
+                    @else
+                        <!-- Standard Item -->
+                        <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
+                            <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
+                                <img alt="{{ $product->name }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    src="{{ asset('storage/' . $product->img) }}" />
+                            </div>
+                            <h4 class="font-bold text-on-surface mb-1">{{ $product->name }}</h4>
+                            <p class="text-primary font-bold">{{ number_format($product->base_price) }}đ</p>
+                            <a href="{{ route('xemchitiet', $product->product_id) }}"
+                                class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors inline-block w-full">Xem chi tiết</a>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </section>
     </main>
