@@ -2,11 +2,26 @@
 @section('content')
     <main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
         <!-- Page Title -->
-        <header class="mb-12">
+        <header class="mb-8">
             <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-2">Giỏ Hàng
             </h1>
             <p class="text-on-surface-variant font-medium">Bạn có {{ count($cartItems ?? []) }} sản phẩm trong giỏ hàng của mình.</p>
         </header>
+
+        @if(session('error'))
+        <div class="bg-error-container/20 border border-error/50 text-error p-4 rounded-xl mb-8 flex items-center gap-3 shadow-sm">
+            <span class="material-symbols-outlined">error</span>
+            <p class="font-bold">{{ session('error') }}</p>
+        </div>
+        @endif
+
+        @if(session('success'))
+        <div class="bg-green-500/20 border border-green-500/50 text-green-700 p-4 rounded-xl mb-8 flex items-center gap-3 shadow-sm">
+            <span class="material-symbols-outlined">check_circle</span>
+            <p class="font-bold">{{ session('success') }}</p>
+        </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <!-- Products Table Section -->
             <div class="lg:col-span-8 space-y-6">
@@ -70,19 +85,41 @@
                     </div>
                 @endforelse
                 <!-- Promo Code -->
-                <div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between mt-8">
-                    <div class="flex items-center gap-3 text-on-surface-variant">
-                        <span class="material-symbols-outlined">sell</span>
-                        <span class="font-medium">Bạn có mã giảm giá?</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input
-                            class="bg-surface-container-lowest border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary/20 w-48"
-                            placeholder="Nhập mã tại đây..." type="text" />
-                        <button
-                            class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-dim transition-colors">Áp
-                            dụng</button>
-                    </div>
+                <div class="bg-surface-container-low p-6 rounded-lg mt-8">
+                    @if($cart && $cart->discount)
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 text-primary">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <div>
+                                    <p class="font-bold">Đã áp dụng mã: {{ $cart->discount->code }}</p>
+                                    <p class="text-xs opacity-70">
+                                        Giảm {{ $cart->discount->discount_type == 'percent' ? $cart->discount->discount_value . '%' : number_format($cart->discount->discount_value) . 'đ' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <form action="{{ route('cart.removeDiscount') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="text-error font-bold text-sm hover:underline">Gỡ mã</button>
+                            </form>
+                        </div>
+                    @else
+                        <form action="{{ route('cart.applyDiscount') }}" method="POST" class="flex flex-col md:flex-row items-center justify-between gap-4">
+                            @csrf
+                            <div class="flex items-center gap-3 text-on-surface-variant">
+                                <span class="material-symbols-outlined">sell</span>
+                                <span class="font-medium">Bạn có mã giảm giá?</span>
+                            </div>
+                            <div class="flex gap-2 w-full md:w-auto">
+                                <input
+                                    name="code"
+                                    class="bg-surface-container-lowest border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary/20 flex-grow md:w-48"
+                                    placeholder="Nhập mã tại đây..." type="text" required />
+                                <button type="submit"
+                                    class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-dim transition-colors">Áp
+                                    dụng</button>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
             <!-- Summary Section -->
@@ -91,6 +128,18 @@
                     <h2
                         class="font-headline text-2xl font-bold text-on-surface border-b border-surface-container-high pb-4">
                         Tóm tắt đơn hàng</h2>
+                    @php
+                        $discountAmount = 0;
+                        if ($cart && $cart->discount) {
+                            $discount = $cart->discount;
+                            if ($discount->discount_type == 'fixed') {
+                                $discountAmount = $discount->discount_value;
+                            } else {
+                                $discountAmount = ($subtotal * $discount->discount_value) / 100;
+                            }
+                        }
+                        $total = max(0, $subtotal - $discountAmount);
+                    @endphp
                     <div class="space-y-4">
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tổng số loại sản phẩm</span>
@@ -104,6 +153,12 @@
                             <span>Tạm tính</span>
                             <span class="font-bold text-on-surface">{{ number_format($subtotal ?? 0) }}đ</span>
                         </div>
+                        @if($discountAmount > 0)
+                            <div class="flex justify-between items-center text-primary">
+                                <span>Giảm giá ({{ $cart->discount->code }})</span>
+                                <span class="font-bold">-{{ number_format($discountAmount) }}đ</span>
+                            </div>
+                        @endif
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Phí vận chuyển</span>
                             <span class="font-bold text-secondary">Miễn phí</span>
@@ -112,7 +167,7 @@
                     <div class="pt-6 border-t border-surface-container-high">
                         <div class="flex justify-between items-end mb-8">
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
-                            <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($subtotal ?? 0) }}đ</span>
+                            <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($total) }}đ</span>
                         </div>
                         <a href="{{ route('checkout.index') }}"
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">

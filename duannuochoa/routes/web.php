@@ -91,6 +91,8 @@ Route::middleware('auth')->group(function () {
     
     // Voucher & Checkout
     Route::post('vouchers/redeem', [\App\Http\Controllers\VoucherController::class, 'redeem'])->name('vouchers.redeem');
+    Route::post('cart/apply-discount', [\App\Http\Controllers\CartController::class, 'applyDiscount'])->name('cart.applyDiscount');
+    Route::post('cart/remove-discount', [\App\Http\Controllers\CartController::class, 'removeDiscount'])->name('cart.removeDiscount');
     Route::get('thanh-toan', [\App\Http\Controllers\CheckoutController::class, 'index'])->name('checkout.index');
     Route::post('dat-hang', [\App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
     Route::post('don-hang/{order}/mark-notified', [\App\Http\Controllers\HomeController::class, 'markNotified'])->name('orders.mark-notified');

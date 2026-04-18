@@ -49,7 +49,10 @@ class CheckoutController extends Controller
             ]);
         }
 
-        return view('clien.thanhtoan', compact('cartItems', 'subtotal', 'userVouchers', 'shippingMethods'));
+        // Check for applied discount in cart
+        $cartDiscount = $cart->discount;
+
+        return view('clien.thanhtoan', compact('cartItems', 'subtotal', 'userVouchers', 'shippingMethods', 'cartDiscount'));
     }
 
     public function store(Request $request)
@@ -82,6 +85,8 @@ class CheckoutController extends Controller
 
             $discountAmount = 0;
             $discountId = null;
+            
+            // Prioritize user selected voucher from dropdown
             if ($request->user_discount_id) {
                 $userDiscount = UserDiscount::where('user_discount_id', $request->user_discount_id)
                     ->where('user_id', $user->user_id)
@@ -100,6 +105,18 @@ class CheckoutController extends Controller
                         $userDiscount->used_at = now();
                         $userDiscount->save();
                     }
+                }
+            } 
+            // Fallback to cart-applied discount (public codes)
+            elseif ($cart->discount_id) {
+                $discount = $cart->discount;
+                if ($subtotal >= $discount->min_order_value) {
+                    if ($discount->discount_type == 'fixed') {
+                        $discountAmount = $discount->discount_value;
+                    } else {
+                        $discountAmount = ($subtotal * $discount->discount_value) / 100;
+                    }
+                    $discountId = $discount->discount_id;
                 }
             }
 

@@ -15,8 +15,14 @@ class Cart extends Model
 
     protected $fillable = [
         'user_id',
+        'discount_id',
         'created_at'
     ];
+
+    public function discount()
+    {
+        return $this->belongsTo(Discount::class, 'discount_id', 'discount_id');
+    }
 
     public function user()
     {
