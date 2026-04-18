@@ -46,9 +46,14 @@ class Product extends Model
         return $this->hasMany(Review::class, 'product_id', 'product_id');
     }
 
+    public function activeReviews()
+    {
+        return $this->reviews()->where('status', true);
+    }
+
     public function averageRating()
     {
-        return $this->reviews()->avg('rating') ?: 0;
+        return $this->activeReviews()->avg('rating') ?: 0;
     }
 
     public function totalStock()

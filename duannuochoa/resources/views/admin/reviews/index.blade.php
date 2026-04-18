@@ -87,16 +87,23 @@
                             </td>
                             <td class="px-6 py-5">
                                 <div class="max-w-xs">
+                                    <div class="mb-2">
+                                        @if($review->status)
+                                            <span class="bg-green-100 text-green-700 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter">Công khai</span>
+                                        @else
+                                            <span class="bg-slate-100 text-slate-400 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter italic">Đã ẩn</span>
+                                        @endif
+                                    </div>
                                     <p class="text-sm text-slate-600 line-clamp-2 italic font-medium">"{{ $review->content }}"</p>
                                     <p class="text-[10px] text-slate-400 mt-1 font-bold">{{ \Carbon\Carbon::parse($review->created_at)->format('H:i d/m/Y') }}</p>
                                 </div>
                             </td>
                             <td class="px-6 py-5 text-right">
-                                <form action="{{ route('admin.reviews.destroy', $review->review_id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này? Một khi đã xóa sẽ không thể khôi phục.')">
+                                <form action="{{ route('admin.reviews.destroy', $review->review_id) }}" method="POST" class="inline-block" onsubmit="return confirm('Bạn có muốn {{ $review->status ? 'ẩn' : 'hiển thị' }} đánh giá này?')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="p-2.5 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 transition-all">
-                                        <span class="material-symbols-outlined">delete</span>
+                                    <button type="submit" class="p-2.5 rounded-xl transition-all {{ $review->status ? 'bg-amber-50 text-amber-600 hover:bg-amber-100' : 'bg-blue-50 text-blue-600 hover:bg-blue-100' }}" title="{{ $review->status ? 'Ẩn đánh giá' : 'Hiển thị đánh giá' }}">
+                                        <span class="material-symbols-outlined">{{ $review->status ? 'visibility_off' : 'visibility' }}</span>
                                     </button>
                                 </form>
                             </td>

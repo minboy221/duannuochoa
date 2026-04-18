@@ -119,10 +119,10 @@ class HomeController extends Controller{
     //phần xem chi tiết sản phẩm
     public function xemchitiet($id)
     {
-        $product = Product::with(['variants', 'reviews.user'])->findOrFail($id);
+        $product = Product::with(['variants', 'activeReviews.user'])->findOrFail($id);
         
         $averageRating = $product->averageRating();
-        $reviewsCount = $product->reviews()->count();
+        $reviewsCount = $product->activeReviews()->count();
         
         // Fetch related products (same category, excluding current)
         $relatedProducts = Product::where('category_id', $product->category_id)

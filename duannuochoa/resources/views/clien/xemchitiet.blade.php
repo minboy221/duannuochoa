@@ -353,7 +353,7 @@
                         </div>
                     </div>
                     <div class="space-y-8">
-                        @forelse($product->reviews as $review)
+                        @forelse($product->activeReviews as $review)
                         <div class="space-y-4 pb-8 border-b border-surface-container-low">
                             <div class="flex justify-between items-start">
                                 <div class="flex items-center gap-4">
