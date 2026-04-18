@@ -18,18 +18,44 @@
             <div class="grid grid-cols-2 gap-4 mb-4">
                 <div>
                     <label class="block text-sm font-bold mb-2">Giá trị giảm</label>
-                    <input type="text" name="discount_value" value="{{ old('discount_value', $discount->discount_value) != '' ? number_format((float)str_replace(',', '', old('discount_value', $discount->discount_value))) : '' }}" class="currency-input w-full rounded-lg border-gray-300 p-3" required>
+                    <input type="text" id="discount_value_input" name="discount_value" 
+                           value="{{ old('discount_value', $discount->discount_value) }}" 
+                           class="currency-input w-full rounded-lg border-gray-300 p-3" required>
                     @error('discount_value') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
                 <div>
                     <label class="block text-sm font-bold mb-2">Loại giảm</label>
-                    <select name="discount_type" class="w-full rounded-lg border-gray-300 p-3">
+                    <select name="discount_type" id="discount_type_select" class="w-full rounded-lg border-gray-300 p-3">
                         <option value="percent" {{ old('discount_type', $discount->discount_type) == 'percent' ? 'selected' : '' }}>Phần trăm (%)</option>
                         <option value="fixed" {{ old('discount_type', $discount->discount_type) == 'fixed' ? 'selected' : '' }}>Cố định (VNĐ)</option>
                     </select>
                     @error('discount_type') <span class="text-error text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const typeSelect = document.getElementById('discount_type_select');
+                    const valueInput = document.getElementById('discount_value_input');
+                    
+                    function updateInputBehavior() {
+                        if (typeSelect.value === 'percent') {
+                            valueInput.classList.remove('currency-input');
+                            // If it has commas, remove them
+                            valueInput.value = valueInput.value.toString().replace(/,/g, '');
+                            // If it has trailing zeros from decimal(15,2), remove them for percentages
+                            if (valueInput.value.includes('.')) {
+                                valueInput.value = parseFloat(valueInput.value).toString();
+                            }
+                        } else {
+                            valueInput.classList.add('currency-input');
+                        }
+                    }
+                    
+                    typeSelect.addEventListener('change', updateInputBehavior);
+                    updateInputBehavior(); // Initial call
+                });
+            </script>
 
             <div class="mb-4">
                 <label class="block text-sm font-bold mb-2">Giá trị đơn hàng tối thiểu (VNĐ)</label>

@@ -170,7 +170,23 @@ class HomeController extends Controller{
             ->groupBy('categories.name')
             ->get();
 
-        return view('admin.tongquan', compact('totalRevenue', 'totalOrders', 'ordersToday', 'totalCustomers', 'lowStockCount', 'lowStockVariants', 'recentOrders', 'categoriesSales'));
+        // Revenue trend for the last 6 months
+        $revenueTrends = collect();
+        for ($i = 5; $i >= 0; $i--) {
+            $date = \Carbon\Carbon::now()->subMonths($i);
+            $total = \App\Models\Order::where('status', 'Đã hoàn thành')
+                ->whereYear('created_at', $date->year)
+                ->whereMonth('created_at', $date->month)
+                ->sum('total_amount');
+            
+            $revenueTrends->push([
+                'label' => 'THG ' . $date->format('n'),
+                'fullLabel' => 'Tháng ' . $date->format('n, y'),
+                'total' => $total
+            ]);
+        }
+
+        return view('admin.tongquan', compact('totalRevenue', 'totalOrders', 'ordersToday', 'totalCustomers', 'lowStockCount', 'lowStockVariants', 'recentOrders', 'categoriesSales', 'revenueTrends'));
     }
     //phần trang qly sản phẩm
     public function qlysanpham()
