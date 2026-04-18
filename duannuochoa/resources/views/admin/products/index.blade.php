@@ -14,6 +14,10 @@
         <div class="bg-green-100 text-green-800 p-4 rounded-xl mb-6 font-bold">{{ session('success') }}</div>
     @endif
 
+    @if(session('error'))
+        <div class="bg-red-100 text-red-800 p-4 rounded-xl mb-6 font-bold">{{ session('error') }}</div>
+    @endif
+
     <!-- Search Form -->
     <form method="GET" action="{{ route('admin.products.index') }}" class="mb-6 flex flex-wrap gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
         <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm sản phẩm..." class="flex-1 min-w-[200px] bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
@@ -73,9 +77,9 @@
                     <td class="px-6 py-4">{{ number_format($product->base_price) }} đ</td>
                     <td class="px-6 py-4">
                         @if($product->status)
-                            <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Đang bán</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-semibold">Đang bán</span>
                         @else
-                            <span class="bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-xs font-bold uppercase">Tạm ngưng</span>
+                            <span class="bg-green-100 text-green-800 px-2 py-0.5 rounded text-[10px] font-semibold">Tạm ngưng</span>
                         @endif
                     </td>
                     <td class="px-6 py-4 text-center">

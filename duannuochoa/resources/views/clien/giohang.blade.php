@@ -2,11 +2,26 @@
 @section('content')
     <main class="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
         <!-- Page Title -->
-        <header class="mb-12">
+        <header class="mb-8">
             <h1 class="font-headline text-5xl md:text-6xl font-extrabold tracking-tight text-on-surface mb-2">Giỏ Hàng
             </h1>
             <p class="text-on-surface-variant font-medium">Bạn có {{ count($cartItems ?? []) }} sản phẩm trong giỏ hàng của mình.</p>
         </header>
+
+        @if(session('error'))
+        <div class="bg-error-container/20 border border-error/50 text-error p-4 rounded-xl mb-8 flex items-center gap-3 shadow-sm">
+            <span class="material-symbols-outlined">error</span>
+            <p class="font-bold">{{ session('error') }}</p>
+        </div>
+        @endif
+
+        @if(session('success'))
+        <div class="bg-green-500/20 border border-green-500/50 text-green-700 p-4 rounded-xl mb-8 flex items-center gap-3 shadow-sm">
+            <span class="material-symbols-outlined">check_circle</span>
+            <p class="font-bold">{{ session('success') }}</p>
+        </div>
+        @endif
+
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <!-- Products Table Section -->
             <div class="lg:col-span-8 space-y-6">
@@ -92,19 +107,41 @@
                     </div>
                 @endforelse
                 <!-- Promo Code -->
-                <div class="bg-surface-container-low p-6 rounded-lg flex items-center justify-between mt-8">
-                    <div class="flex items-center gap-3 text-on-surface-variant">
-                        <span class="material-symbols-outlined">sell</span>
-                        <span class="font-medium">Bạn có mã giảm giá?</span>
-                    </div>
-                    <div class="flex gap-2">
-                        <input
-                            class="bg-surface-container-lowest border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary/20 w-48"
-                            placeholder="Nhập mã tại đây..." type="text" />
-                        <button
-                            class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-dim transition-colors">Áp
-                            dụng</button>
-                    </div>
+                <div class="bg-surface-container-low p-6 rounded-lg mt-8">
+                    @if(isset($cart) && $cart->discount)
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3 text-primary">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                <div>
+                                    <p class="font-bold">Đã áp dụng mã: {{ $cart->discount->code }}</p>
+                                    <p class="text-xs opacity-70">
+                                        Giảm {{ $cart->discount->discount_type == 'percentage' ? $cart->discount->discount_value . '%' : number_format($cart->discount->discount_value) . 'đ' }}
+                                    </p>
+                                </div>
+                            </div>
+                            <form action="{{ route('cart.removeDiscount') }}" method="POST" class="m-0">
+                                @csrf
+                                <button type="submit" class="text-error font-bold text-sm hover:underline">Gỡ mã</button>
+                            </form>
+                        </div>
+                    @else
+                        <form action="{{ route('cart.applyDiscount') }}" method="POST" class="flex flex-col md:flex-row items-center justify-between gap-4">
+                            @csrf
+                            <div class="flex items-center gap-3 text-on-surface-variant">
+                                <span class="material-symbols-outlined">sell</span>
+                                <span class="font-medium">Bạn có mã giảm giá?</span>
+                            </div>
+                            <div class="flex gap-2 w-full md:w-auto">
+                                <input
+                                    name="code"
+                                    class="bg-surface-container-lowest border-none rounded-full px-6 py-2 text-sm focus:ring-2 focus:ring-primary/20 flex-grow md:w-48"
+                                    placeholder="Nhập mã tại đây..." type="text" required />
+                                <button type="submit"
+                                    class="bg-primary text-on-primary px-6 py-2 rounded-full font-bold text-sm hover:bg-primary-dim transition-colors">Áp
+                                    dụng</button>
+                            </div>
+                        </form>
+                    @endif
                 </div>
             </div>
             <!-- Summary Section -->
@@ -113,7 +150,19 @@
                     <h2
                         class="font-headline text-2xl font-bold text-on-surface border-b border-surface-container-high pb-4">
                         Tóm tắt đơn hàng</h2>
-                    <div class="space-y-4">
+                    @php
+                        $discountAmount = 0;
+                        $discountType = '';
+                        $discountValue = 0;
+                        if (isset($cart) && $cart->discount) {
+                            $discount = $cart->discount;
+                            $discountType = $discount->discount_type;
+                            $discountValue = $discount->discount_value;
+                        }
+                    @endphp
+                    <div class="space-y-4" id="summary-container" 
+                         data-discount-type="{{ $discountType }}" 
+                         data-discount-value="{{ $discountValue }}">
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tổng số loại sản phẩm</span>
                             <span class="font-bold text-on-surface" id="total-types">0</span>
@@ -126,6 +175,12 @@
                             <span>Tạm tính</span>
                             <span class="font-bold text-on-surface" id="subtotal-amount">0đ</span>
                         </div>
+                        @if($discountAmount > 0)
+                            <div class="flex justify-between items-center text-primary">
+                                <span>Giảm giá ({{ $cart->discount->code }})</span>
+                                <span class="font-bold">-{{ number_format($discountAmount) }}đ</span>
+                            </div>
+                        @endif
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Phí vận chuyển</span>
                             <span class="font-bold text-secondary">Miễn phí</span>
@@ -163,56 +218,41 @@
                 </a>
             </div>
         </div>
-        <!-- Recommendations Grid (Bento Style) -->
         <section class="mt-32">
             <h2 class="font-headline text-3xl font-bold text-on-surface mb-8">Có thể bạn sẽ thích</h2>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <div
-                    class="md:col-span-2 bg-primary-container/10 rounded-lg p-8 flex flex-col justify-between group overflow-hidden relative min-h-[300px]">
-                    <div class="relative z-10">
-                        <span
-                            class="bg-tertiary text-on-tertiary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Mới
-                            Nhất</span>
-                        <h3 class="font-headline text-3xl font-bold text-on-primary-container max-w-[200px]">Combo Sức
-                            Mạnh Thức Tỉnh</h3>
-                        <p class="text-on-primary-container/70 mt-4 max-w-[240px]">Trọn bộ chăm sóc toàn diện cho phái
-                            mạnh tự tin mỗi ngày.</p>
-                        <button
-                            class="mt-6 text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
-                            Xem ngay <span class="material-symbols-outlined">east</span>
-                        </button>
-                    </div>
-                    <img alt="X-Men Bundle"
-                        class="absolute -right-12 -bottom-12 w-64 h-64 object-contain rotate-12 group-hover:rotate-0 transition-transform duration-500"
-                        data-alt="Collection of men's grooming products arranged artistically on a blue textured surface with dynamic diagonal shadows"
-                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuHyis5Qc7bU66MbdsSafDZxDPDLVXr0ZoZJ9ZV9CCReC5hIXY42-RoSEYs8eIFswk7-J_c2R3-MMnlVjqhgLlkvlqTzc0zQ1G2942X5bh_WRAzxvS8cH_MHK5i42j0YZftuySMeYnCGERapPk7YN0JjP-BnTOQx7FAvOwjHjSQlcS7w1KEU4bK3iCK6LgvZSNCDcYHwD8-sTSA8OZS_pMx8_sEqe7qxzfGNNvcFmp4XTa3lEuRYi8LaNIXK5VyP9RGL3m_8B-Dyhg" />
-                </div>
-                <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
-                    <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
-                        <img alt="Product"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            data-alt="Modern geometric perfume bottle with orange citrus notes, sunlight refraction through the glass, bright energetic atmosphere"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuA86OnizyWVhlt2rnG_uhXBwVR_63TY9zIqPThz5eLejHwVMtNiOvAOrpPRJDB6aOuGOllpScLLE1MaTdDcSg_M5DfQhvXkVm_X_61ihtvN2a7-pvdOjymwlt3Po3R-vV1_v0j6DxmoXWBOIY170C8nzLR0OPOelorVkXiqKSqmS_aRSK9OD3k9ote2ZkotfpcRcRqXzMoku46ZDs2KyaaymvntZnJHa0FiRvX3lfGlAviTsioAXH9ZNlMxquEefg3nrRbrkVkXxaBr" />
-                    </div>
-                    <h4 class="font-bold text-on-surface mb-1">Lăn Khử Mùi Fire</h4>
-                    <p class="text-primary font-bold">78,000đ</p>
-                    <button
-                        class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
-                        vào</button>
-                </div>
-                <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
-                    <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
-                        <img alt="Product"
-                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            data-alt="Dark aesthetic shot of men's facial wash bottle with water splashes and charcoal textures, professional photography"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7k4j1RgyHrfIjiNc8fhoQ55uhS0NwdrYScrnSzFUiJnOM47V63v64JRuyUsWYgwLz4Hfbnk0dji39jzqW6H8cwN2nYww66LZY-qBt2mwuDgAO9SVOb1lvRopY7jp6EiOnT7Ry6I6mWStIeCt6DexYW7sE0UtCMtAKC5cfRCFzxIQuGx7OtMrkZHnrn1QQpMh2-ZKdXXrQNyW6zRRiulbV2rf5b8gygB_j2umDJvZGY3VoNYOhO5t_ybZptP-HvHb5GT0vN_KDeGTG" />
-                    </div>
-                    <h4 class="font-bold text-on-surface mb-1">Sữa Rửa Mặt Sạch Sâu</h4>
-                    <p class="text-primary font-bold">95,000đ</p>
-                    <button
-                        class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors">Thêm
-                        vào</button>
-                </div>
+                @foreach($recommendedProducts as $product)
+                    @if($loop->first)
+                        <!-- Large Bento Item -->
+                        <div class="md:col-span-2 bg-primary-container/10 rounded-lg p-8 flex flex-col justify-between group overflow-hidden relative min-h-[300px]">
+                            <div class="relative z-10">
+                                <span class="bg-tertiary text-on-tertiary text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 inline-block">Gợi ý</span>
+                                <h3 class="font-headline text-3xl font-bold text-on-primary-container max-w-[200px]">{{ $product->name }}</h3>
+                                <p class="text-on-primary-container/70 mt-4 max-w-[240px]">{{ Str::limit($product->description, 80) }}</p>
+                                <a href="{{ route('xemchitiet', $product->product_id) }}"
+                                    class="mt-6 text-primary font-bold flex items-center gap-2 group-hover:gap-4 transition-all">
+                                    Xem ngay <span class="material-symbols-outlined">east</span>
+                                </a>
+                            </div>
+                            <img alt="{{ $product->name }}"
+                                class="absolute -right-12 -bottom-12 w-64 h-64 object-contain rotate-12 group-hover:rotate-0 transition-transform duration-500"
+                                src="{{ asset('storage/' . $product->img) }}" />
+                        </div>
+                    @else
+                        <!-- Standard Item -->
+                        <div class="bg-surface-container-low rounded-lg p-6 flex flex-col items-center text-center group">
+                            <div class="w-full aspect-square bg-white rounded-lg mb-6 overflow-hidden">
+                                <img alt="{{ $product->name }}"
+                                    class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                                    src="{{ asset('storage/' . $product->img) }}" />
+                            </div>
+                            <h4 class="font-bold text-on-surface mb-1">{{ $product->name }}</h4>
+                            <p class="text-primary font-bold">{{ number_format($product->base_price) }}đ</p>
+                            <a href="{{ route('xemchitiet', $product->product_id) }}"
+                                class="mt-4 w-full py-3 bg-surface-container-highest rounded-xl font-bold text-primary hover:bg-primary hover:text-on-primary transition-colors inline-block w-full">Xem chi tiết</a>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </section>
     </main>
@@ -235,11 +275,29 @@
                 selectedIds.push(id);
             });
 
+            // Calculate Discount
+            const summaryContainer = document.getElementById('summary-container');
+            const discountType = summaryContainer.dataset.discountType;
+            const discountValue = parseInt(summaryContainer.dataset.discountValue) || 0;
+            let discountAmount = 0;
+
+            if (discountType === 'percentage') {
+                discountAmount = (subtotal * discountValue) / 100;
+            } else if (discountType === 'fixed') {
+                discountAmount = discountValue;
+            }
+
             // Update UI
             document.getElementById('total-types').innerText = checkboxes.length;
             document.getElementById('total-quantity').innerText = totalQuantity;
             document.getElementById('subtotal-amount').innerText = subtotal.toLocaleString('vi-VN') + 'đ';
-            document.getElementById('total-amount').innerText = subtotal.toLocaleString('vi-VN') + 'đ';
+            
+            if (document.getElementById('discount-row')) {
+                document.getElementById('discount-amount').innerText = '-' + discountAmount.toLocaleString('vi-VN') + 'đ';
+            }
+
+            const finalTotal = Math.max(0, subtotal - discountAmount);
+            document.getElementById('total-amount').innerText = finalTotal.toLocaleString('vi-VN') + 'đ';
 
             // Update Checkout Button
             const checkoutBtn = document.getElementById('checkout-btn');

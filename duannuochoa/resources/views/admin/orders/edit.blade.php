@@ -6,17 +6,7 @@
         <p class="text-on-surface-variant mt-1">Thay đổi trạng thái xử lý cho đơn hàng này theo quy trình chuyên nghiệp.</p>
     </div>
 
-    <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container max-w-xl">
-        <form action="{{ route('admin.orders.update', $order) }}" method="POST" novalidate>
-            @csrf
-            @method('PUT')
-            <div class="mb-6">
-                <label class="block text-sm font-bold mb-4 text-on-surface-variant">Chọn Trạng thái Mới</label>
-                <div class="grid grid-cols-1 gap-3">
-                    @foreach(['Pending', 'Processing', 'Shipped', 'Delivered', 'Cancelled'] as $status)
-                        <label class="flex items-center gap-3 p-4 rounded-xl border border-surface-container hover:bg-surface-container-low cursor-pointer transition-colors {{ old('status', $order->status) == $status ? 'bg-primary-container/20 border-primary' : '' }}">
-                            <input type="radio" name="status" value="{{ $status }}" class="w-5 h-5 text-primary" {{ old('status', $order->status) == $status ? 'checked' : '' }}>
-                            <span class="font-medium">{{ $status }}</span>
+
     <div class="bg-surface-container-lowest p-8 rounded-xl shadow-sm border border-surface-container max-w-2xl">
         <form action="{{ route('admin.orders.update', $order) }}" method="POST" novalidate id="order-status-form">
             @csrf

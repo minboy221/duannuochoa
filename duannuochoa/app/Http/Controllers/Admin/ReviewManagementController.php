@@ -37,8 +37,10 @@ class ReviewManagementController extends Controller
 
     public function destroy(Review $review)
     {
-        $review->delete();
+        $review->status = !$review->status;
+        $review->save();
 
-        return redirect()->route('admin.reviews.index')->with('success', 'Đã xóa đánh giá thành công.');
+        $message = $review->status ? 'Đã hiển thị đánh giá.' : 'Đã ẩn đánh giá.';
+        return redirect()->route('admin.reviews.index')->with('success', $message);
     }
 }

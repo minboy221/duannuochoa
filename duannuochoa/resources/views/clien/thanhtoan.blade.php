@@ -253,6 +253,12 @@
         let discountAmount = 0;
         let shippingFee = 0;
 
+        // Cart applied discount (from previous page)
+        const cartDiscountVal = @json($cartDiscount ? (
+            $cartDiscount->discount_type == 'fixed' ? $cartDiscount->discount_value : ($subtotal * $cartDiscount->discount_value / 100)
+        ) : 0);
+        const cartDiscountMin = @json($cartDiscount ? $cartDiscount->min_order_value : 0);
+
         if (selectedVoucher && selectedVoucher.value !== "") {
             const label = selectedVoucher.closest('label');
             const type = label.dataset.type;
@@ -266,13 +272,17 @@
                     discountAmount = (subtotal * value) / 100;
                 }
             }
+        } 
+        // fallback to cart discount if no voucher selected and conditions met
+        else if (subtotal >= cartDiscountMin) {
+            discountAmount = cartDiscountVal;
         }
 
         if (selectedShipping) {
             shippingFee = parseInt(selectedShipping.dataset.fee) || 0;
         }
 
-        document.getElementById('summary-discount').innerText = '-' + discountAmount.toLocaleString() + 'đ';
+        document.getElementById('summary-discount').innerText = '-' + Math.round(discountAmount).toLocaleString() + 'đ';
         document.getElementById('summary-shipping').innerText = shippingFee > 0 ? shippingFee.toLocaleString() + 'đ' : 'Miễn phí';
         document.getElementById('summary-total').innerText = Math.max(0, subtotal - discountAmount + shippingFee).toLocaleString() + 'đ';
     }
