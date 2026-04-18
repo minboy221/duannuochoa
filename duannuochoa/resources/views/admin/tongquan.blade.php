@@ -109,32 +109,8 @@
                             tuần</button>
                     </div>
                 </div>
-                <div
-                    class="relative h-[300px] w-full bg-gradient-to-b from-primary/5 to-transparent rounded-xl overflow-hidden">
-                    <!-- Fake Line Chart Path -->
-                    <svg class="w-full h-full preserve-3d" viewbox="0 0 1000 300">
-                        <defs>
-                            <lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
-                                <stop offset="0%" stop-color="#0052d0" stop-opacity="0.5"></stop>
-                                <stop offset="100%" stop-color="#0052d0" stop-opacity="0"></stop>
-                            </lineargradient>
-                        </defs>
-                        <path d="M0,250 Q100,220 200,240 T400,180 T600,210 T800,100 T1000,140 L1000,300 L0,300 Z"
-                            fill="url(#chartGradient)"></path>
-                        <path d="M0,250 Q100,220 200,240 T400,180 T600,210 T800,100 T1000,140" fill="none" stroke="#0052d0"
-                            stroke-linecap="round" stroke-width="4"></path>
-                        <circle cx="800" cy="100" fill="#0052d0" r="6" stroke="#fff" stroke-width="2"></circle>
-                    </svg>
-                    <!-- Tooltip -->
-                    <div
-                        class="absolute top-[80px] left-[78%] -translate-x-1/2 bg-inverse-surface text-on-primary px-3 py-2 rounded-lg text-xs shadow-xl">
-                        <span class="block opacity-70">Tháng 11, 22</span>
-                        <span class="font-bold">64,200$</span>
-                    </div>
-                </div>
-                <div class="flex justify-between mt-6 text-xs font-medium text-outline">
-                    <span>THG 1</span><span>THG 3</span><span>THG 5</span><span>THG 7</span><span>THG 9</span><span>THG
-                        11</span>
+                <div class="relative h-[300px] w-full rounded-xl p-2 pt-6">
+                    <div id="revenueChart" class="w-full h-full"></div>
                 </div>
             </div>
             <!-- Categories -->
@@ -272,4 +248,96 @@
         <span class="material-symbols-outlined" data-icon="add"
             style="font-variation-settings: 'FILL' 0, 'wght' 700;">add</span>
     </button>
+    
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Revenue Trend Chart
+            const revenueData = @json($revenueTrends);
+            
+            // Format labels and series data
+            const labels = revenueData.map(item => item.label);
+            const seriesData = revenueData.map(item => item.total);
+            const fullLabels = revenueData.map(item => item.fullLabel);
+
+            const options = {
+                series: [{
+                    name: 'Doanh thu',
+                    data: seriesData
+                }],
+                chart: {
+                    type: 'area',
+                    height: 280,
+                    fontFamily: 'Be Vietnam Pro, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: ['#0052d0'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.5,
+                        opacityTo: 0.05,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                xaxis: {
+                    categories: labels,
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    },
+                    labels: {
+                        style: {
+                            colors: '#6f768e',
+                            fontSize: '12px',
+                            fontWeight: 500,
+                        }
+                    }
+                },
+                yaxis: {
+                    show: false, // Hide y-axis as per design
+                },
+                grid: {
+                    show: false, // Hide grid lines
+                    padding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 10
+                    }
+                },
+                tooltip: {
+                    theme: 'dark',
+                    y: {
+                        formatter: function (val) {
+                            return new Intl.NumberFormat('en-US').format(val) + "$";
+                        }
+                    },
+                    x: {
+                        formatter: function (val, { dataPointIndex }) {
+                            return fullLabels[dataPointIndex];
+                        }
+                    }
+                }
+            };
+
+            const chart = new ApexCharts(document.querySelector("#revenueChart"), options);
+            chart.render();
+        });
+    </script>
 @endsection

@@ -23,7 +23,16 @@ class DiscountRequest extends FormRequest
                 'max:255',
                 Rule::unique('discounts', 'code')->ignore($discountId, 'discount_id'),
             ],
-            'discount_value' => 'required|numeric|min:0',
+            'discount_value' => [
+                'required',
+                'numeric',
+                'min:0',
+                function ($attribute, $value, $fail) {
+                    if ($this->input('discount_type') === 'percent' && $value >= 100) {
+                        $fail('Nếu là loại phần trăm (%), giá trị phải nhỏ hơn 100.');
+                    }
+                },
+            ],
             'discount_type' => 'required|in:percent,fixed',
             'min_order_value' => 'required|numeric|min:0',
             'valid_from' => 'required|date',
