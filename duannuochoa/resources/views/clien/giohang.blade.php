@@ -10,13 +10,38 @@
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
             <!-- Products Table Section -->
             <div class="lg:col-span-8 space-y-6">
+                <!-- Select All Bar -->
+                @if(count($cartItems) > 0)
+                <div class="bg-surface-container-lowest p-6 rounded-lg flex items-center justify-between shadow-sm border border-surface-container-high/50">
+                    <label class="flex items-center gap-4 cursor-pointer group">
+                        <div class="relative flex items-center">
+                            <input type="checkbox" id="select-all" checked 
+                                class="peer w-6 h-6 rounded-md border-2 border-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer appearance-none checked:bg-primary checked:border-primary">
+                            <span class="material-symbols-outlined absolute text-on-primary scale-0 peer-checked:scale-100 transition-transform pointer-events-none text-xl">check</span>
+                        </div>
+                        <span class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors">Chọn tất cả ({{ count($cartItems) }})</span>
+                    </label>
+                </div>
+                @endif
+
                 <!-- Product Carts -->
                 @forelse($cartItems as $item)
-                    <div class="bg-surface-container-lowest p-6 rounded-lg flex flex-col md:flex-row items-center gap-8 shadow-sm transition-transform hover:scale-[1.01]">
+                    @php 
+                        $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price; 
+                    @endphp
+                    <div class="cart-item bg-surface-container-lowest p-6 rounded-lg flex flex-col md:flex-row items-center gap-6 shadow-sm border border-surface-container-high/50 transition-all hover:shadow-md hover:border-primary/20"
+                         data-id="{{ $item->cart_item_id }}" 
+                         data-price="{{ $price }}" 
+                         data-quantity="{{ $item->quantity }}">
+                        
+                        <div class="relative flex items-center flex-shrink-0">
+                            <input type="checkbox" class="item-checkbox peer w-6 h-6 rounded-md border-2 border-surface-container-highest text-primary focus:ring-primary focus:ring-offset-0 transition-all cursor-pointer appearance-none checked:bg-primary checked:border-primary" 
+                                checked onchange="updateCartTotals()">
+                            <span class="material-symbols-outlined absolute text-on-primary scale-0 peer-checked:scale-100 transition-transform pointer-events-none text-xl">check</span>
+                        </div>
                         <div class="w-32 h-32 flex-shrink-0 bg-surface-container-low rounded-lg overflow-hidden">
                             <!-- Try getting product image, fallback to placeholder -->
                             <img alt="{{ $item->variant->product->name }}" class="w-full h-full object-cover"
-                                src="{{ $item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80' }}" />
                                 src="{{ $item->variant->image ? asset('storage/' . $item->variant->image) : ($item->variant->product->img ? asset('storage/' . $item->variant->product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=800&q=80') }}" />
                         </div>
                         <div class="flex-grow text-center md:text-left">
@@ -48,9 +73,6 @@
                         </div>
                         <div class="text-right min-w-[120px]">
                             <p class="text-xs text-on-surface-variant font-medium uppercase tracking-wider mb-1">Thành tiền</p>
-                            @php 
-                                $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price; 
-                            @endphp
                             <p class="font-headline text-xl font-bold text-on-surface">{{ number_format($price * $item->quantity) }}đ</p>
                         </div>
                         <form action="{{ route('cart.remove', $item->cart_item_id) }}" method="POST" class="m-0">
@@ -94,15 +116,15 @@
                     <div class="space-y-4">
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tổng số loại sản phẩm</span>
-                            <span class="font-bold text-on-surface">{{ count($cartItems ?? []) }}</span>
+                            <span class="font-bold text-on-surface" id="total-types">0</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tổng số lượng</span>
-                            <span class="font-bold text-on-surface">{{ $totalQuantity ?? 0 }}</span>
+                            <span class="font-bold text-on-surface" id="total-quantity">0</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Tạm tính</span>
-                            <span class="font-bold text-on-surface">{{ number_format($subtotal ?? 0) }}đ</span>
+                            <span class="font-bold text-on-surface" id="subtotal-amount">0đ</span>
                         </div>
                         <div class="flex justify-between items-center text-on-surface-variant">
                             <span>Phí vận chuyển</span>
@@ -112,9 +134,9 @@
                     <div class="pt-6 border-t border-surface-container-high">
                         <div class="flex justify-between items-end mb-8">
                             <span class="font-bold text-on-surface-variant">Tổng cộng</span>
-                            <span class="font-headline text-3xl font-extrabold text-primary">{{ number_format($subtotal ?? 0) }}đ</span>
+                            <span class="font-headline text-3xl font-extrabold text-primary" id="total-amount">0đ</span>
                         </div>
-                        <a href="{{ route('checkout.index') }}"
+                        <a href="{{ route('checkout.index') }}" id="checkout-btn"
                             class="w-full bg-gradient-to-br from-primary to-primary-container text-on-primary py-5 rounded-xl font-headline font-bold text-lg shadow-lg shadow-primary/25 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-3">
                             Tiến hành thanh toán
                             <span class="material-symbols-outlined">arrow_forward</span>
@@ -194,4 +216,61 @@
             </div>
         </section>
     </main>
+
+    <script>
+        function updateCartTotals() {
+            const checkboxes = document.querySelectorAll('.item-checkbox:checked');
+            let totalQuantity = 0;
+            let subtotal = 0;
+            let selectedIds = [];
+
+            checkboxes.forEach(cb => {
+                const item = cb.closest('.cart-item');
+                const price = parseInt(item.dataset.price);
+                const quantity = parseInt(item.dataset.quantity);
+                const id = item.dataset.id;
+
+                totalQuantity += quantity;
+                subtotal += price * quantity;
+                selectedIds.push(id);
+            });
+
+            // Update UI
+            document.getElementById('total-types').innerText = checkboxes.length;
+            document.getElementById('total-quantity').innerText = totalQuantity;
+            document.getElementById('subtotal-amount').innerText = subtotal.toLocaleString('vi-VN') + 'đ';
+            document.getElementById('total-amount').innerText = subtotal.toLocaleString('vi-VN') + 'đ';
+
+            // Update Checkout Button
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (selectedIds.length > 0) {
+                checkoutBtn.href = "{{ route('checkout.index') }}?items=" + selectedIds.join(',');
+                checkoutBtn.classList.remove('opacity-50', 'pointer-events-none');
+            } else {
+                checkoutBtn.href = "javascript:void(0)";
+                checkoutBtn.classList.add('opacity-50', 'pointer-events-none');
+            }
+
+            // Update Select All checkbox state
+            const selectAll = document.getElementById('select-all');
+            if (selectAll) {
+                const allCheckboxes = document.querySelectorAll('.item-checkbox');
+                selectAll.checked = checkboxes.length === allCheckboxes.length && allCheckboxes.length > 0;
+            }
+        }
+
+        const selectAllBtn = document.getElementById('select-all');
+        if (selectAllBtn) {
+            selectAllBtn.addEventListener('change', function() {
+                const isChecked = this.checked;
+                document.querySelectorAll('.item-checkbox').forEach(cb => {
+                    cb.checked = isChecked;
+                });
+                updateCartTotals();
+            });
+        }
+
+        // Initial calculation
+        document.addEventListener('DOMContentLoaded', updateCartTotals);
+    </script>
 @endsection

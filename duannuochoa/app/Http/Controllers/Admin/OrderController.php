@@ -39,6 +39,36 @@ class OrderController extends Controller
 
     public function update(UpdateOrderStatusRequest $request, Order $order)
     {
+        $newStatus = $request->status;
+        
+        // Auto-refund logic
+        if ($newStatus === 'Trả hàng/Hoàn tiền' && !$order->is_refunded && $order->user) {
+            \Illuminate\Support\Facades\DB::beginTransaction();
+            try {
+                $user = $order->user;
+                $refundAmount = $order->total_amount;
+                
+                // Credit wallet
+                $user->increment('wallet_balance', $refundAmount);
+                
+                // Log transaction
+                \App\Models\WalletTransaction::create([
+                    'user_id' => $user->user_id,
+                    'amount' => $refundAmount,
+                    'type' => 'refund',
+                    'description' => "Hoàn tiền cho đơn hàng #ORD-" . str_pad($order->order_id, 5, '0', STR_PAD_LEFT)
+                ]);
+                
+                $order->is_refunded = true;
+                $order->save();
+                
+                \Illuminate\Support\Facades\DB::commit();
+            } catch (\Exception $e) {
+                \Illuminate\Support\Facades\DB::rollBack();
+                return back()->with('error', 'Có lỗi xảy ra khi hoàn tiền: ' . $e->getMessage());
+            }
+        }
+
         $order->update($request->validated());
         return back()->with('success', 'Cập nhật trạng thái đơn hàng thành công.');
     }

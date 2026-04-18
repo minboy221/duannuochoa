@@ -135,82 +135,14 @@
                         }
                     </script>
                 </section>
-                <!-- Order History Section (Bento Grid Style) -->
-                <section class="space-y-6" id="order-history">
-                    <div class="flex items-end justify-between px-2">
-                        <div>
-                            <h2 class="text-2xl font-headline font-extrabold tracking-tight text-primary">Đơn hàng gần
-                                đây</h2>
-                            <p class="text-on-surface-variant">Theo dõi trạng thái các đơn hàng của bạn</p>
-                        </div>
-                        <button class="text-primary font-bold flex items-center space-x-1 hover:underline">
-                            <span>Xem tất cả</span>
-                            <span class="material-symbols-outlined text-sm" data-icon="arrow_forward">arrow_forward</span>
-                        </button>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Order Card 1 -->
-                        <div
-                            class="bg-surface-container-lowest p-6 rounded-lg shadow-xl shadow-blue-900/5 hover:scale-[1.02] transition-transform group">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <span class="text-xs font-bold text-primary uppercase tracking-widest">Đang xử
-                                        lý</span>
-                                    <h3 class="text-lg font-bold mt-1">#XM-88291</h3>
-                                </div>
-                                <span class="text-sm text-on-surface-variant">15 Th05, 2024</span>
-                            </div>
-                            <div class="flex items-center space-x-4 mb-6">
-                                <div class="w-20 h-20 bg-surface-container-low rounded-lg p-2 overflow-hidden">
-                                    <img alt="Product" class="w-full h-full object-contain"
-                                        data-alt="sleek professional blue glass perfume bottle on a clean white surface with elegant lighting"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmbgYGeQwMHs6RPYy3sEEw2GXpJz1hnW_DfdLlUggjsGmfMqv_A6LmdYJm9rAzChf_eD7TjKGkML1X3IfztvK7qdCGw2p0ikzsai6lOiYGn9_vxX8xqfU2IyeNThroc6Rb7B05au-Q58nInpsz9UK5nC5xCT-2AKiKvCQxjoGkBp-xEhdgpOl1uyc4Es1mI4IJdByEwuajrLg5UIKVaP-khPLtGdf07BgtBG0FZSBnMeiNkfaiHHjr7e-cHZqmZFoAUNAN9pAflJbW" />
-                                </div>
-                                <div>
-                                    <p class="font-bold">X-MEN Kinetic Scent</p>
-                                    <p class="text-sm text-on-surface-variant">Số lượng: 01 • 100ml</p>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
-                                <span class="font-bold text-lg">450,000₫</span>
-                                <button
-                                    class="bg-surface-container-highest text-primary px-4 py-2 rounded-full text-sm font-bold group-hover:bg-primary group-hover:text-on-primary transition-colors">Chi
-                                    tiết</button>
-                            </div>
-                        </div>
-                        <!-- Order Card 2 -->
-                        <div
-                            class="bg-surface-container-lowest p-6 rounded-lg shadow-xl shadow-blue-900/5 hover:scale-[1.02] transition-transform group">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <span class="text-xs font-bold text-secondary uppercase tracking-widest">Đã giao
-                                        hàng</span>
-                                    <h3 class="text-lg font-bold mt-1">#XM-88104</h3>
-                                </div>
-                                <span class="text-sm text-on-surface-variant">02 Th05, 2024</span>
-                            </div>
-                            <div class="flex items-center space-x-4 mb-6">
-                                <div class="w-20 h-20 bg-surface-container-low rounded-lg p-2 overflow-hidden">
-                                    <img alt="Product" class="w-full h-full object-contain"
-                                        data-alt="premium metallic blue shaving foam canister with modern design against a minimal background"
-                                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlbAHGC8o4-6yHEnIUkbsbRzY57EGgHsyBYqlD3TQEeHrNNL_FVn4MVMNDMCcbCdxWGL_l2VLAm0NsAPRK3nCrAmodGxX94U4Wi-OBmNHBlmayzx8pTO08I4GOcW29O0GWqGgWd-sL1T0rue3IKd99i5Z7sdHaaGz-tASNQVBLa1iVVCuaoZQ9zvl0J3BfQMHXdSUc0NusXYTJToWJm2OWbOV3DM9CUilOJlql_4ffuDgPDjM7Ns67ojuMeQ-ZHPENRXSNuE-wfIgm" />
-                                </div>
-                                <div>
-                                    <p class="font-bold">Combo Sạch Sâu X-MEN</p>
-                                    <p class="text-sm text-on-surface-variant">Số lượng: 02 • Bundle</p>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center pt-4 border-t border-slate-100">
-                                <span class="font-bold text-lg">720,000₫</span>
-                                <button
-                                    class="bg-surface-container-highest text-primary px-4 py-2 rounded-full text-sm font-bold group-hover:bg-primary group-hover:text-on-primary transition-colors">Mua
-                                    lại</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
                 <!-- Activity Insights (Visual Interest) -->
-                <section class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-indigo-600 p-6 rounded-lg text-white">
+                        <span class="material-symbols-outlined mb-4 scale-125" data-icon="account_balance_wallet"
+                            style="font-variation-settings: 'FILL' 1;">account_balance_wallet</span>
+                        <h4 class="text-sm font-medium opacity-80">Số dư ví</h4>
+                        <p class="text-3xl font-black">{{ number_format(Auth::user()->wallet_balance) }}đ</p>
+                    </div>
                     <div class="bg-gradient-to-br from-primary to-primary-container p-6 rounded-lg text-on-primary">
                         <span class="material-symbols-outlined mb-4 scale-125" data-icon="stars"
                             style="font-variation-settings: 'FILL' 1;">stars</span>

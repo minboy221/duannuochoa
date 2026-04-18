@@ -20,7 +20,7 @@ class CheckoutController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
         $cart = Cart::where('user_id', $user->user_id)->first();
@@ -29,7 +29,20 @@ class CheckoutController extends Controller
             return redirect()->route('giohang')->with('error', 'Giỏ hàng của bạn đang trống.');
         }
 
-        $cartItems = $cart->items()->with('variant.product')->get();
+        $query = $cart->items()->with('variant.product');
+        
+        // Filter by selected items if provided
+        if ($request->has('items')) {
+            $itemIds = explode(',', $request->items);
+            $query->whereIn('cart_item_id', $itemIds);
+        }
+
+        $cartItems = $query->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('giohang')->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+        }
+
         $subtotal = 0;
         foreach ($cartItems as $item) {
             $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
@@ -60,8 +73,9 @@ class CheckoutController extends Controller
             'address' => 'required|string',
             'shipping_id' => 'required',
             'user_discount_id' => 'nullable|exists:user_discounts,user_discount_id',
-            'payment_method' => 'required|in:cod,vnpay',
-            'note' => 'nullable|string'
+            'payment_method' => 'required|in:cod,vnpay,wallet',
+            'note' => 'nullable|string',
+            'cart_item_ids' => 'required|string'
         ]);
 
         $user = Auth::user();
@@ -71,10 +85,16 @@ class CheckoutController extends Controller
             return redirect()->route('home')->with('error', 'Giỏ hàng trống.');
         }
 
+        $itemIds = explode(',', $request->cart_item_ids);
+        $cartItems = $cart->items()->whereIn('cart_item_id', $itemIds)->with('variant.product')->get();
+
+        if ($cartItems->isEmpty()) {
+            return redirect()->route('giohang')->with('error', 'Không tìm thấy sản phẩm được chọn.');
+        }
+
         DB::beginTransaction();
         try {
             $subtotal = 0;
-            $cartItems = $cart->items()->with('variant.product')->get();
             foreach ($cartItems as $item) {
                 $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
                 $subtotal += $price * $item->quantity;
@@ -107,20 +127,50 @@ class CheckoutController extends Controller
             $shippingFee = $shippingMethod ? $shippingMethod->fee : 0;
             $totalAmount = max(0, $subtotal - $discountAmount + $shippingFee);
 
+            // Check wallet balance if payment method is wallet
+            if ($request->payment_method === 'wallet') {
+                if ($user->wallet_balance < $totalAmount) {
+                    throw new \Exception('Số dư ví không đủ để thanh toán đơn hàng này.');
+                }
+                
+                // Deduct wallet balance
+                $user->decrement('wallet_balance', $totalAmount);
+                
+                // Log transaction
+                \App\Models\WalletTransaction::create([
+                    'user_id' => $user->user_id,
+                    'amount' => -$totalAmount,
+                    'type' => 'payment',
+                    'description' => "Thanh toán đơn hàng #" . ($order_id_placeholder ?? 'New Order')
+                ]);
+            }
+
             // Create Order
             $order = Order::create([
                 'user_id' => $user->user_id,
                 'shipping_id' => $request->shipping_id,
                 'discount_id' => $discountId,
                 'total_amount' => $totalAmount,
-                'status' => $request->payment_method === 'vnpay' ? 'Chờ thanh toán' : 'Chờ xác nhận',
+                'status' => in_array($request->payment_method, ['vnpay', 'wallet']) ? ($request->payment_method === 'wallet' ? 'Đã xác nhận' : 'Chờ thanh toán') : 'Chờ xác nhận',
                 'full_name' => $request->full_name,
                 'phone' => $request->phone,
                 'address' => $request->address,
                 'note' => $request->note,
                 'payment_method' => $request->payment_method,
-                'payment_status' => 'pending'
+                'payment_status' => $request->payment_method === 'wallet' ? 'paid' : 'pending'
             ]);
+
+            // Update transaction description with real ID
+            if ($request->payment_method === 'wallet') {
+                $lastTransaction = \App\Models\WalletTransaction::where('user_id', $user->user_id)
+                    ->orderBy('created_at', 'desc')
+                    ->first();
+                if ($lastTransaction) {
+                    $lastTransaction->update([
+                        'description' => "Thanh toán cho đơn hàng #ORD-" . str_pad($order->order_id, 5, '0', STR_PAD_LEFT)
+                    ]);
+                }
+            }
 
             // Create Order Items
             foreach ($cartItems as $item) {
@@ -147,9 +197,13 @@ class CheckoutController extends Controller
                 }
             }
 
-            // Clear Cart
-            CartItem::where('cart_id', $cart->cart_id)->delete();
-            $cart->delete();
+            // Clear ONLY selected items
+            CartItem::whereIn('cart_item_id', $itemIds)->delete();
+            
+            // Delete cart ONLY if empty
+            if ($cart->items()->count() == 0) {
+                $cart->delete();
+            }
 
             DB::commit();
 

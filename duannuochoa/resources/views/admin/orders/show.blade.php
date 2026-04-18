@@ -23,7 +23,9 @@
                     'Đang chuẩn bị hàng' => 'inventory_2',
                     'Đang giao' => 'local_shipping',
                     'Đã giao hàng' => 'package_2',
-                    'Đã hoàn thành' => 'task_alt'
+                    'Đã hoàn thành' => 'task_alt',
+                    'Yêu cầu trả hàng' => 'assignment_return',
+                    'Trả hàng/Hoàn tiền' => 'keyboard_return'
                 ];
                 
                 $currentIndex = array_search($order->status, array_keys($statusFlow));
@@ -99,6 +101,7 @@
                                     'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
                                     'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
                                     'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
+                                    'Yêu cầu trả hàng' => 'bg-orange-100 text-orange-700 border-orange-200',
                                     'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
                                     default => 'bg-slate-100 text-slate-700 border-slate-200'
                                 };
@@ -122,6 +125,31 @@
                             </div>
                         </div>
                     @endif
+
+                    @if($order->status == 'Yêu cầu trả hàng' && $order->return_reason)
+                        <div class="pt-4 border-t mt-2">
+                            <span class="block text-orange-700 font-black text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1">
+                                <span class="material-symbols-outlined text-xs">assignment_return</span>
+                                Lý do yêu cầu trả hàng:
+                            </span>
+                            <div class="bg-orange-50 p-4 rounded-xl border border-orange-100 text-orange-900 italic font-medium mb-4">
+                                "{{ $order->return_reason }}"
+                            </div>
+                            
+                            @if($order->return_image)
+                                <span class="block text-orange-700 font-black text-[10px] uppercase tracking-widest mb-2 flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs">image</span>
+                                    Hình ảnh bằng chứng:
+                                </span>
+                                <div class="relative group w-48 h-48 rounded-xl overflow-hidden border-2 border-orange-200 shadow-sm">
+                                    <img src="{{ asset('storage/' . $order->return_image) }}" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onclick="window.open(this.src)">
+                                    <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
+                                        <span class="material-symbols-outlined text-white">zoom_in</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -142,10 +170,11 @@
                                 'Đã xác nhận' => ['Đang chuẩn bị hàng', 'Đã hủy'],
                                 'Đã thanh toán' => ['Đang chuẩn bị hàng'],
                                 'Đang chuẩn bị hàng' => ['Đang giao', 'Đã hủy'],
-                                'Đang giao' => ['Đã giao hàng'],
+                                'Đang giao' => ['Đã giao hàng', 'Đã hoàn thành'],
                                 'Đã giao hàng' => ['Đã hoàn thành', 'Trả hàng/Hoàn tiền'],
-                                'Đã hoàn thành' => [],
+                                'Đã hoàn thành' => ['Yêu cầu trả hàng'],
                                 'Đã hủy' => [],
+                                'Yêu cầu trả hàng' => ['Trả hàng/Hoàn tiền', 'Đã hoàn thành'],
                                 'Trả hàng/Hoàn tiền' => []
                             ];
                             $allowed = $transitionRules[$currentStatus] ?? [];

@@ -26,6 +26,7 @@
 
             <form id="checkout-form" action="{{ route('checkout.store') }}" method="POST" class="space-y-6">
                 @csrf
+                <input type="hidden" name="cart_item_ids" value="{{ implode(',', $cartItems->pluck('cart_item_id')->toArray()) }}">
 
                 @if(session('error'))
                 <div class="bg-error-container/10 border border-error/20 text-error p-4 rounded-xl flex items-center gap-3">
@@ -126,6 +127,14 @@
                             <div class="flex-grow">
                                 <p class="font-bold">VNPay</p>
                                 <p class="text-[10px] text-on-surface-variant uppercase font-bold">Thanh toán trực tuyến</p>
+                            </div>
+                        </label>
+                        <label class="relative flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all hover:bg-surface-container-low border-primary/20 has-[:checked]:border-primary has-[:checked]:bg-primary-container/10">
+                            <input type="radio" name="payment_method" value="wallet" class="sr-only">
+                            <span class="material-symbols-outlined text-primary mr-4">account_balance_wallet</span>
+                            <div class="flex-grow">
+                                <p class="font-bold">Ví điện tử</p>
+                                <p class="text-[10px] text-on-surface-variant uppercase font-bold tracking-tight">Số dư: {{ number_format(Auth::user()->wallet_balance) }}đ</p>
                             </div>
                         </label>
                     </div>

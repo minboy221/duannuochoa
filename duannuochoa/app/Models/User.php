@@ -43,7 +43,13 @@ class User extends Authenticatable
         'is_active',
         'role_id',
         'xu',
+        'wallet_balance',
     ];
+
+    public function walletTransactions()
+    {
+        return $this->hasMany(WalletTransaction::class, 'user_id', 'user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.

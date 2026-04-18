@@ -25,8 +25,9 @@
                 'Đang giao' => ['icon' => 'local_shipping', 'color' => 'indigo'],
                 'Đã giao hàng' => ['icon' => 'package_2', 'color' => 'cyan'],
                 'Đã hoàn thành' => ['icon' => 'task_alt', 'color' => 'green'],
+                'Yêu cầu trả hàng' => ['icon' => 'assignment_return', 'color' => 'orange'],
                 'Đã hủy' => ['icon' => 'cancel', 'color' => 'red'],
-                'Trả hàng/Hoàn tiền' => ['icon' => 'assignment_return', 'color' => 'rose']
+                'Trả hàng/Hoàn tiền' => ['icon' => 'keyboard_return', 'color' => 'rose']
             ];
             // Since we only have paginated orders, we'd ideally pass counts from controller, 
             // but for a quick enhancement we'll show labels. 
@@ -101,6 +102,7 @@
                                     'Đã giao hàng' => 'bg-cyan-100 text-cyan-700 border-cyan-200',
                                     'Đã hoàn thành' => 'bg-green-100 text-green-700 border-green-200',
                                     'Đã hủy' => 'bg-red-100 text-red-700 border-red-200',
+                                    'Yêu cầu trả hàng' => 'bg-orange-100 text-orange-700 border-orange-200',
                                     'Trả hàng/Hoàn tiền' => 'bg-rose-100 text-rose-700 border-rose-200',
                                     default => 'bg-slate-100 text-slate-700 border-slate-200'
                                 };
@@ -129,6 +131,23 @@
                                     Chuyển sang {{ $nextStatus }}
                                 </button>
                             </form>
+                            @endif
+
+                            @if($order->status == 'Yêu cầu trả hàng')
+                            <div class="flex gap-2 mt-1">
+                                <form action="{{ route('admin.orders.update', $order) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="Trả hàng/Hoàn tiền">
+                                    <button type="submit" class="text-[9px] font-bold text-green-600 hover:underline">Chấp nhận</button>
+                                </form>
+                                <form action="{{ route('admin.orders.update', $order) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
+                                    <input type="hidden" name="status" value="Đã hoàn thành">
+                                    <button type="submit" class="text-[9px] font-bold text-red-600 hover:underline">Từ chối</button>
+                                </form>
+                            </div>
                             @endif
                         </div>
                     </td>

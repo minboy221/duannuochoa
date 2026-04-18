@@ -84,7 +84,13 @@ class HomeController extends Controller{
             ->with('discount')
             ->get();
 
-        return view('clien.taikhoan', compact('availableVouchers', 'userVouchers'));
+        $recentOrders = \App\Models\Order::where('user_id', Auth::id())
+            ->with(['orderItems.variant.product'])
+            ->latest()
+            ->take(4)
+            ->get();
+
+        return view('clien.taikhoan', compact('availableVouchers', 'userVouchers', 'recentOrders'));
     }
 
     public function lichsu()
@@ -197,5 +203,48 @@ class HomeController extends Controller{
 
         $order->update(['client_notified' => true]);
         return response()->json(['success' => true]);
+    }
+
+    public function confirmReceived(Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if (!in_array($order->status, ['Đang giao', 'Đã giao hàng'])) {
+            return back()->with('error', 'Trạng thái đơn hàng không hợp lệ để xác nhận.');
+        }
+
+        $order->update(['status' => 'Đã hoàn thành']);
+        return back()->with('success', 'Xác nhận đã nhận hàng thành công. Cảm ơn bạn đã mua sắm!');
+    }
+
+    public function requestReturn(Request $request, Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if ($order->status !== 'Đã hoàn thành') {
+            return back()->with('error', 'Chỉ có thể yêu cầu trả hàng cho đơn hàng đã hoàn thành.');
+        }
+
+        $request->validate([
+            'return_reason' => 'required|string|max:1000',
+            'return_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048'
+        ]);
+
+        $data = [
+            'status' => 'Yêu cầu trả hàng',
+            'return_reason' => $request->return_reason
+        ];
+
+        if ($request->hasFile('return_image')) {
+            $data['return_image'] = $request->file('return_image')->store('returns', 'public');
+        }
+
+        $order->update($data);
+
+        return back()->with('success', 'Yêu cầu trả hàng của bạn đã được gửi. Chúng tôi sẽ sớm liên hệ lại.');
     }
 }
