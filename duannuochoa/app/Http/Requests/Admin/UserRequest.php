@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
                 'max:255',
                 Rule::unique('users', 'email')->ignore($userId, 'user_id'),
             ],
-            'password' => $this->isMethod('POST') ? 'required|string|min:6' : 'nullable|string|min:6',
+            'password' => 'nullable|string|min:6',
         ];
     }
 

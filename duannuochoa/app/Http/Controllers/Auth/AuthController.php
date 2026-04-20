@@ -122,9 +122,10 @@ class AuthController extends Controller
             Auth::login($user, $request->remember);
             $request->session()->regenerate();
             
-            // Redirect Admin directly to dashboard
-            if (Auth::user()->role_id == 1) {
-                return redirect()->route('tongquan')->with('success', 'Chào mừng Quản trị viên!');
+            // Redirect Admin and Staff directly to dashboard
+            if (in_array(Auth::user()->role_id, [1, 3])) {
+                $roleName = Auth::user()->role_id == 1 ? 'Quản trị viên' : 'Nhân viên';
+                return redirect()->route('admin.tongquan')->with('success', "Chào mừng $roleName!");
             }
 
             return redirect()->intended('/')->with('success', 'Chào mừng bạn quay lại!');

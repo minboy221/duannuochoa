@@ -38,7 +38,7 @@ Route::delete('gio-hang/xoa/{id}', [\App\Http\Controllers\CartController::class,
 // Route::get('gio-hang', [HomeController::class, 'giohang'])->name('giohang');
 Route::get('xem-chi-tiet/{product}', [HomeController::class, 'xemchitiet'])->name('xemchitiet');
 //trang admin
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'admin'])->name('admin.')->group(function () {
     Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');
     
     // Management Routes
@@ -108,8 +108,4 @@ Route::middleware('auth')->group(function () {
     Route::get('vnpay/ipn', [\App\Http\Controllers\CheckoutController::class, 'vnpayIPN'])->name('vnpay.ipn');
 });
 
-// Admin routes
-Route::get('tong-quan', [HomeController::class, 'tongquan'])->name('tongquan');
-Route::get('qly-sanpham', [HomeController::class, 'qlysanpham'])->name('qlysanpham');
-Route::get('qly-donhang', [HomeController::class, 'qlydonhang'])->name('qlydonhang');
-Route::get('qly-taikhoan', [HomeController::class, 'qlytaikhoan'])->name('qlytaikhoan');
+// Admin routes (đã được chuyển vào trong prefix('admin') ở trên)
