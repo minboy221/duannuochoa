@@ -136,21 +136,27 @@
                 <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
                 <span>Tổng quan</span>
             </a>
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.categories.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.categories.index') }}">
                 <span class="material-symbols-outlined" data-icon="category">category</span>
                 <span>Danh mục</span>
             </a>
+            @endif
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.brands.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.brands.index') }}">
                 <span class="material-symbols-outlined" data-icon="branding_watermark">branding_watermark</span>
                 <span>Thương hiệu</span>
             </a>
+            @endif
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.products.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.products.index') }}">
                 <span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
                 <span>Sản phẩm</span>
             </a>
+            @endif
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.orders.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.orders.index') }}">
                 <span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
@@ -161,21 +167,27 @@
                 <span class="material-symbols-outlined" data-icon="box">box</span>
                 <span>Kho hàng</span>
             </a>
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.users.index') }}">
                 <span class="material-symbols-outlined" data-icon="group">group</span>
                 <span>Người dùng</span>
             </a>
+            @endif
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.discounts.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.discounts.index') }}">
                 <span class="material-symbols-outlined" data-icon="local_offer">local_offer</span>
                 <span>Khuyến mãi</span>
             </a>
+            @endif
+            @if(auth()->check() && auth()->user()->role_id == 1)
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.shipping-methods.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.shipping-methods.index') }}">
                 <span class="material-symbols-outlined" data-icon="local_shipping">local_shipping</span>
                 <span>Vận chuyển</span>
             </a>
+            @endif
             <a class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all duration-200 {{ request()->routeIs('admin.reviews.*') ? 'bg-blue-600 text-white shadow-lg' : 'text-slate-600' }}"
                 href="{{ route('admin.reviews.index') }}">
                 <span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
@@ -192,15 +204,32 @@
                 data-alt="Professional studio portrait of a confident male executive in a blue shirt with a clean background"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAo8vYkaHjNHzG9Q6iykrniuK0XxlHnzACLMuFqP5A0Bm6sbzWO-jqsrsKvZGPhqDWmpd0FsmhJMkRv-6DxcUjJlluPmTHYTLBFrOD_EauJU7udtADCv45Yg6JvXZrPwNgwyUqP6jtpmq3jna6PRqmP7o0Jp-qe2pA33n-nPHiBOVsafz-K7f27WkTw2WHnIuGpbAKGw8zqvXGE4uCT0xBGyz6an-ncv97K69dFtYg8s5JEIPodOXXnWOxJzG3fajIfdBmhN-7b9Eht" />
             <div>
-                <p class="font-bold text-on-background">Quản trị viên</p>
-                <p class="text-xs text-on-surface-variant">Quản trị viên cấp cao</p>
+                <p class="font-bold text-on-background">
+                    {{ auth()->check() ? auth()->user()->full_name : 'Người dùng' }}
+                </p>
+                <p class="text-xs text-on-surface-variant">
+                    @if(auth()->check() && auth()->user()->role_id == 1)
+                        Quản trị viên
+                    @elseif(auth()->check() && auth()->user()->role_id == 3)
+                        Nhân viên
+                    @else
+                        Hệ thống
+                    @endif
+                </p>
             </div>
         </div>
         <div class="pt-4 mt-4 border-t border-outline-variant/20">
+            @if(auth()->check() && auth()->user()->role_id == 3)
+            <a href="{{ route('password.change') }}"
+                class="w-full flex items-center space-x-3 p-4 mb-1 rounded-xl hover:bg-blue-50 hover:text-blue-700 transition-all text-on-surface-variant font-medium text-left">
+                <span class="material-symbols-outlined" data-icon="lock_reset">lock_reset</span>
+                <span>Đổi mật khẩu</span>
+            </a>
+            @endif
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
                 <button type="submit"
-                    class="w-full flex items-center space-x-3 p-4 rounded-xl hover:text-error transition-all text-on-surface-variant font-medium text-left">
+                    class="w-full flex items-center space-x-3 p-4 rounded-xl hover:bg-red-50 hover:text-error transition-all text-on-surface-variant font-medium text-left">
                     <span class="material-symbols-outlined" data-icon="logout">logout</span>
                     <span>Đăng xuất</span>
                 </button>

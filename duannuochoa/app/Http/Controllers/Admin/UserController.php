@@ -36,17 +36,25 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::where('role_id', '!=', 1)->get();
+        // Chỉ lấy các role dành cho staff quản trị (loại trừ Admin=1 và User=2)
+        $roles = Role::whereNotIn('role_id', [1, 2])->get();
         return view('admin.users.create', compact('roles'));
     }
 
     public function store(UserRequest $request)
     {
         $data = $request->validated();
-        $data['password'] = Hash::make($request->password);
+        
+        // Tự động sinh mật khẩu ngẫu nhiên
+        $plainPassword = \Illuminate\Support\Str::random(8);
+        $data['password'] = Hash::make($plainPassword);
 
-        User::create($data);
-        return redirect()->route('admin.users.index')->with('success', 'Thêm tài khoản thành công.');
+        $user = User::create($data);
+
+        // Gửi email thông báo cho Nhân viên/User
+        \Illuminate\Support\Facades\Mail::to($user->email)->send(new \App\Mail\StaffInviteMail($user, $plainPassword));
+
+        return redirect()->route('admin.users.index')->with('success', 'Thêm tài khoản thành công. Thông tin đăng nhập đã được gửi tới email của người dùng.');
     }
 
     public function show(User $user)

@@ -75,7 +75,10 @@ class PasswordController extends Controller
 
         DB::table('otps')->where('id', $otpRecord->id)->delete();
         session()->forget(['change_password_new', 'change_password_otp_sent']);
+        if (in_array($user->role_id, [1, 3])) {
+            return redirect()->route('admin.tongquan')->with('success', 'Mật khẩu đã được thay đổi thành công.');
+        }
 
-        return redirect()->route('password.change')->with('success', 'Mật khẩu đã được thay đổi thành công.');
+        return redirect()->route('taikhoan')->with('success', 'Mật khẩu đã được thay đổi thành công.');
     }
 }

@@ -42,10 +42,11 @@
                 <label class="block text-sm font-bold mb-2">Địa chỉ</label>
                 <input type="text" name="address" class="w-full rounded-lg border-gray-300 p-3">
             </div>
-            <div class="mb-6">
-                <label class="block text-sm font-bold mb-2">Mật khẩu</label>
-                <input type="password" name="password" class="w-full rounded-lg border-gray-300 p-3">
-                @error('password') <span class="text-error text-sm">{{ $message }}</span> @enderror
+            <div class="mb-6 p-4 bg-blue-50 border-l-4 border-blue-500 rounded-r-lg">
+                <p class="text-sm text-blue-700 font-medium">
+                    <span class="material-symbols-outlined align-middle mr-1 text-base" data-icon="lightbulb">lightbulb</span>
+                    Hệ thống sẽ tự động sinh mật khẩu ngẫu nhiên và gửi tới địa chỉ Email của tài khoản này.
+                </p>
             </div>
 
             <div class="flex gap-4">
