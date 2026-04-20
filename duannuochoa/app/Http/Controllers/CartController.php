@@ -46,8 +46,7 @@ class CartController extends Controller
             ->take(4)
             ->get();
 
-        return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'recommendedProducts'));
-        return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'cart'));
+        return view('clien.giohang', compact('cartItems', 'totalQuantity', 'subtotal', 'recommendedProducts', 'cart'));
     }
 
     public function applyDiscount(Request $request)

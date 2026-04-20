@@ -26,7 +26,9 @@
                                 'Đang chuẩn bị hàng' => 'inventory_2',
                                 'Đang giao' => 'local_shipping',
                                 'Đã giao hàng' => 'package_2',
-                                'Đã hoàn thành' => 'task_alt'
+                                'Đã hoàn thành' => 'task_alt',
+                                'Yêu cầu trả hàng' => 'assignment_return',
+                                'Trả hàng/Hoàn tiền' => 'keyboard_return'
                             ];
                             $currentIndex = array_search($order->status, array_keys($statusFlow));
                             if ($order->status == 'Đã hủy') $currentIndex = -1;
@@ -54,6 +56,33 @@
                         </div>
                     @endif
                 </div>
+
+                @if($order->status == 'Đã hủy' && $order->cancel_reason)
+                    <div class="bg-red-50 border border-red-100 p-6 rounded-2xl flex items-center gap-4">
+                        <span class="material-symbols-outlined text-red-500">info</span>
+                        <div>
+                            <p class="text-[10px] font-black uppercase text-red-400 tracking-widest">Lý do hủy đơn</p>
+                            <p class="text-sm text-red-700 font-medium">{{ $order->cancel_reason }}</p>
+                        </div>
+                    </div>
+                @endif
+
+                @if($order->status == 'Yêu cầu trả hàng' && $order->return_reason)
+                    <div class="bg-orange-50 border border-orange-100 p-6 rounded-2xl flex flex-col md:flex-row gap-6">
+                        <div class="flex-1 flex gap-4">
+                            <span class="material-symbols-outlined text-orange-500">assignment_return</span>
+                            <div>
+                                <p class="text-[10px] font-black uppercase text-orange-400 tracking-widest">Lý do yêu cầu trả hàng</p>
+                                <p class="text-sm text-orange-700 font-medium">{{ $order->return_reason }}</p>
+                            </div>
+                        </div>
+                        @if($order->return_image)
+                            <div class="w-full md:w-32 h-32 rounded-xl overflow-hidden border border-orange-200">
+                                <img src="{{ asset('storage/' . $order->return_image) }}" class="w-full h-full object-cover cursor-pointer hover:scale-110 transition-transform" onclick="window.open(this.src)">
+                            </div>
+                        @endif
+                    </div>
+                @endif
 
                 @if($order->status == 'Chờ thanh toán' && $order->payment_method == 'vnpay')
                     <div class="bg-amber-50 border border-amber-200 p-8 rounded-[2rem] shadow-sm animate-pulse">
@@ -195,11 +224,30 @@
 
                 <div class="flex flex-col gap-3">
 
+                    @if(in_array($order->status, ['Đang giao', 'Đã giao hàng']))
+                        <form action="{{ route('donhang.received', $order->order_id) }}" method="POST" class="w-full">
+                            @csrf
+                            <button type="submit" class="w-full py-4 rounded-xl bg-green-600 text-white font-bold shadow-lg hover:bg-green-700 transition-all flex items-center justify-center gap-2">
+                                <span class="material-symbols-outlined">check_circle</span>
+                                Đã nhận hàng
+                            </button>
+                        </form>
+                    @endif
+
+                    @if($order->status == 'Đã hoàn thành')
+                        <button type="button" 
+                                class="return-modal-btn w-full py-4 rounded-xl bg-error/10 text-error font-bold border border-error/20 hover:bg-error/20 transition-all flex items-center justify-center gap-2"
+                                data-order-id="{{ $order->order_id }}">
+                            <span class="material-symbols-outlined">assignment_return</span>
+                            Trả hàng/Hoàn tiền
+                        </button>
+                    @endif
+
                     <button class="w-full py-4 rounded-xl bg-surface-container-highest text-primary font-bold hover:bg-surface-container-high transition-all flex items-center justify-center gap-2">
                         <span class="material-symbols-outlined">print</span>
                         In hóa đơn
                     </button>
-                    @if($order->status == 'Đã hủy' || $order->status == 'Đã hoàn thành' || $order->status == 'Đã xác nhận')
+                    @if($order->status == 'Đã hủy' || $order->status == 'Đã hoàn thành' || $order->status == 'Đã xác nhận' || $order->status == 'Trả hàng/Hoàn tiền')
                         <a href="{{ route('sanpham') }}" class="w-full py-4 rounded-xl bg-primary text-white font-bold shadow-lg hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2">
                             <span class="material-symbols-outlined">shopping_cart</span>
                             Tiếp tục mua sắm
@@ -208,5 +256,106 @@
                 </div>
             </div>
         </div>
+
+        <!-- Return Request Modal -->
+        <div id="return-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+            <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
+                <div class="p-8">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-2xl font-black text-slate-800 font-headline">Yêu cầu trả hàng</h3>
+                        <button id="close-return-modal" class="text-slate-400 hover:text-slate-600 transition-colors">
+                            <span class="material-symbols-outlined">close</span>
+                        </button>
+                    </div>
+
+                    <form id="return-form" action="" method="POST" enctype="multipart/form-data" class="space-y-6">
+                        @csrf
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest block">Lý do trả hàng/hoàn tiền</label>
+                            <textarea name="return_reason" rows="4" required
+                                      class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none resize-none text-sm font-medium"
+                                      placeholder="Vui lòng cho chúng tôi biết lý do bạn muốn trả hàng..."></textarea>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="text-xs font-black text-slate-400 uppercase tracking-widest block">Hình ảnh bằng chứng (nếu có)</label>
+                            <div class="relative group">
+                                <input type="file" name="return_image" id="return_image" accept="image/*" class="hidden">
+                                <label for="return_image" class="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-slate-200 rounded-2xl bg-slate-50 hover:bg-slate-100 hover:border-primary/30 transition-all cursor-pointer overflow-hidden">
+                                    <div id="preview-container" class="hidden w-full h-full relative">
+                                        <img id="image-preview" src="#" alt="Preview" class="w-full h-full object-cover">
+                                        <div class="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                            <span class="text-white text-xs font-bold uppercase tracking-widest">Thay đổi ảnh</span>
+                                        </div>
+                                    </div>
+                                    <div id="upload-placeholder" class="flex flex-col items-center gap-2">
+                                        <span class="material-symbols-outlined text-4xl text-slate-300">add_a_photo</span>
+                                        <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Chọn ảnh bằng chứng</span>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-error text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-error/30 hover:shadow-error/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            Gửi yêu cầu ngay
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const returnModal = document.getElementById('return-modal');
+                const closeReturnBtn = document.getElementById('close-return-modal');
+                const openReturnBtns = document.querySelectorAll('.return-modal-btn');
+                const returnForm = document.getElementById('return-form');
+
+                openReturnBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const orderId = this.dataset.orderId;
+                        returnForm.action = `/don-hang/${orderId}/yeu-cau-tra-hang`;
+                        returnModal.classList.remove('hidden');
+                        document.body.style.overflow = 'hidden';
+                    });
+                });
+
+                closeReturnBtn.addEventListener('click', function() {
+                    returnModal.classList.add('hidden');
+                    document.body.style.overflow = '';
+                    // Reset preview
+                    const previewContainer = document.getElementById('preview-container');
+                    const placeholder = document.getElementById('upload-placeholder');
+                    const imagePreview = document.getElementById('image-preview');
+                    const fileInput = document.getElementById('return_image');
+                    
+                    if (previewContainer) previewContainer.classList.add('hidden');
+                    if (placeholder) placeholder.classList.remove('hidden');
+                    if (imagePreview) imagePreview.src = '#';
+                    if (fileInput) fileInput.value = '';
+                });
+
+                // Image Preview logic
+                const returnImageInput = document.getElementById('return_image');
+                if (returnImageInput) {
+                    returnImageInput.addEventListener('change', function() {
+                        const file = this.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            const previewContainer = document.getElementById('preview-container');
+                            const placeholder = document.getElementById('upload-placeholder');
+                            const imagePreview = document.getElementById('image-preview');
+
+                            reader.onload = function(e) {
+                                imagePreview.src = e.target.result;
+                                previewContainer.classList.remove('hidden');
+                                placeholder.classList.add('hidden');
+                            }
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                }
+            });
+        </script>
     </main>
 @endsection
