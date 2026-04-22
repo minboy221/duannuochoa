@@ -95,18 +95,31 @@ class HomeController extends Controller{
         return view('clien.taikhoan', compact('availableVouchers', 'userVouchers', 'recentOrders'));
     }
 
-    public function lichsu()
+    public function lichsu(Request $request)
     {
-        $orders = \App\Models\Order::where('user_id', Auth::id())
+        $status = $request->input('status', 'all');
+        
+        $query = \App\Models\Order::where('user_id', Auth::id())
             ->with(['orderItems.variant.product'])
-            ->latest()
-            ->paginate(5);
+            ->latest();
+
+        if ($status === 'all') {
+            $query->where('status', '!=', 'Đã hủy');
+        } elseif ($status === 'completed') {
+            $query->whereIn('status', ['Đã giao hàng', 'Đã hoàn thành']);
+        } elseif ($status === 'returned') {
+            $query->whereIn('status', ['Yêu cầu trả hàng', 'Trả hàng/Hoàn tiền']);
+        } else {
+            $query->where('status', $status);
+        }
+
+        $orders = $query->paginate(5)->withQueryString();
 
         $reviewedProductIds = \App\Models\Review::where('user_id', Auth::id())
             ->pluck('product_id')
             ->toArray();
 
-        return view('clien.lichsudonhang', compact('orders', 'reviewedProductIds'));
+        return view('clien.lichsudonhang', compact('orders', 'reviewedProductIds', 'status'));
     }
 
     public function chitietdonhang(Order $order)
@@ -264,5 +277,57 @@ class HomeController extends Controller{
         $order->update($data);
 
         return back()->with('success', 'Yêu cầu trả hàng của bạn đã được gửi. Chúng tôi sẽ sớm liên hệ lại.');
+    }
+
+    public function cancelOrder(Request $request, Order $order)
+    {
+        if ($order->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        if (!in_array($order->status, ['Chờ xác nhận', 'Đã xác nhận'])) {
+            return back()->with('error', 'Không thể hủy đơn hàng ở trạng thái này.');
+        }
+
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            // Restore stock
+            foreach ($order->orderItems as $item) {
+                if ($item->variant) {
+                    $item->variant->stock_quantity += $item->quantity;
+                    $item->variant->save();
+                }
+            }
+
+            // Refund if paid
+            if (in_array($order->payment_status, ['paid']) || $order->payment_method === 'wallet') {
+                // Double check if not already refunded to prevent double refund
+                if (!$order->is_refunded) {
+                    $user = Auth::user();
+                    $refundAmount = $order->total_amount;
+                    
+                    $user->increment('wallet_balance', $refundAmount);
+                    
+                    \App\Models\WalletTransaction::create([
+                        'user_id' => $user->user_id,
+                        'amount' => $refundAmount,
+                        'type' => 'refund',
+                        'description' => "Hoàn tiền do khách hủy đơn hàng #ORD-" . str_pad($order->order_id, 5, '0', STR_PAD_LEFT)
+                    ]);
+
+                    $order->is_refunded = true;
+                }
+            }
+
+            $order->status = 'Đã hủy';
+            $order->cancel_reason = 'Khách hàng tự hủy';
+            $order->save();
+
+            \Illuminate\Support\Facades\DB::commit();
+            return back()->with('success', 'Đã hủy đơn hàng thành công.');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 }

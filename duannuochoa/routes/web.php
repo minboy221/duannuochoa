@@ -104,6 +104,7 @@ Route::middleware('auth')->group(function () {
     Route::post('don-hang/{order}/mark-notified', [\App\Http\Controllers\HomeController::class, 'markNotified'])->name('orders.mark-notified');
     Route::post('don-hang/{order}/da-nhan-hang', [\App\Http\Controllers\HomeController::class, 'confirmReceived'])->name('donhang.received');
     Route::post('don-hang/{order}/yeu-cau-tra-hang', [\App\Http\Controllers\HomeController::class, 'requestReturn'])->name('donhang.return');
+    Route::post('don-hang/{order}/huy', [\App\Http\Controllers\HomeController::class, 'cancelOrder'])->name('donhang.cancel');
     Route::get('vnpay/return', [\App\Http\Controllers\CheckoutController::class, 'vnpayReturn'])->name('vnpay.return');
     Route::get('vnpay/ipn', [\App\Http\Controllers\CheckoutController::class, 'vnpayIPN'])->name('vnpay.ipn');
 });
