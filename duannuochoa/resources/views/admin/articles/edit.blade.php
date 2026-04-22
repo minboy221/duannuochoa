@@ -45,7 +45,7 @@
                                      class="{{ $article->image ? '' : 'hidden' }} w-full h-full object-cover">
                                 <div id="upload-placeholder" class="{{ $article->image ? 'hidden' : '' }} text-center">
                                     <span class="material-symbols-outlined text-slate-300 text-4xl">image</span>
-                                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Chọn ảnh mới (.jpg, .png)</p>
+                                    <p class="text-[10px] text-slate-400 font-bold uppercase mt-2">Chọn ảnh mới (.jpg, .png, .webp)</p>
                                 </div>
                                 <input type="file" name="image" onchange="previewImage(this)" class="absolute inset-0 opacity-0 cursor-pointer">
                             </div>

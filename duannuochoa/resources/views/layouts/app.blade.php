@@ -101,12 +101,41 @@
             mask-image: linear-gradient(to right, black 50%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, black 50%, transparent 100%);
         }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .animate-scroll {
+            animation: scroll 20s linear infinite;
+        }
     </style>
 </head>
 
 <body class="bg-surface font-body text-on-surface">
     <!-- TopNavBar -->
     <header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-2xl shadow-blue-900/5">
+        <!-- Announcement Bar -->
+        <div class="w-full bg-gradient-to-r from-violet-600 via-fuchsia-500 to-orange-500 overflow-hidden py-2 flex whitespace-nowrap">
+            <div class="animate-scroll flex w-max">
+                <div class="flex items-center">
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">⚡ Flash sale giảm tới 50%</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">✨ Giao hàng hỏa tốc trong 2H</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">🎁 Quà tặng cho đơn từ 2 triệu</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">⚡ Flash sale giảm tới 50%</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">✨ Giao hàng hỏa tốc trong 2H</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">🎁 Quà tặng cho đơn từ 2 triệu</span>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">⚡ Flash sale giảm tới 50%</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">✨ Giao hàng hỏa tốc trong 2H</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">🎁 Quà tặng cho đơn từ 2 triệu</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">⚡ Flash sale giảm tới 50%</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">✨ Giao hàng hỏa tốc trong 2H</span>
+                    <span class="text-white font-bold text-sm px-8 uppercase tracking-widest flex items-center gap-2">🎁 Quà tặng cho đơn từ 2 triệu</span>
+                </div>
+            </div>
+        </div>
         <nav class="flex justify-between items-center px-8 py-4 max-w-screen-2xl mx-auto">
             <div class="text-3xl font-black italic tracking-tighter text-blue-700">X-MEN</div>
             <div class="hidden md:flex items-center space-gap-8 gap-8">
@@ -164,7 +193,7 @@
             </div>
         </nav>
     </header>
-    <main class="pt-20">
+    <main class="pt-[104px]">
         @yield('content')
     </main>
     <!-- Footer -->

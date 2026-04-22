@@ -259,6 +259,40 @@
             </div>
         </div>
     </section>
+    <!-- Latest News -->
+    <section class="py-24 bg-surface px-8">
+        <div class="container mx-auto">
+            <div class="flex justify-between items-end mb-16">
+                <div>
+                    <h2 class="font-headline text-4xl font-extrabold text-on-surface mb-2">Góc chia sẻ & Tin tức</h2>
+                    <div class="h-1.5 w-24 kinetic-gradient rounded-full"></div>
+                </div>
+                <a class="text-primary font-bold flex items-center gap-2 hover:underline" href="{{ route('news.index') }}">Xem tất cả <span class="material-symbols-outlined">arrow_forward</span></a>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                @forelse($latestArticles as $article)
+                <div class="bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm group cursor-pointer hover:shadow-xl transition-shadow" onclick="window.location='{{ route('news.show', $article->slug) }}'">
+                    <div class="h-64 overflow-hidden relative">
+                        <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            src="{{ $article->image ? asset('storage/' . $article->image) : 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=800&q=80' }}" alt="{{ $article->title }}" />
+                    </div>
+                    <div class="p-6 relative">
+                        <p class="text-xs text-primary font-bold mb-2">{{ $article->created_at->format('d/m/Y') }}</p>
+                        <h4 class="font-bold text-xl mb-3 line-clamp-2 text-on-surface hover:text-primary transition-colors"><a href="{{ route('news.show', $article->slug) }}">{{ $article->title }}</a></h4>
+                        <p class="text-outline text-sm line-clamp-3 mb-4">{{ $article->summary ?? Str::limit(strip_tags($article->content), 100) }}</p>
+                        <a href="{{ route('news.show', $article->slug) }}" class="inline-flex items-center gap-1 text-sm font-bold text-primary group-hover:underline">Đọc tiếp <span class="material-symbols-outlined text-[16px]">trending_flat</span></a>
+                    </div>
+                </div>
+                @empty
+                <div class="col-span-1 md:col-span-3 text-center py-12 bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant">
+                    <span class="material-symbols-outlined text-4xl text-outline-variant mb-2">article</span>
+                    <p class="text-outline">Chưa có bài viết tin tức nào được xuất bản.</p>
+                </div>
+                @endforelse
+            </div>
+        </div>
+    </section>
+
     <!-- Customer Reviews -->
     <section class="py-24 bg-surface-container-low px-8">
         <div class="container mx-auto">
