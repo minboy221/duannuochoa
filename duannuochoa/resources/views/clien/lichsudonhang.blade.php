@@ -53,6 +53,29 @@
                     <p class="text-on-surface-variant">Theo dõi và quản lý các đơn hàng của bạn.</p>
                 </header>
 
+                <!-- Status Tabs -->
+                <div class="flex overflow-x-auto border-b border-surface-container-high mb-6 hide-scrollbar">
+                    @php
+                        $tabs = [
+                            'all' => 'Tất cả',
+                            'Chờ xác nhận' => 'Chờ xác nhận',
+                            'Đã xác nhận' => 'Đã xác nhận',
+                            'Đang chuẩn bị hàng' => 'Chuẩn bị hàng',
+                            'Đang giao' => 'Đang giao',
+                            'completed' => 'Hoàn thành',
+                            'Đã hủy' => 'Đã hủy',
+                            'returned' => 'Trả hàng',
+                        ];
+                    @endphp
+
+                    @foreach($tabs as $key => $label)
+                        <a href="{{ route('lichsu', ['status' => $key]) }}" 
+                           class="whitespace-nowrap px-6 py-4 font-bold text-sm transition-all border-b-2 {{ $status === $key ? 'border-primary text-primary' : 'border-transparent text-on-surface-variant hover:text-primary' }}">
+                            {{ $label }}
+                        </a>
+                    @endforeach
+                </div>
+
                 <!-- Orders List -->
                 <div class="space-y-6">
                     @forelse($orders as $order)
@@ -143,6 +166,19 @@
                                     <a href="{{ route('donhang.show', $order->order_id) }}" class="px-6 py-3 rounded-xl font-bold text-on-surface-variant bg-surface-container-highest hover:bg-surface-container-high transition-all text-sm flex items-center justify-center">
                                         Chi tiết
                                     </a>
+
+                                    @if(in_array($order->status, ['Chờ xác nhận', 'Đã xác nhận']))
+                                        <form action="{{ route('donhang.cancel', $order->order_id) }}" method="POST" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
+                                            @csrf
+                                            <button type="submit" class="px-6 py-3 rounded-xl font-bold text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 hover:text-red-700 transition-all text-sm">
+                                                Hủy đơn
+                                            </button>
+                                        </form>
+                                    @elseif(in_array($order->status, ['Đang chuẩn bị hàng', 'Đang giao', 'Đã giao hàng']))
+                                        <button disabled class="px-6 py-3 rounded-xl font-bold text-slate-400 bg-slate-100 border border-slate-200 cursor-not-allowed transition-all text-sm" title="Đơn hàng đang được xử lý, không thể hủy">
+                                            Hủy đơn
+                                        </button>
+                                    @endif
 
                                     @if(in_array($order->status, ['Đang giao', 'Đã giao hàng']))
                                         <form action="{{ route('donhang.received', $order->order_id) }}" method="POST" class="m-0">

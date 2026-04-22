@@ -97,9 +97,22 @@ class CheckoutController extends Controller
 
         DB::beginTransaction();
         try {
+            // Lấy danh sách ID các biến thể và khóa dòng dữ liệu để tránh race condition
+            $variantIds = $cartItems->pluck('variant_id')->toArray();
+            $lockedVariants = \App\Models\ProductVariant::whereIn('variant_id', $variantIds)
+                ->lockForUpdate()
+                ->get()
+                ->keyBy('variant_id');
+
             $subtotal = 0;
             foreach ($cartItems as $item) {
-                $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
+                $variant = $lockedVariants->get($item->variant_id);
+                // Kiểm tra lại tồn kho từ instance đã bị khóa
+                if (!$variant || $variant->stock_quantity < $item->quantity) {
+                    throw new \Exception('Sản phẩm "' . ($variant ? $variant->product->name : 'Không xác định') . '" không đủ số lượng trong kho.');
+                }
+
+                $price = $variant->price > 0 ? $variant->price : $variant->product->base_price;
                 $subtotal += $price * $item->quantity;
             }
 
@@ -191,7 +204,9 @@ class CheckoutController extends Controller
 
             // Create Order Items
             foreach ($cartItems as $item) {
-                $price = $item->variant->price > 0 ? $item->variant->price : $item->variant->product->base_price;
+                $lockedVariant = $lockedVariants->get($item->variant_id);
+                $price = $lockedVariant->price > 0 ? $lockedVariant->price : $lockedVariant->product->base_price;
+                
                 OrderItem::create([
                     'order_id' => $order->order_id,
                     'variant_id' => $item->variant_id,
@@ -199,15 +214,15 @@ class CheckoutController extends Controller
                     'price' => $price
                 ]);
 
-                // Update stock
-                $item->variant->stock_quantity -= $item->quantity;
-                $item->variant->save();
+                // Cập nhật tồn kho dựa trên instance đã bị khóa
+                $lockedVariant->stock_quantity -= $item->quantity;
+                $lockedVariant->save();
 
                 // Check for out of stock alert
-                if ($item->variant->stock_quantity <= 0) {
+                if ($lockedVariant->stock_quantity <= 0) {
                     $adminEmail = env('MAIL_ADMIN_ADDRESS', 'phamtuan20061969@gmail.com');
                     try {
-                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\OutOfStockAlert($item->variant->load('product')));
+                        \Illuminate\Support\Facades\Mail::to($adminEmail)->send(new \App\Mail\OutOfStockAlert($lockedVariant->load('product')));
                     } catch (\Exception $e) {
                         \Log::error('Out of stock mail error: ' . $e->getMessage());
                     }
@@ -314,14 +329,29 @@ class CheckoutController extends Controller
 
         $secureHash = hash_hmac('sha512', $hashdata, $vnp_HashSecret);
         if ($secureHash == $vnp_SecureHash) {
+            $order = Order::findOrFail($request->vnp_TxnRef);
             if ($request->vnp_ResponseCode == '00') {
-                $order = Order::findOrFail($request->vnp_TxnRef);
                 $order->update([
                     'status' => 'Đã xác nhận',
                     'payment_status' => 'paid'
                 ]);
                 return redirect()->route('lichsu')->with('success', 'Thanh toán thành công qua VNPay!');
             } else {
+                if ($order->status === 'Chờ thanh toán') {
+                    $order->update([
+                        'status' => 'Đã hủy',
+                        'payment_status' => 'failed'
+                    ]);
+                    
+                    // Hoàn lại số lượng tồn kho
+                    foreach ($order->orderItems as $item) {
+                        $variant = \App\Models\ProductVariant::find($item->variant_id);
+                        if ($variant) {
+                            $variant->stock_quantity += $item->quantity;
+                            $variant->save();
+                        }
+                    }
+                }
                 return redirect()->route('checkout.index')->with('error', 'Thanh toán không thành công hoặc đã bị hủy.');
             }
         } else {
@@ -355,6 +385,22 @@ class CheckoutController extends Controller
                     'status' => 'Đã xác nhận',
                     'payment_status' => 'paid'
                 ]);
+            } else {
+                if ($order->status === 'Chờ thanh toán') {
+                    $order->update([
+                        'status' => 'Đã hủy',
+                        'payment_status' => 'failed'
+                    ]);
+                    
+                    // Hoàn lại số lượng tồn kho
+                    foreach ($order->orderItems as $item) {
+                        $variant = \App\Models\ProductVariant::find($item->variant_id);
+                        if ($variant) {
+                            $variant->stock_quantity += $item->quantity;
+                            $variant->save();
+                        }
+                    }
+                }
             }
             return response()->json(['RspCode' => '00', 'Message' => 'Confirm Success']);
         }
