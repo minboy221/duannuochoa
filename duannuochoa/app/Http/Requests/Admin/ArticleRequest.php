@@ -25,7 +25,7 @@ class ArticleRequest extends FormRequest
             'title' => 'required|string|max:255',
             'content' => 'required',
             'summary' => 'nullable|string|max:500',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             'status' => 'required|boolean',
         ];
     }
@@ -38,7 +38,7 @@ class ArticleRequest extends FormRequest
             'content.required' => 'Nội dung bài viết không được để trống.',
             'summary.max' => 'Tóm tắt không được vượt quá 500 ký tự.',
             'image.image' => 'Tệp tải lên phải là hình ảnh.',
-            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg.',
+            'image.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif, svg, webp.',
             'image.max' => 'Dung lượng ảnh không được vượt quá 2MB.',
             'status.required' => 'Vui lòng chọn trạng thái bài viết.',
         ];
