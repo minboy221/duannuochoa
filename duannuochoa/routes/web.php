@@ -22,6 +22,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('search-suggest', [HomeController::class, 'searchSuggest'])->name('search.suggest');
 Route::get('gioi-thieu', [HomeController::class, 'about'])->name('about');
 Route::get('san-pham', [HomeController::class, 'sanpham'])->name('sanpham');
 Route::get('lien-he', [HomeController::class, 'lienhe'])->name('lienhe');

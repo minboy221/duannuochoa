@@ -89,7 +89,7 @@ class AuthController extends Controller
             'password' => Hash::make($registerData['password']),
             'phone' => $registerData['phone'],
             'address' => $registerData['address'],
-            'role_id' => 2, // Default role: User
+            'role_id' => 3, // Default role: Customer
             'xu' => 100, // Tặng 100 xu cho tài khoản mới
         ]);
 
@@ -123,7 +123,7 @@ class AuthController extends Controller
             $request->session()->regenerate();
             
             // Redirect Admin and Staff directly to dashboard
-            if (in_array(Auth::user()->role_id, [1, 3])) {
+            if (in_array(Auth::user()->role_id, [1, 2])) {
                 $roleName = Auth::user()->role_id == 1 ? 'Quản trị viên' : 'Nhân viên';
                 return redirect()->route('admin.tongquan')->with('success', "Chào mừng $roleName!");
             }

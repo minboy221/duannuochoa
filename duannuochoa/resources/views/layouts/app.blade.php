@@ -151,11 +151,21 @@
                     href="{{ route('lienhe') }}">Liên Hệ</a>
             </div>
             <div class="flex items-center gap-6">
-                <div class="relative hidden lg:block">
-                    <input
-                        class="bg-surface-container-high border-none rounded-full py-2 px-6 w-64 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-sm"
-                        placeholder="Tìm kiếm mùi hương..." type="text" />
-                    <span class="material-symbols-outlined absolute right-4 top-2 text-outline">search</span>
+                <div class="relative hidden lg:block" id="header-search-container">
+                    <form action="{{ route('sanpham') }}" method="GET">
+                        <input id="header-search-input" name="search" autocomplete="off" value="{{ request('search') }}"
+                            class="bg-surface-container-high border-none rounded-full py-2 px-6 w-64 focus:ring-2 focus:ring-primary/20 transition-all outline-none text-sm focus:w-80"
+                            placeholder="Tìm kiếm mùi hương..." type="text" />
+                        <button type="submit" class="absolute right-4 top-2 text-outline hover:text-primary">
+                            <span class="material-symbols-outlined">search</span>
+                        </button>
+                    </form>
+                    <!-- Suggestions Dropdown -->
+                    <div id="header-search-results" class="absolute top-full right-0 w-80 mt-2 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden hidden z-50">
+                        <div id="header-search-list" class="max-h-[60vh] overflow-y-auto">
+                            <!-- Items go here -->
+                        </div>
+                    </div>
                 </div>
                 <div class="flex gap-4">
                     <button
@@ -330,6 +340,60 @@
         .fade-out { opacity: 0; transition: opacity 0.3s ease; }
     </style>
     @endif
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('header-search-input');
+            const searchResults = document.getElementById('header-search-results');
+            const searchList = document.getElementById('header-search-list');
+            let timeout = null;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    clearTimeout(timeout);
+                    const query = this.value.trim();
+
+                    if (query.length < 2) {
+                        searchResults.classList.add('hidden');
+                        return;
+                    }
+
+                    timeout = setTimeout(() => {
+                        fetch(`{{ route('search.suggest') }}?search=${encodeURIComponent(query)}`)
+                            .then(res => res.json())
+                            .then(data => {
+                                searchList.innerHTML = '';
+                                if (data.length > 0) {
+                                    data.forEach(item => {
+                                        const el = document.createElement('a');
+                                        el.href = item.url;
+                                        el.className = 'flex items-center gap-3 p-3 hover:bg-slate-50 transition-colors border-b border-slate-50 last:border-0';
+                                        el.innerHTML = `
+                                            <img src="${item.img_url}" class="w-10 h-10 object-cover rounded-lg">
+                                            <div class="flex-1 min-w-0">
+                                                <h4 class="text-sm font-bold text-slate-800 truncate">${item.name}</h4>
+                                                <p class="text-xs font-semibold text-primary mt-0.5">${item.formatted_price}</p>
+                                            </div>
+                                        `;
+                                        searchList.appendChild(el);
+                                    });
+                                    searchResults.classList.remove('hidden');
+                                } else {
+                                    searchList.innerHTML = `<div class="p-4 text-center text-sm text-slate-500">Không tìm thấy sản phẩm</div>`;
+                                    searchResults.classList.remove('hidden');
+                                }
+                            });
+                    }, 300);
+                });
+
+                // Hide when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                        searchResults.classList.add('hidden');
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>

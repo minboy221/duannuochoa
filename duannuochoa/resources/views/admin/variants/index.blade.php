@@ -21,10 +21,18 @@
     @endif
 
     <!-- Search Form -->
-    <form method="GET" action="{{ route('admin.products.variants.index', $product) }}" class="mb-6 flex gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container">
-        <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm biến thể theo màu sắc..." class="flex-1 bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
-        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Tìm kiếm</button>
-        @if(request('search'))
+    <form method="GET" action="{{ route('admin.products.variants.index', $product) }}" class="mb-6 flex gap-4 bg-surface-container-lowest p-4 rounded-xl shadow-sm border border-surface-container flex-wrap">
+        <div class="flex-1 min-w-[200px]">
+            <input type="text" name="search" value="{{ request('search') }}" placeholder="Tìm kiếm theo màu sắc, mã màu..." class="w-full bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+            <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Giá từ..." class="w-32 bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        </div>
+        <div>
+            <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Đến giá..." class="w-32 bg-surface-container-low border-none rounded-lg px-4 py-2 text-on-background placeholder-on-surface-variant focus:ring-2 focus:ring-primary">
+        </div>
+        <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg font-bold hover:bg-primary/90 transition-colors">Lọc</button>
+        @if(request('search') || request('min_price') || request('max_price'))
             <a href="{{ route('admin.products.variants.index', $product) }}" class="bg-surface-container-high text-on-surface px-6 py-2 rounded-lg font-bold hover:bg-surface-container-highest transition-colors flex items-center justify-center">Xóa lọc</a>
         @endif
     </form>

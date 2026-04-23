@@ -168,12 +168,11 @@
                                     </a>
 
                                     @if(in_array($order->status, ['Chờ xác nhận', 'Đã xác nhận']))
-                                        <form action="{{ route('donhang.cancel', $order->order_id) }}" method="POST" class="m-0" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
-                                            @csrf
-                                            <button type="submit" class="px-6 py-3 rounded-xl font-bold text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 hover:text-red-700 transition-all text-sm">
-                                                Hủy đơn
-                                            </button>
-                                        </form>
+                                        <button type="button" 
+                                                class="cancel-modal-btn px-6 py-3 rounded-xl font-bold text-red-600 bg-red-50 border border-red-100 hover:bg-red-100 hover:text-red-700 transition-all text-sm"
+                                                data-order-id="{{ $order->order_id }}">
+                                            Hủy đơn
+                                        </button>
                                     @elseif(in_array($order->status, ['Đang chuẩn bị hàng', 'Đang giao', 'Đã giao hàng']))
                                         <button disabled class="px-6 py-3 rounded-xl font-bold text-slate-400 bg-slate-100 border border-slate-200 cursor-not-allowed transition-all text-sm" title="Đơn hàng đang được xử lý, không thể hủy">
                                             Hủy đơn
@@ -262,6 +261,34 @@
 
                     <button type="submit" class="w-full bg-error text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-error/30 hover:shadow-error/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
                         Gửi yêu cầu ngay
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cancel Request Modal -->
+    <div id="cancel-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300">
+        <div class="bg-white w-full max-w-lg rounded-[2rem] shadow-2xl overflow-hidden animate-in zoom-in-95 duration-500">
+            <div class="p-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-2xl font-black text-slate-800 font-headline">Hủy đơn hàng</h3>
+                    <button id="close-cancel-modal" class="text-slate-400 hover:text-slate-600 transition-colors">
+                        <span class="material-symbols-outlined">close</span>
+                    </button>
+                </div>
+
+                <form id="cancel-form" action="" method="POST" class="space-y-6">
+                    @csrf
+                    <div class="space-y-2">
+                        <label class="text-xs font-black text-slate-400 uppercase tracking-widest block">Lý do hủy đơn hàng</label>
+                        <textarea name="cancel_reason" rows="4" required
+                                  class="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl px-5 py-4 focus:ring-4 focus:ring-primary/10 focus:border-primary transition-all outline-none resize-none text-sm font-medium"
+                                  placeholder="Vui lòng cho chúng tôi biết lý do bạn hủy đơn hàng..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-error text-white py-4 rounded-xl font-bold text-lg shadow-xl shadow-error/30 hover:shadow-error/40 hover:scale-[1.02] active:scale-[0.98] transition-all">
+                        Xác nhận hủy
                     </button>
                 </form>
             </div>
@@ -369,6 +396,26 @@
                 placeholder.classList.remove('hidden');
                 imagePreview.src = '#';
                 fileInput.value = '';
+            });
+
+            // Cancel Modal Logic
+            const cancelModal = document.getElementById('cancel-modal');
+            const closeCancelBtn = document.getElementById('close-cancel-modal');
+            const openCancelBtns = document.querySelectorAll('.cancel-modal-btn');
+            const cancelForm = document.getElementById('cancel-form');
+
+            openCancelBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const orderId = this.dataset.orderId;
+                    cancelForm.action = `/don-hang/${orderId}/huy`;
+                    cancelModal.classList.remove('hidden');
+                    document.body.style.overflow = 'hidden';
+                });
+            });
+
+            closeCancelBtn.addEventListener('click', function() {
+                cancelModal.classList.add('hidden');
+                document.body.style.overflow = '';
             });
 
             // Image Preview logic

@@ -36,18 +36,15 @@
                     <section>
                         <h3 class="font-headline text-xl font-bold mb-6 flex items-center gap-2">
                             <span class="w-1.5 h-6 bg-primary rounded-full"></span>
-                            Khoảng Giá (Dưới)
+                            Khoảng Giá
                         </h3>
                         <div class="px-2">
-                            <input
-                                class="w-full h-2 bg-surface-container-high rounded-full appearance-none cursor-pointer accent-primary"
-                                name="max_price" max="2000000" min="0" step="50000" type="range" 
-                                value="{{ request('max_price', 2000000) }}"
-                                onchange="this.form.submit()" />
-                            <div class="flex justify-between mt-4 text-sm font-semibold text-on-surface-variant">
-                                <span>0đ</span>
-                                <span id="price-display">{{ number_format(request('max_price', 2000000)) }}đ</span>
+                            <div class="flex items-center gap-2">
+                                <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Từ..." class="w-full bg-surface-container-low border border-surface-container rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
+                                <span class="text-on-surface-variant">-</span>
+                                <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Đến..." class="w-full bg-surface-container-low border border-surface-container rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none">
                             </div>
+                            <button type="submit" class="w-full mt-4 bg-primary text-white py-2 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">Áp dụng giá</button>
                         </div>
                     </section>
 
@@ -76,7 +73,7 @@
                         </div>
                     </section>
                     
-                    @if(request()->anyFilled(['category', 'brand', 'max_price']))
+                    @if(request()->anyFilled(['category', 'brand', 'min_price', 'max_price']))
                     <a href="{{ route('sanpham') }}" class="inline-flex items-center gap-2 text-sm font-bold text-error hover:underline transition-all">
                         <span class="material-symbols-outlined text-sm">close</span>
                         Xóa tất cả bộ lọc
@@ -181,14 +178,5 @@
         </form>
     </main>
 
-    <script>
-        // Update price display dynamically
-        const priceRange = document.querySelector('input[name="max_price"]');
-        const priceDisplay = document.getElementById('price-display');
-        if (priceRange) {
-            priceRange.addEventListener('input', (e) => {
-                priceDisplay.textContent = new Intl.NumberFormat('vi-VN').format(e.target.value) + 'đ';
-            });
-        }
-    </script>
+
 @endsection

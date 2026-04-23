@@ -14,10 +14,21 @@ class ProductVariantController extends Controller
     public function index(\Illuminate\Http\Request $request, Product $product)
     {
         $search = $request->input('search');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
 
         $variants = ProductVariant::where('product_id', $product->product_id)
             ->when($search, function ($query, $search) {
-                return $query->where('color', 'like', "%{$search}%");
+                return $query->where(function($q) use ($search) {
+                    $q->where('color', 'like', "%{$search}%")
+                      ->orWhere('color_code', 'like', "%{$search}%");
+                });
+            })
+            ->when($minPrice != '', function ($query) use ($minPrice) {
+                return $query->where('price', '>=', $minPrice);
+            })
+            ->when($maxPrice != '', function ($query) use ($maxPrice) {
+                return $query->where('price', '<=', $maxPrice);
             })
             ->paginate(10);
             
