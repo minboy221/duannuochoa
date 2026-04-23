@@ -36,8 +36,8 @@ class UserController extends Controller
 
     public function create()
     {
-        // Chỉ lấy các role dành cho staff quản trị (loại trừ Admin=1 và User=2)
-        $roles = Role::whereNotIn('role_id', [1, 2])->get();
+        // Chỉ lấy các role dành cho staff quản trị (loại trừ Admin=1 và Customer=3)
+        $roles = Role::whereNotIn('role_id', [1, 3])->get();
         return view('admin.users.create', compact('roles'));
     }
 

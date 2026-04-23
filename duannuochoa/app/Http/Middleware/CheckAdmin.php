@@ -28,7 +28,7 @@ class CheckAdmin
         }
 
         // Nhân viên: có quyền truy cập một số mục cụ thể
-        if ($user->role_id == 3) {
+        if ($user->role_id == 2) {
             $routeName = $request->route()->getName();
             
             // Các route hợp lệ cho Nhân viên
@@ -51,7 +51,7 @@ class CheckAdmin
             abort(403, 'Trang này chỉ dành cho Quản trị viên. Bạn không có quyền truy cập.');
         }
 
-        // Nếu là User thường (role_id = 2) thì chặn
+        // Nếu là Customer thường (role_id = 3) thì chặn
         abort(403, 'Bạn không có quyền truy cập trang quản trị.');
     }
 }

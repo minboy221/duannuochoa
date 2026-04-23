@@ -34,8 +34,16 @@ class HomeController extends Controller{
             $query->whereIn('category_id', $request->category);
         }
 
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
         if ($request->filled('brand')) {
             $query->where('brand_id', $request->brand);
+        }
+
+        if ($request->filled('min_price')) {
+            $query->where('base_price', '>=', $request->min_price);
         }
 
         if ($request->filled('max_price')) {
@@ -64,6 +72,32 @@ class HomeController extends Controller{
         $products = $query->paginate(12)->withQueryString();
 
         return view('clien.sanpham', compact('products', 'categories', 'brands'));
+    }
+
+    public function searchSuggest(Request $request)
+    {
+        $search = $request->input('search');
+        if (empty($search)) {
+            return response()->json([]);
+        }
+
+        $products = Product::where('name', 'like', '%' . $search . '%')
+            ->where('status', 1)
+            ->take(5)
+            ->get(['product_id', 'name', 'img', 'base_price']);
+
+        $results = [];
+        foreach ($products as $product) {
+            $results[] = [
+                'id' => $product->product_id,
+                'name' => $product->name,
+                'img_url' => $product->img ? asset('storage/' . $product->img) : 'https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=80&q=80',
+                'url' => route('xemchitiet', $product->product_id),
+                'formatted_price' => number_format($product->base_price) . 'đ'
+            ];
+        }
+
+        return response()->json($results);
     }
     //phần liên hệ
     public function lienhe()
@@ -289,6 +323,10 @@ class HomeController extends Controller{
             return back()->with('error', 'Không thể hủy đơn hàng ở trạng thái này.');
         }
 
+        $request->validate([
+            'cancel_reason' => 'required|string|max:1000'
+        ]);
+
         \Illuminate\Support\Facades\DB::beginTransaction();
         try {
             // Restore stock
@@ -320,7 +358,7 @@ class HomeController extends Controller{
             }
 
             $order->status = 'Đã hủy';
-            $order->cancel_reason = 'Khách hàng tự hủy';
+            $order->cancel_reason = $request->cancel_reason;
             $order->save();
 
             \Illuminate\Support\Facades\DB::commit();
