@@ -161,6 +161,11 @@
                                     <span class="material-symbols-outlined text-blue-600 text-sm">payments</span>
                                 </div>
                                 <span class="text-[11px] font-black text-blue-700 uppercase tracking-widest">VNPay</span>
+                            @elseif(strtolower($order->payment_method) == 'wallet')
+                                <div class="w-8 h-8 rounded-lg bg-purple-50 flex items-center justify-center">
+                                    <span class="material-symbols-outlined text-purple-600 text-sm">account_balance_wallet</span>
+                                </div>
+                                <span class="text-[11px] font-black text-purple-700 uppercase tracking-widest">Ví</span>
                             @else
                                 <div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center">
                                     <span class="material-symbols-outlined text-slate-600 text-sm">local_shipping</span>
@@ -175,11 +180,6 @@
                                class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-primary hover:text-white text-primary transition-all duration-300 transition-all shadow-sm bg-surface-container-low"
                                title="Xem chi tiết">
                                 <span class="material-symbols-outlined text-xl">visibility</span>
-                            </a>
-                            <a href="{{ route('admin.orders.edit', $order) }}" 
-                               class="w-10 h-10 flex items-center justify-center rounded-xl hover:bg-secondary hover:text-white text-secondary transition-all duration-300 shadow-sm bg-surface-container-low"
-                               title="Quản lý trạng thái">
-                                <span class="material-symbols-outlined text-xl">settings</span>
                             </a>
                         </div>
                     </td>
