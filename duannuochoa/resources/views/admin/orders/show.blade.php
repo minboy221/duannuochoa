@@ -165,14 +165,14 @@
                         @php
                             $currentStatus = $order->status;
                             $transitionRules = [
-                                'Chờ thanh toán' => ['Đã hủy', 'Chờ xác nhận'],
+                                'Chờ thanh toán' => ['Đã hủy'],
                                 'Chờ xác nhận' => ['Đã xác nhận', 'Đã hủy'],
                                 'Đã xác nhận' => ['Đang chuẩn bị hàng', 'Đã hủy'],
                                 'Đã thanh toán' => ['Đang chuẩn bị hàng'],
                                 'Đang chuẩn bị hàng' => ['Đang giao', 'Đã hủy'],
                                 'Đang giao' => ['Đã giao hàng', 'Đã hoàn thành'],
-                                'Đã giao hàng' => ['Đã hoàn thành', 'Trả hàng/Hoàn tiền'],
-                                'Đã hoàn thành' => ['Yêu cầu trả hàng'],
+                                'Đã giao hàng' => ['Đã hoàn thành'],
+                                'Đã hoàn thành' => [],
                                 'Đã hủy' => [],
                                 'Yêu cầu trả hàng' => ['Trả hàng/Hoàn tiền', 'Đã hoàn thành'],
                                 'Trả hàng/Hoàn tiền' => []
@@ -185,9 +185,23 @@
                         @endif
 
                         @foreach($allowed as $status)
+                            @php
+                                $displayLabel = $status;
+                                if ($currentStatus == 'Yêu cầu trả hàng') {
+                                    if ($status == 'Trả hàng/Hoàn tiền') {
+                                        $displayLabel = 'Đồng ý (Trả hàng/Hoàn tiền)';
+                                    } elseif ($status == 'Đã hoàn thành' || $status == 'Đã giao hàng') {
+                                        $displayLabel = 'Từ chối (Đơn hàng tiếp tục hoặc hoàn thành)';
+                                    }
+                                }
+                                // Specifically handle the exact string shown in screenshot
+                                if ($currentStatus == 'Yêu cầu trả hàng' && $status == 'Đã hoàn thành') {
+                                    $displayLabel = 'Từ chối trả hàng (Hoàn thành đơn)';
+                                }
+                            @endphp
                             <label class="flex items-center gap-3 p-3 rounded-xl border border-surface-container hover:bg-primary-container/10 hover:border-primary transition-all cursor-pointer group">
                                 <input type="radio" name="status" value="{{ $status }}" class="w-4 h-4 text-primary focus:ring-primary/20 status-radio" required>
-                                <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{{ $status }}</span>
+                                <span class="text-sm font-bold text-on-surface group-hover:text-primary transition-colors">{{ $displayLabel }}</span>
                             </label>
                         @endforeach
 
@@ -242,6 +256,18 @@
             <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-surface-container">
                 <h3 class="font-bold text-lg mb-4 text-primary border-b pb-2">Thanh toán</h3>
                 <div class="space-y-2 text-sm">
+                    <div class="flex justify-between mb-2">
+                        <span class="font-medium">Phương thức:</span>
+                        <span class="font-bold uppercase text-primary">
+                            @if(strtolower($order->payment_method) == 'vnpay')
+                                VNPay
+                            @elseif(strtolower($order->payment_method) == 'wallet')
+                                Ví điện tử
+                            @else
+                                Thanh toán khi nhận hàng (COD)
+                            @endif
+                        </span>
+                    </div>
                     <div class="flex justify-between">
                         <span>Phí vận chuyển:</span>
                         <span>+ {{ $order->shippingMethod ? number_format($order->shippingMethod->fee) : 0 }} đ</span>
